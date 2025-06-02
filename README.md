@@ -20,7 +20,7 @@ git config --global --add --bool push.autoSetupRemote true
 - Ensuite, tu vas cloner ton fork sur ta machine, par exemple : `git clone "urlDuRepoForké"`
 - Une fois dans le dossier cloné, on va créer une nouvelle branche pour ton travail : `cd repoforker && git checkout -b new-cool-feature`
 - En codant, tu vas vouloir sauvegarder ton avancement (comme dans un jeu) avec : `git add . && git commit -m "1hpMustNotDied"`
-- Jusqu’à maintenant, toutes les modifications sont seulement sur ta machine. Pour les envoyer sur ton fork GitHub : `git push`
+- Jusqu’à maintenant, toutes les modifications sont seulement sur ta machine. Pour les envoyer sur ton fork GitHub : `git push` mais je recommande de faire `git pull` avant de push
 - Quand tu auras fini ton travail dans cette branche, tu vas créer une *pull request* (PR) vers mon repo : Va sur GitHub, il y aura un bouton "Create pull request".
 - Je recevrai ta PR, je la vérifierai et je la fusionnerai *merge* dans la branche `main` de mon repo.
 - Ensuite, tu synchroniseras ta branche `main` locale avec celle de mon repo, qui contient maintenant les dernières modifications :
@@ -28,6 +28,7 @@ git config --global --add --bool push.autoSetupRemote true
   - Puis ramène les changements en local : `git pull`
 - Et tu recommences le cycle :  
   créer une branche → coder → commit → push → PR → sync → pull → recommencer (et passer GO, récolter 200 $ 💰).
+  
   
 
 *apprendre git en jouant*
