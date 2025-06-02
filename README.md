@@ -28,3 +28,8 @@ git config --global --add --bool push.autoSetupRemote true
   - Puis ramène les changements en local : `git pull`
 - Et tu recommences le cycle :  
   créer une branche → coder → commit → push → PR → sync → pull → recommencer (et passer GO, récolter 200 $ 💰).
+  
+
+*apprendre git en jouant*
+[ohmygit](https://ohmygit.org/)
+[learngitbranching](https://learngitbranching.js.org/?locale=en_US)
