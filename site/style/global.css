@@ -1,0 +1,16 @@
+body {
+  margin: 0;
+  background-color: #f2f2f2;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+main * {
+  margin: 10px;
+}
+
+.invisible {
+  display: none;
+}

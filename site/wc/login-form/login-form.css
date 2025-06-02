@@ -1,0 +1,13 @@
+/**
+    Changez le style pour votre composante. N'ayez pas peur, ce fichier de style
+    ne va affectez que ce composant.
+ */
+
+p {
+    font-weight: bold;
+    font-style: italic;
+}
+/* input {
+    background-color: bisque;
+    color: blueviolet;
+} */

@@ -1,0 +1,15 @@
+.item-data {
+    display: block;
+    border: 1px solid black;
+}
+
+label, input {
+    display: inline-block;
+    width: 175px;
+    vertical-align:middle;
+}
+
+textarea {
+    display: block;
+    height: 150px;
+}

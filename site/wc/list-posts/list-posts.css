@@ -1,0 +1,9 @@
+/**
+    Changez le style pour votre composante. N'ayez pas peur, ce fichier de style
+    ne va affectez que ce composant.
+ */
+
+table, th, tr, td {
+    border: 1px solid black;
+    border-collapse: collapse;
+}
