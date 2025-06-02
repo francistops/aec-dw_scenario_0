@@ -9,6 +9,13 @@ Préparation du cours d'AEC de Développement Web (LEA.6C) du Cégep de Sherbroo
 
 ### note pour collaboration:
 - Assure-toi que Git fonctionne (email et username pour pouvoir commits) et que tu as un compte GitHub.
+```bash
+git config --add --global user.name "GITHUB_USERNAME"
+git config --add --global user.email "EMAIL ou OFFUSCATED_EMAIL eg: 69420+francistops@users.noreply.github.com"
+git config --global init.defaultBranch main
+git config --global pull.rebase true
+git config --global --add --bool push.autoSetupRemote true
+```
 - Avec ton compte GitHub, on va forker la branche `main` de mon repo [scenario_0](https://github.com/francistops/aec-dw_scenario_0).
 - Ensuite, tu vas cloner ton fork sur ta machine, par exemple : `git clone "urlDuRepoForké"`
 - Une fois dans le dossier cloné, on va créer une nouvelle branche pour ton travail : `cd repoforker && git checkout -b new-cool-feature`
