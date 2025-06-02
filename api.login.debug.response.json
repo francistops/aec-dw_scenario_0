@@ -1136,3 +1136,11 @@ queryResult:  [
     token: '1db07979-156e-4c6e-91fd-f261559ec1ce'
   }
 ]
+params: [Object: null prototype] {},
+  body: { email: 'ft@m.local', password: 'saltypass' },
+  length: undefined,
+  _eventsCount: 0,
+  route: Route {
+    path: '/debug',
+    stack: [ [Layer] ],
+    methods: [Object: null prototype] { post: true }
