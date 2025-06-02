@@ -29,22 +29,22 @@ class LoginFormWC extends HTMLElement {
     loginBtn.addEventListener('click', async (e) => {
       e.preventDefault();
       const email = this.shadowRoot.getElementById('login-email').value;
-      console.log(email);
+      console.log('in WC login-form input email: ', email);
       const password = this.shadowRoot.getElementById('login-password').value;
-      console.log(password);
+      console.log('in WC login-form input password: ', password);
 
       try {
         const response = await fetch("https://api.amelieroussin.ca/login", {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ email, password })
+          //body: JSON.stringify(email)
         });
         console.log(response)
         if (!response.ok) {
-            throw new Error(`salut error: ${response.status}`);
+            throw new Error(`error: ${response.status}`);
           }
-        const result = await response.json();
-        console.log(result);
+        // const result = await response.json();
 
         // const data = await response.json();
 
@@ -57,7 +57,7 @@ class LoginFormWC extends HTMLElement {
         //   throw new Error(`API return: ${data}`);
         // }
       } catch (error) {
-        console.log(`Salut: ${error}`)
+        console.log(`WC login-form catch: ${error}`)
       }
     });
  
