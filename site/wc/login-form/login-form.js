@@ -37,8 +37,8 @@ class LoginFormWC extends HTMLElement {
         const response = await fetch("https://api.amelieroussin.ca/login", {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          //body: JSON.stringify({ email, password })
-          body: JSON.stringify(email)
+          body: JSON.stringify({ email, password })
+          //body: JSON.stringify(email)
         });
         console.log(response)
         if (!response.ok) {
