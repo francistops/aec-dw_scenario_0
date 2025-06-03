@@ -82,28 +82,35 @@ exports.sendLogin = async (req, res) => {
 // simple too help me understand
 exports.debugLogin = async (req, res) => {
   console.log("---in controller debugLogin---");
-  console.log("in sendLogin req: ", req.body.email, typeof(req.body.email));
+  // console.log("in sendLogin req: ", req.body.email, typeof(req.body.email));
   // console.log("in sendLogin res: ", res);
+
+  let result = UNKNOWN_ERROR;
+
+  //get user info from curl POST method
   const userEmail = req.body.email;
   const userHash = req.body.password;
 
-  let result = UNKNOWN_ERROR;
   try {
-    const debugData = await loginModel.fetchDebug();
+    const debugData = await loginModel.fetchDebugByEmailFromDb(userEmail);
     result = {
       message: "Success",
       errorCode: 0,
       debugData: debugData,
     };
-    console.log('db email: ', debugData[3].email, typeof(req.body.email))
-    const dbEmail = debugData[3].email;
-    const dbHash = debugData[3].passHash;
+    // console.log('db email: ', debugData[3].email, typeof(req.body.email))
+
+    // narrow the return db data 
+    const dbEmail = debugData[0].email;
+    const dbHash = debugData[0].passHash;
 
     if (isUserValid(userEmail, dbEmail, res)){
      if (isPasswordValid(userHash, dbHash, res)){
       console.log('user has been successfully authentificated! you are welcome!')
+      // create and insert a token in the user.token table
      }
     }
+
     
 
   } catch (error) {

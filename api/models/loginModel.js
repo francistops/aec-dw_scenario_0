@@ -30,3 +30,14 @@ exports.fetchDebug = async() => {
   // console.log('queryResult: ', queryResult.rows);
   return queryResult.rows;
 };
+
+exports.fetchDebugByEmailFromDb = async(userEmail) => {
+  console.log('in fetchDebugByEmailFromDb userEmail', userEmail)
+  const selectSql = `SELECT "email", "passHash"
+                      FROM "users"
+                      WHERE "email"=$1;`;
+  const parameters = [userEmail]; 
+  const queryResult = await pool.query(selectSql, parameters);
+  console.log('in fetchDebugByEmailFromDb queryResult: ', queryResult.rows);
+  return queryResult.rows;
+}
