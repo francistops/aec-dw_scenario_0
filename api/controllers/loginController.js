@@ -114,7 +114,13 @@ exports.debugLogin = async (req, res) => {
         );
         // create and insert a token in the user.token table
         const debugToken = await loginModel.insertTokenIntoUserTable(userEmail);
-        console.log(debugToken.token)
+
+        // console.log(debugToken.token)
+        user = {
+          email: dbEmail,
+          passHash: dbHash,
+          token: debugToken.token
+        }
       }
     }
   } catch (error) {
@@ -125,14 +131,15 @@ exports.debugLogin = async (req, res) => {
   }
 
   // console.log("result: ", result);
-  res.formatView(result);
+  console.log("user: ", user);
+  res.formatView(result, user);
 };
 
 function isPasswordValid(passHash, passHash2, res) {
   if (passHash != passHash2) {
     return res
-      .status(403)
-      .json({ message: "password non valide", errorCode: 1001 });
+      .status(401)
+      .json({ message: "Unauthorized: password non valide", errorCode: 1001 });
   }
   return true;
 }
@@ -141,7 +148,7 @@ function isUserValid(userEmail, dbEmail, res) {
   if (userEmail != dbEmail) {
     return res
       .status(401)
-      .json({ message: "Utilisateur non trouvé", errorCode: 1001 });
+      .json({ message: "Unauthorized: Utilisateur non trouvé", errorCode: 1001 });
   }
   return true;
 }

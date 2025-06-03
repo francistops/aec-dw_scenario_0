@@ -1,54 +1,58 @@
-const pool = require('../db/pool');
+const pool = require("../db/pool");
 
-
-exports.fetchLogin = async() => {
+exports.fetchLogin = async () => {
   const selectSql = `SELECT * FROM "users"`;
   const queryResult = await pool.query(selectSql);
-  console.log('queryResult: ', queryResult.rows);
+  console.log("queryResult: ", queryResult.rows);
   return queryResult.rows;
 };
 
-exports.fetchLoginByEmailFromDb = async(userSentEmail) => {
+exports.fetchLoginByEmailFromDb = async (userSentEmail) => {
   const selectSql = `SELECT * FROM "users" WHERE email=$1`;
-  const parameters = [userSentEmail]; 
+  const parameters = [userSentEmail];
   const queryResult = await pool.query(selectSql, parameters);
-  console.log('queryResult: ', queryResult.rows);
+  console.log("queryResult: ", queryResult.rows);
   return queryResult.rows;
 };
 
-exports.fetchLoginByEmailForPassword = async(userSentEmail) => {
+exports.fetchLoginByEmailForPassword = async (userSentEmail) => {
   const selectSql = `SELECT * FROM "users" WHERE email=$1`;
-  const parameters = [userSentEmail]; 
+  const parameters = [userSentEmail];
   const queryResult = await pool.query(selectSql, parameters);
-  console.log('queryResult: ', queryResult.rows);
+  console.log("queryResult: ", queryResult.rows);
   return queryResult.rows;
 };
 
-exports.fetchDebug = async() => {
+exports.fetchDebug = async () => {
   const selectSql = `SELECT * FROM "users"`;
   const queryResult = await pool.query(selectSql);
   // console.log('queryResult: ', queryResult.rows);
   return queryResult.rows;
 };
 
-exports.fetchDebugByEmailFromDb = async(userEmail) => {
-  console.log('in fetchDebugByEmailFromDb userEmail', userEmail)
+exports.fetchDebugByEmailFromDb = async (userEmail) => {
+  console.log("in fetchDebugByEmailFromDb userEmail", userEmail);
   const selectSql = `SELECT "email", "passHash", "token"
                       FROM "users"
                       WHERE "email"=$1;`;
-  const parameters = [userEmail]; 
+  const parameters = [userEmail];
   const queryResult = await pool.query(selectSql, parameters);
-  console.log('in fetchDebugByEmailFromDb queryResult: ', queryResult.rows);
+  console.log("in fetchDebugByEmailFromDb queryResult: ", queryResult.rows);
   return queryResult.rows;
 };
 
-exports.insertTokenIntoUserTable = async(userEmail) => {
-   const updateSql = `UPDATE "users" 
-                            SET token = gen_random_uuid() 
+exports.insertTokenIntoUserTable = async (userEmail) => {
+  const debugToken = "d0b831eb-dace-43f8-836f-396d66f29e8c";
+  //  const updateSql = `UPDATE "users"
+  //                           SET token = gen_random_uuid()
+  //                           WHERE "email" = $1
+  //                           RETURNING *;`;
+  const updateSql = `UPDATE "users" 
+                            SET token = $2
                             WHERE "email" = $1 
                             RETURNING *;`;
-    const parameters = [userEmail];
-    const queryResult = await pool.query(updateSql, parameters);
+  const parameters = [userEmail, debugToken];
+  const queryResult = await pool.query(updateSql, parameters);
   // console.log('in insertTokenIntoUserTable queryResult: ', queryResult.rows)
-    return queryResult.rows[0];
+  return queryResult.rows[0];
 };
