@@ -124,6 +124,8 @@ function isPasswordValid(passHash, passHash2, res) {
   return true;
 };
 
+// Salut
+
 function isUserValid(userEmail, dbEmail, res) {
   if (userEmail != dbEmail) {
       return res
@@ -132,3 +134,7 @@ function isUserValid(userEmail, dbEmail, res) {
   }
   return true;
 };
+
+// Salut git
+
+
