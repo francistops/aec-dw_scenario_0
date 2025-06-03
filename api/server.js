@@ -1,48 +1,60 @@
-const express = require("express");
+// const express = require("express");
+import express, { json } from "express";
 const app = express();
 const PORT = 3000;
 
 /**
  * Librairies et middlewares
  */
-const cors = require("cors");
+import cors from "cors";
 app.use(cors({
     origin: ['https://amelieroussin.ca', 'https://www.amelieroussin.ca']
 }));
 
-app.use(express.json());
+// old
+// app.use(express.json());
 // video andre diff
-// app.use(json());
+app.use(json());
 
+// old
+//const negotiate = require('./middlewares/negotiate');
+//app.use(negotiate);
 
-const negotiate = require('./middlewares/negotiate');
-app.use(negotiate);
-
-const validateToken = require('./middlewares/authGard.js');
-app.use(validateToken);
+//const validateToken = require('./middlewares/authGuard.js');
+//app.use(validateToken);
 
 // video andre diff
-// import negociate from './middlewares/negotiate';
-// app.use(negociate);
-//
-// import { validateToken } from './middlewares/authGard.js';
+import negociate from './middlewares/negotiate.js';
+app.use(negociate);
+
+import { validateToken } from './middlewares/authGuard.js';
 
 /**
  * Routers
- * Ces 2 lignes pour chaque table qu'on ajoute
- */
-const postRoute = require('./routers/postRoutes');
+*/
+// old
+// const postRoute = require('./routers/postRoutes');
+// app.use('/posts', validateToken, postRoute);
+// 
+// const userRoute = require('./routers/userRoutes');
+// app.use('/users', validateToken, userRoute);
+// 
+// const authRoute = require('./routers/authRoutes');
+// app.use('/', authRoute);
+
+// video andre diff
+import postRoute from './routers/postRoutes.js';
 app.use('/posts', validateToken, postRoute);
 
-const userRoute = require('./routers/userRoutes');
+import userRoute from './routers/userRoutes.js';
 app.use('/users', validateToken, userRoute);
 
-const loginRoute = require('./routers/loginRoutes');
-app.use('/', loginRoute);
+import authRoute from './routers/authRoutes.js';
+app.use('/', authRoute);
 
 /**
  * Serveur HTTP
  */
-app.listen(PORT, '0.0.0.0', () => {
+app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
 });

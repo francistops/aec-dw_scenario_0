@@ -1,19 +1,19 @@
-const loginModel = require("../models/loginModel");
+const authModel = require("../models/authModel");
 const UNKNOWN_ERROR = {
   message: "Unknown error",
   errorCode: 9999,
 };
 const crypto = require("crypto");
 
-exports.getLogin = async (req, res) => {
-  console.log("---in controller getLogin---");
+exports.getauth = async (req, res) => {
+  console.log("---in controller getauth---");
   let result = UNKNOWN_ERROR;
   try {
-    const login = await loginModel.fetchLogin();
+    const auth = await authModel.fetchauth();
     result = {
       message: "Success",
       errorCode: 0,
-      login: login,
+      auth: auth,
     };
   } catch (error) {
     console.error("DB error", error);
@@ -26,22 +26,22 @@ exports.getLogin = async (req, res) => {
   res.formatView(result);
 };
 
-exports.sendLogin = async (req, res) => {
+exports.sendauth = async (req, res) => {
   //
-  console.log("---in controller getLogin---");
-  console.log("in sendLogin req: ", req);
-  console.log("in sendLogin res: ", res);
+  console.log("---in controller sendauth---");
+  console.log("in sendauth req: ", req);
+  console.log("in sendauth res: ", res);
 
   let result = UNKNOWN_ERROR;
 
   const { userSentEmail, userSentPassword } = req.body;
   //const { userSentEmail } = req.body;
-  console.log("in sendLogin req.body: ", userSentEmail, userSentPassword);
-  //console.log("in sendLogin req.body: ", email);
+  console.log("in sendauth req.body: ", userSentEmail, userSentPassword);
+  //console.log("in sendauth req.body: ", email);
 
   try {
-    const dbSentEmail = await loginModel.fetchLoginByEmailFromDb(userSentEmail);
-    const dbSentPassHash = await loginModel.fetchLoginByEmailForPassword(
+    const dbSentEmail = await authModel.fetchauthByEmailFromDb(userSentEmail);
+    const dbSentPassHash = await authModel.fetchauthByEmailForPassword(
       userSentEmail
     );
 
@@ -82,10 +82,10 @@ exports.sendLogin = async (req, res) => {
 };
 
 // simple too help me understand
-exports.debugLogin = async (req, res) => {
-  console.log("---in controller debugLogin---");
-  // console.log("in sendLogin req: ", req.body.email, typeof(req.body.email));
-  // console.log("in sendLogin res: ", res);
+exports.debugauth = async (req, res) => {
+  console.log("---in controller debugauth---");
+  // console.log("in sendauth req: ", req.body.email, typeof(req.body.email));
+  // console.log("in sendauth res: ", res);
 
   let result = UNKNOWN_ERROR;
 
@@ -94,7 +94,7 @@ exports.debugLogin = async (req, res) => {
   const userHash = req.body.password;
 
   try {
-    const debugData = await loginModel.fetchDebugByEmailFromDb(userEmail);
+    const debugData = await authModel.fetchDebugByEmailFromDb(userEmail);
     result = {
       message: "Success",
       errorCode: 0,
@@ -113,7 +113,7 @@ exports.debugLogin = async (req, res) => {
           "user has been successfully authentificated! you are welcome!"
         );
         // create and insert a token in the user.token table
-        const debugToken = await loginModel.insertTokenIntoUserTable(userEmail);
+        const debugToken = await authModel.insertTokenIntoUserTable(userEmail);
 
         // console.log(debugToken.token)
         user = {

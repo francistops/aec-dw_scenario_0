@@ -1,13 +1,13 @@
 const pool = require("../db/pool");
 
-exports.fetchLogin = async () => {
+exports.fetchauth = async () => {
   const selectSql = `SELECT * FROM "users"`;
   const queryResult = await pool.query(selectSql);
   console.log("queryResult: ", queryResult.rows);
   return queryResult.rows;
 };
 
-exports.fetchLoginByEmailFromDb = async (userSentEmail) => {
+exports.fetchauthByEmailFromDb = async (userSentEmail) => {
   const selectSql = `SELECT * FROM "users" WHERE email=$1`;
   const parameters = [userSentEmail];
   const queryResult = await pool.query(selectSql, parameters);
@@ -15,7 +15,7 @@ exports.fetchLoginByEmailFromDb = async (userSentEmail) => {
   return queryResult.rows;
 };
 
-exports.fetchLoginByEmailForPassword = async (userSentEmail) => {
+exports.fetchauthByEmailForPassword = async (userSentEmail) => {
   const selectSql = `SELECT * FROM "users" WHERE email=$1`;
   const parameters = [userSentEmail];
   const queryResult = await pool.query(selectSql, parameters);

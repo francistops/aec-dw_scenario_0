@@ -8,6 +8,14 @@ CREATE DATABASE andre;
 -- USE andre;
 \c andre;
 
+-- TODO: join with user table 
+CREATE TABLE "tokens" (
+    "id" uuid DEFAULT gen_random_uuid(),
+    "expires" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    "token" uuid DEFAULT gen_random_uuid(),
+    PRIMARY KEY ("id")
+);
+
 CREATE TABLE "users" (
     "userUuid" uuid DEFAULT gen_random_uuid(),
     "email" VARCHAR(255) NOT NULL,
