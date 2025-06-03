@@ -25,8 +25,8 @@ app.use('/posts', postRoute);
 const userRoute = require('./routers/userRoutes');
 app.use('/users', userRoute);
 
-const loginRoute = require('./routers/loginRoutes')
-app.use('/login', loginRoute);
+const loginRoute = require('./routers/loginRoutes');
+app.use('/', loginRoute);
 
 /**
  * Serveur HTTP

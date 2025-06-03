@@ -27,6 +27,6 @@ exports.fetchLoginByEmailForPassword = async(userSentEmail) => {
 exports.fetchDebug = async() => {
   const selectSql = `SELECT * FROM "users"`;
   const queryResult = await pool.query(selectSql);
-  console.log('queryResult: ', queryResult.rows);
+  // console.log('queryResult: ', queryResult.rows);
   return queryResult.rows;
 };
