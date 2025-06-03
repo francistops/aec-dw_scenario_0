@@ -33,11 +33,22 @@ exports.fetchDebug = async() => {
 
 exports.fetchDebugByEmailFromDb = async(userEmail) => {
   console.log('in fetchDebugByEmailFromDb userEmail', userEmail)
-  const selectSql = `SELECT "email", "passHash"
+  const selectSql = `SELECT "email", "passHash", "token"
                       FROM "users"
                       WHERE "email"=$1;`;
   const parameters = [userEmail]; 
   const queryResult = await pool.query(selectSql, parameters);
   console.log('in fetchDebugByEmailFromDb queryResult: ', queryResult.rows);
   return queryResult.rows;
-}
+};
+
+exports.insertTokenIntoUserTable = async(userEmail) => {
+   const updateSql = `UPDATE "users" 
+                            SET token = gen_random_uuid() 
+                            WHERE "email" = $1 
+                            RETURNING *;`;
+    const parameters = [userEmail];
+    const queryResult = await pool.query(updateSql, parameters);
+  // console.log('in insertTokenIntoUserTable queryResult: ', queryResult.rows)
+    return queryResult.rows[0];
+};

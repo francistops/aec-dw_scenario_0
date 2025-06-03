@@ -41,7 +41,9 @@ exports.sendLogin = async (req, res) => {
 
   try {
     const dbSentEmail = await loginModel.fetchLoginByEmailFromDb(userSentEmail);
-    const dbSentPassHash = await loginModel.fetchLoginByEmailForPassword(userSentEmail);
+    const dbSentPassHash = await loginModel.fetchLoginByEmailForPassword(
+      userSentEmail
+    );
 
     // if (!userSentEmail || !dbSentEmail) {
     //   return res
@@ -64,10 +66,10 @@ exports.sendLogin = async (req, res) => {
       errorCode: 0,
       debug: {
         req: req,
-        res: res
+        res: res,
       },
       user: {
-        email: userSentEmail
+        email: userSentEmail,
       },
     });
   } catch (error) {
@@ -100,19 +102,21 @@ exports.debugLogin = async (req, res) => {
     };
     // console.log('db email: ', debugData[3].email, typeof(req.body.email))
 
-    // narrow the return db data 
+    // narrow the return db data
     const dbEmail = debugData[0].email;
     const dbHash = debugData[0].passHash;
 
-    if (isUserValid(userEmail, dbEmail, res)){
-     if (isPasswordValid(userHash, dbHash, res)){
-      console.log('user has been successfully authentificated! you are welcome!')
-      // create and insert a token in the user.token table
-     }
+    console.log(debugData[0].token)
+    if (isUserValid(userEmail, dbEmail, res)) {
+      if (isPasswordValid(userHash, dbHash, res)) {
+        console.log(
+          "user has been successfully authentificated! you are welcome!"
+        );
+        // create and insert a token in the user.token table
+        const debugToken = await loginModel.insertTokenIntoUserTable(userEmail);
+        console.log(debugToken.token)
+      }
     }
-
-    
-
   } catch (error) {
     console.error("DB error", error);
     result.message = `Database error ${error}`;
@@ -126,18 +130,18 @@ exports.debugLogin = async (req, res) => {
 
 function isPasswordValid(passHash, passHash2, res) {
   if (passHash != passHash2) {
-      return res
-        .status(403)
-        .json({ message: "password non valide", errorCode: 1001 });
+    return res
+      .status(403)
+      .json({ message: "password non valide", errorCode: 1001 });
   }
   return true;
-};
+}
 
 function isUserValid(userEmail, dbEmail, res) {
   if (userEmail != dbEmail) {
-      return res
-        .status(401)
-        .json({ message: "Utilisateur non trouvé", errorCode: 1001 });
+    return res
+      .status(401)
+      .json({ message: "Utilisateur non trouvé", errorCode: 1001 });
   }
   return true;
-};
+}
