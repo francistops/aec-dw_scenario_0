@@ -11,19 +11,31 @@ app.use(cors({
 }));
 
 app.use(express.json());
+// video andre diff
+// app.use(json());
+
 
 const negotiate = require('./middlewares/negotiate');
 app.use(negotiate);
+
+const validateToken = require('./middlewares/authGard.js');
+app.use(validateToken);
+
+// video andre diff
+// import negociate from './middlewares/negotiate';
+// app.use(negociate);
+//
+// import { validateToken } from './middlewares/authGard.js';
 
 /**
  * Routers
  * Ces 2 lignes pour chaque table qu'on ajoute
  */
 const postRoute = require('./routers/postRoutes');
-app.use('/posts', postRoute);
+app.use('/posts', validateToken, postRoute);
 
 const userRoute = require('./routers/userRoutes');
-app.use('/users', userRoute);
+app.use('/users', validateToken, userRoute);
 
 const loginRoute = require('./routers/loginRoutes');
 app.use('/', loginRoute);
