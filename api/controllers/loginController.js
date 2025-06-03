@@ -82,8 +82,9 @@ exports.sendLogin = async (req, res) => {
 // simple too help me understand
 exports.debugLogin = async (req, res) => {
   console.log("---in controller debugLogin---");
-  // console.log("in sendLogin req: ", req.body.email);
+  console.log("in sendLogin req: ", req.body.email, typeof(req.body.email));
   // console.log("in sendLogin res: ", res);
+  const userEmail = req.body.email;
   const userHash = req.body.password;
 
   let result = UNKNOWN_ERROR;
@@ -94,12 +95,13 @@ exports.debugLogin = async (req, res) => {
       errorCode: 0,
       debugData: debugData,
     };
-    // console.log(debugData)
-    const dbHash = debugData.passHash;
+    console.log('db email: ', debugData[3].email, typeof(req.body.email))
+    const dbEmail = debugData[3].email;
+    const dbHash = debugData[3].passHash;
 
-    if (isUserValid(userHash, dbHash, res)){
+    if (isUserValid(userEmail, dbEmail, res)){
      if (isPasswordValid(userHash, dbHash, res)){
-      console.log('user is been successfully authentificated! you are welcome!')
+      console.log('user has been successfully authentificated! you are welcome!')
      }
     }
     
