@@ -28,6 +28,9 @@ app.use('/users', userRoute);
 const loginRoute = require('./routers/loginRoutes');
 app.use('/', loginRoute);
 
+const subscribeRoute = require('./routers/userRoutes')
+app.use('/subscribe', subscribeRoute)
+
 /**
  * Serveur HTTP
  */
