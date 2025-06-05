@@ -1,72 +1,117 @@
-const userModel = require('../models/userModel');
+const userModel = require("../models/userModel");
+const tokenModel = require("../models/tokenModel");
+
+const crypto = require("crypto");
+// la on le hash mais est le bonne endroit?
+// const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+// const userPassHash = crypto.createHash("sha256").update(userSentPassword).digest("hex");
 
 const UNKNOWN_ERROR = {
-        message: "Unknown error",
-        errorCode: 9999
+  message: "Unknown error",
+  errorCode: 9999,
 };
 
 exports.getAllUsers = async (req, res) => {
-    let result = UNKNOWN_ERROR;
-
-        try {
-            const users = await userModel.fetchAllUsers();
-            result = {
-                message: 'Success',
-                errorCode: 0,
-                users: users
-            };
-        } catch (error) {
-            console.error('DB error', error);
-            result.message = `Database error ${error}`;
-            result.errorCode = 1001;
-            res.status(500);
-        }
-            res.formatView(result);
-    }
-
-exports.getUserById = async (req, res) => {
-    let result = UNKNOWN_ERROR;
-    const { id } = req.params;
-
-    try {
-        const user = await userModel.fetchById(id);
-
-        result = {
-            message: 'Success',
-            errorCode: 0,
-            post: post
-        }
-    } catch (error) {
-        console.error('Error fetching user by ID:', error);
-        res.status(500);
-        result.message = `Error retrieving user with id ${id}`;
-        result.errorCode = 1002;
-    }
-
-    res.formatView(result);
+  let result = UNKNOWN_ERROR;
+  try {
+    const users = await userModel.fetchAllUsers();
+      result = {
+        message: "Success",
+        errorCode: 0,
+        users: users,
+      };
+  } catch (error) {
+      console.error("DB error", error);
+      result.message = `Database error ${error}`;
+      result.errorCode = 1001;
+      res.status(500);
+  }
+  res.formatView(result);
 };
 
-exports.createUser = async (req, res) => {
-    let result = UNKNOWN_ERROR;
-    const user = req.body;
-    console.log(user);
+exports.getUserById = async (req, res) => {
+  let result = UNKNOWN_ERROR;
+  const { id } = req.params;
 
+  try {
+    const user = await userModel.fetchById(id);
 
-    try {
-        const createdUser = await userModel.insert(user);
-        console.log(createdUser);
+    result = {
+      message: "Success",
+      errorCode: 0,
+      post: post,
+    };
+  } catch (error) {
+    console.error("Error fetching user by ID:", error);
+    res.status(500);
+    result.message = `Error retrieving user with id ${id}`;
+    result.errorCode = 1002;
+  }
+
+  res.formatView(result);
+};
+
+exports.subscribe = async (req, res) => {
+  console.log("---in userController subscribe---");
+
+  let result = UNKNOWN_ERROR;
+  const newUser = req.body;
+  console.log(newUser);
+
+  try {
+    const createdUser = await userModel.createUser(newUser);
+    console.log(createdUser);
+    result = {
+      message: "Success",
+      errorCode: 0,
+      user: createdUser,
+    };
+  } catch (error) {
+    console.error("Error inserting user:", error);
+
+    res.status(500);
+    result.message = `Error inserting user`;
+    result.errorCode = 1002;
+  }
+
+  res.formatView(result);
+};
+
+exports.login = async (req, res) => {
+  console.log("---in userController login---");
+  // console.log("in login req: ", req.body.email);
+  // console.log("in sendLogin res: ", res);
+
+  let result = UNKNOWN_ERROR;
+
+  // const { userObj } = req.body.email, req.body.passHash;
+  // console.log(userObj)
+  const U_email = req.body.email;
+  const U_passHash = req.body.password;
+
+  try {
+    const checkUser = await userModel.isUserValid(U_email)
+    if (checkUser == 0) {
+      const checkedPassHash = await userModel.isPasswordValid(U_passHash)
+      if (checkedPassHash == 0) {
+        // console.log('logged in successfully!!!')
+        const loggedUser = await userModel.fetchDetailsByEmail(U_email)
+        const userToken = await tokenModel.assignToken(loggedUser.email)
         result = {
-            message: 'Success',
-            errorCode: 0,
-            post: createdUser
-        }
-    } catch (error) {
-        console.error('Error inserting user:', error);
-
-        res.status(500);
-        result.message = `Error inserting user`;
-        result.errorCode = 1002;
+          message: "Successfull login",
+          errorCode: 0,
+          user: loggedUser.email,
+          token: userToken.token
+        };
+      }
     }
+  } catch (error) {
+    console.error("DB error", error);
+    result.message = `Database error ${error}`;
+    result.errorCode = 1001;
+    res.status(500);
+  }
 
-    res.formatView(result);
+  console.log("result: ", result);
+  res.formatView(result);
 };
