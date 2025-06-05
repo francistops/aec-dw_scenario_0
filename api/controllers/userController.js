@@ -71,3 +71,7 @@ exports.createUser = async (req, res) => {
 
     res.formatView(result);
 };
+
+exports.subscribe = async(req, res) => {
+    console.log('in subscribe');
+};

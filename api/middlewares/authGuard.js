@@ -1,6 +1,6 @@
-import { isTokenValid } from '../models/tokenModel.js';
+const tokenModel = require('../models/tokenModel');
 
-export async function validateToken(req, res, next) {
+exports.validateToken = async(req, res, next) => {
   const header = req.headers.authorization || '';
 
   const [scheme, token] = header.split(' ');
@@ -11,7 +11,7 @@ export async function validateToken(req, res, next) {
   }
 
   try {
-    const tokenRow = await isTokenValid(token);
+    const tokenRow = await tokenModel.isTokenValid(token);
     if (!tokenRow) {
       return res
         .status(401)
