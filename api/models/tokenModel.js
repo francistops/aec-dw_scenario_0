@@ -3,6 +3,8 @@ const pool = require('../db/pool');
 
 exports.isTokenValid = async(token) => {
     console.log('in isTokenValid ', token)
+    return token
+
 };
 
 exports.assignToken = async(email) => {
