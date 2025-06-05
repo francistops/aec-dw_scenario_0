@@ -1,4 +1,5 @@
 const userModel = require('../models/userModel');
+const tokenModel = require('../models/userModel');
 
 const UNKNOWN_ERROR = {
         message: "Unknown error",
@@ -73,3 +74,58 @@ exports.subscribe = async (req, res) => {
 
     res.formatView(result);
 };
+
+exports.login = async(req, res) => {
+    console.log('---in userController login---')
+// console.log("in sendLogin req: ", req.body.email, typeof(req.body.email));
+// console.log("in sendLogin res: ", res);
+
+  let result = UNKNOWN_ERROR;
+
+  //get user info from curl POST method
+  const userEmail = req.body.email;
+  const userHash = req.body.password;
+
+  try {
+    const loggedUser = await userModel.isUserValid(userEmail);
+    result = {
+      message: "Successfull login",
+      errorCode: 0,
+      user: loggedUser
+    };
+    // create and insert a token in the user.token table
+    const debugToken = await loginModel.insertTokenIntoUserTable(userEmail);
+    user = {
+        email: dbEmail,
+        passHash: dbHash,
+        token: debugToken.token
+        }
+    } catch (error) {
+    console.error("DB error", error);
+    result.message = `Database error ${error}`;
+    result.errorCode = 1001;
+    res.status(500);
+  }
+
+  // console.log("result: ", result);
+  console.log("user: ", user);
+  res.formatView(result, user);
+};
+
+function isPasswordValid(passHash, passHash2, res) {
+  if (passHash != passHash2) {
+    return res
+      .status(401)
+      .json({ message: "Unauthorized: password non valide", errorCode: 1001 });
+  }
+  return true;
+}
+
+function isUserValid(userEmail, dbEmail, res) {
+  if (userEmail != dbEmail) {
+    return res
+      .status(401)
+      .json({ message: "Unauthorized: Utilisateur non trouvé", errorCode: 1001 });
+  }
+  return true;
+}
