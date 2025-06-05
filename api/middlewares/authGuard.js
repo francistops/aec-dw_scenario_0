@@ -1,3 +1,4 @@
+
 const tokenModel = require('../models/tokenModel');
 
 exports.validateToken = async(req, res, next) => {

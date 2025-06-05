@@ -21,6 +21,15 @@ CREATE TABLE "users" (
     PRIMARY KEY ("userUuid")
 );
 
+/* Créer une table token */
+
+CREATE TABLE "tokens" (
+    "tokenUuid" uuid DEFAULT gen_random_uuid(),
+    "userId" uuid NOT NULL REFERENCES "users"("userUuid"),
+    "expires" TIMESTAMP DEFAULT (Now() + INTERVAL '24 hours'),
+    PRIMARY KEY ("tokenUuid")
+);
+
 CREATE UNIQUE INDEX uidx_users_email ON "users"("email");
 
 -- Créer une table "posts"
