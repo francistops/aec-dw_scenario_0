@@ -46,10 +46,47 @@ exports.createUser = async(user) => {
     const queryResult = await pool.query(insertSql, parameters);
     
     hasAffectedOne(null, "inserted", queryResult);
-    console.log(queryResult.rows[0]);
+    // console.log(queryResult.rows[0]);
     return queryResult.rows[0];
 };
 
 exports.isUserValid = async(email) => {
-    console.log('---in isUserValid---')
+    // console.log('---in isUserValid--- ', email)
+    const sql = `select "email" from "users" where "email"=$1;`;
+    const param = [email];
+    const queryResult = await pool.query(sql, param);
+    if (queryResult.rowCount == 1) {
+        return 0
+    }
+    console.log('error user dont exist')
+    return 404
 }
+
+// need improvement 
+exports.isPasswordValid = async(passHash) => {
+    // console.log('---in isPasswordValid--- ', passHash)
+    const sql = `select "passHash" from "users" where "passHash"=$1;`;
+    const param = [passHash.passHash];
+    try {
+        await pool.query(sql, param);
+    } catch (error) {
+        console.log('error password not valid', error)
+        return 404
+    }
+
+    return 0
+}
+
+exports.fetchDetailsByEmail = async(email) => {
+    const selectSql = `SELECT * 
+                        FROM "users"
+                        WHERE email = $1`;
+    const parameters = [email];
+    const queryResult = await pool.query(selectSql, parameters);
+    
+    if (queryResult.rowCount > 1) {
+        throw new Error(`Too many users retrieve for id ${id}.`);
+    }
+
+    return queryResult.rows[0];
+};

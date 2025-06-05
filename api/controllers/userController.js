@@ -74,7 +74,7 @@ exports.subscribe = async (req, res) => {
 
 exports.login = async (req, res) => {
   console.log("---in userController login---");
-  console.log("in login req: ", req.body.email);
+  // console.log("in login req: ", req.body.email);
   // console.log("in sendLogin res: ", res);
 
   let result = UNKNOWN_ERROR;
@@ -86,17 +86,17 @@ exports.login = async (req, res) => {
 
   try {
     const checkUser = await userModel.isUserValid(U_email)
-    if (checkUser) {
+    if (checkUser == 0) {
       const checkedPassHash = await userModel.isPasswordValid(U_passHash)
-      if (checkedPassHash) {
-        console.log('logged in successfully!!!')
-        const loggedUser = await userModel.getUserDetailsByEmail(U_email)
-        const userToken = await tokenModel.assignToken()
+      if (checkedPassHash == 0) {
+        // console.log('logged in successfully!!!')
+        const loggedUser = await userModel.fetchDetailsByEmail(U_email)
+        const userToken = await tokenModel.assignToken(loggedUser.email)
         result = {
           message: "Successfull login",
           errorCode: 0,
-          user: loggedUser,
-          token: userToken
+          user: loggedUser.email,
+          token: userToken.token
         };
       }
     }
@@ -107,6 +107,6 @@ exports.login = async (req, res) => {
     res.status(500);
   }
 
-  // console.log("result: ", result);
+  console.log("result: ", result);
   res.formatView(result);
 };

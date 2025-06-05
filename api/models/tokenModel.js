@@ -1,12 +1,14 @@
-const authGuard = require('../middlewares/authGuard');
-
-exports.createUser = async(userObj) => {
-    console.log(user);
-    const sql = `INSERT INTO "users" ("email", "passHash", "firstName", "lastName) VALUE
-                    ($1, $2, $3, $4);`
-    const param = [user.email]
-};
+const pool = require('../db/pool');
+//const authGuard = require('../middlewares/authGuard');
 
 exports.isTokenValid = async(token) => {
-    console.log(token)
-}
+    console.log('in isTokenValid ', token)
+};
+
+exports.assignToken = async(email) => {
+    // console.log('in assignToken')
+    const sql = `update users set token = gen_random_uuid() where email=$1 returning *;`;
+    const param = [email]
+    const queryResult = await pool.query(sql, param)
+    return queryResult.rows[0]
+};
