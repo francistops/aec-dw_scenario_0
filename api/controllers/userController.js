@@ -1,106 +1,106 @@
-const userModel = require('../models/userModel');
-const tokenModel = require('../models/userModel');
+const userModel = require("../models/userModel");
+const tokenModel = require("../models/tokenModel");
 
 const UNKNOWN_ERROR = {
-        message: "Unknown error",
-        errorCode: 9999
+  message: "Unknown error",
+  errorCode: 9999,
 };
 
 exports.getAllUsers = async (req, res) => {
-    let result = UNKNOWN_ERROR;
-    if (Object.keys(req.query).length === 0) {
-        try {
-            const users = await userModel.fetchAllUsers();
-            result = {
-                message: 'Success',
-                errorCode: 0,
-                users: users
-            };
-        } catch (error) {
-            console.error('DB error', error);
-            result.message = `Database error ${error}`;
-            result.errorCode = 1001;
-            res.status(500);
-        }
-    }
-    res.formatView(result);
+  let result = UNKNOWN_ERROR;
+  try {
+    const users = await userModel.fetchAllUsers();
+      result = {
+        message: "Success",
+        errorCode: 0,
+        users: users,
+      };
+  } catch (error) {
+      console.error("DB error", error);
+      result.message = `Database error ${error}`;
+      result.errorCode = 1001;
+      res.status(500);
+  }
+  res.formatView(result);
 };
 
 exports.getUserById = async (req, res) => {
-    let result = UNKNOWN_ERROR;
-    const { id } = req.params;
+  let result = UNKNOWN_ERROR;
+  const { id } = req.params;
 
-    try {
-        const user = await userModel.fetchById(id);
+  try {
+    const user = await userModel.fetchById(id);
 
-        result = {
-            message: 'Success',
-            errorCode: 0,
-            post: post
-        }
-    } catch (error) {
-        console.error('Error fetching user by ID:', error);
-        res.status(500);
-        result.message = `Error retrieving user with id ${id}`;
-        result.errorCode = 1002;
-    }
+    result = {
+      message: "Success",
+      errorCode: 0,
+      post: post,
+    };
+  } catch (error) {
+    console.error("Error fetching user by ID:", error);
+    res.status(500);
+    result.message = `Error retrieving user with id ${id}`;
+    result.errorCode = 1002;
+  }
 
-    res.formatView(result);
+  res.formatView(result);
 };
 
 exports.subscribe = async (req, res) => {
-    console.log('---in userController subscribe---');
+  console.log("---in userController subscribe---");
 
-    let result = UNKNOWN_ERROR;
-    const newUser = req.body;
-    console.log(newUser);
+  let result = UNKNOWN_ERROR;
+  const newUser = req.body;
+  console.log(newUser);
 
+  try {
+    const createdUser = await userModel.createUser(newUser);
+    console.log(createdUser);
+    result = {
+      message: "Success",
+      errorCode: 0,
+      user: createdUser,
+    };
+  } catch (error) {
+    console.error("Error inserting user:", error);
 
-    try {
-        const createdUser = await userModel.createUser(newUser);
-        console.log(createdUser);
-        result = {
-            message: 'Success',
-            errorCode: 0,
-            user: createdUser
-        }
-    } catch (error) {
-        console.error('Error inserting user:', error);
+    res.status(500);
+    result.message = `Error inserting user`;
+    result.errorCode = 1002;
+  }
 
-        res.status(500);
-        result.message = `Error inserting user`;
-        result.errorCode = 1002;
-    }
-
-    res.formatView(result);
+  res.formatView(result);
 };
 
-exports.login = async(req, res) => {
-    console.log('---in userController login---')
-// console.log("in sendLogin req: ", req.body.email, typeof(req.body.email));
-// console.log("in sendLogin res: ", res);
+exports.login = async (req, res) => {
+  console.log("---in userController login---");
+  console.log("in login req: ", req.body.email);
+  // console.log("in sendLogin res: ", res);
 
   let result = UNKNOWN_ERROR;
 
-  //get user info from curl POST method
-  const userEmail = req.body.email;
-  const userHash = req.body.password;
+  // const { userObj } = req.body.email, req.body.passHash;
+  // console.log(userObj)
+  const U_email = req.body.email;
+  const U_passHash = req.body.password;
 
   try {
-    const loggedUser = await userModel.isUserValid(userEmail);
-    result = {
-      message: "Successfull login",
-      errorCode: 0,
-      user: loggedUser
-    };
-    // create and insert a token in the user.token table
-    const debugToken = await loginModel.insertTokenIntoUserTable(userEmail);
-    user = {
-        email: dbEmail,
-        passHash: dbHash,
-        token: debugToken.token
-        }
-    } catch (error) {
+    const checkUser = await userModel.isUserValid(U_email)
+    if (checkUser) {
+      const checkedPassHash = await userModel.isPasswordValid(U_passHash)
+      if (checkedPassHash) {
+        console.log('logged in successfully!!!')
+        const loggedUser = await userModel.getUserDetailsByEmail(U_email)
+        const userToken = await tokenModel.assignToken()
+        result = {
+          message: "Successfull login",
+          errorCode: 0,
+          user: loggedUser,
+          token: userToken
+        };
+      }
+    }
+  } catch (error) {
     console.error("DB error", error);
     result.message = `Database error ${error}`;
     result.errorCode = 1001;
@@ -108,24 +108,5 @@ exports.login = async(req, res) => {
   }
 
   // console.log("result: ", result);
-  console.log("user: ", user);
   res.formatView(result, user);
 };
-
-function isPasswordValid(passHash, passHash2, res) {
-  if (passHash != passHash2) {
-    return res
-      .status(401)
-      .json({ message: "Unauthorized: password non valide", errorCode: 1001 });
-  }
-  return true;
-}
-
-function isUserValid(userEmail, dbEmail, res) {
-  if (userEmail != dbEmail) {
-    return res
-      .status(401)
-      .json({ message: "Unauthorized: Utilisateur non trouvé", errorCode: 1001 });
-  }
-  return true;
-}
