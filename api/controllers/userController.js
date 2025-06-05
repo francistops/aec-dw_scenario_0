@@ -7,7 +7,7 @@ const UNKNOWN_ERROR = {
 
 exports.getAllUsers = async (req, res) => {
     let result = UNKNOWN_ERROR;
-    if (Object.keys(req.query).length === 0) {
+
         try {
             const users = await userModel.fetchAllUsers();
             result = {
@@ -21,9 +21,8 @@ exports.getAllUsers = async (req, res) => {
             result.errorCode = 1001;
             res.status(500);
         }
+            res.formatView(result);
     }
-    res.formatView(result);
-};
 
 exports.getUserById = async (req, res) => {
     let result = UNKNOWN_ERROR;

@@ -1,4 +1,4 @@
-import { isTokenValid } from '../models/tokenModel.js';
+import { isTokenValid } from '../models/tokenModel.js';  // supprimer loginModel 
 
 export async function validateToken(req, res, next) {
   const header = req.headers.authorization || '';
