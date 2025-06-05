@@ -5,26 +5,23 @@ const UNKNOWN_ERROR = {
 };
 const crypto = require("crypto");
 
-exports.getLogin = async (req, res) => {
-  console.log("---in controller getLogin---");
-  let result = UNKNOWN_ERROR;
-  try {
-    const login = await loginModel.fetchLogin();
-    result = {
-      message: "Success",
-      errorCode: 0,
-      login: login,
-    };
-  } catch (error) {
-    console.error("DB error", error);
-    result.message = `Database error ${error}`;
-    result.errorCode = 1001;
-    res.status(500);
-  }
+// exports.getLogin = async (req, res) => {
+//   console.log("---in controller getLogin---");
+//   let result = UNKNOWN_ERROR;
+//   try {
+//     const login = await loginModel.fetchLogin();
+//     result = {
+//       message: "Success",
+//       errorCode: 0,
+//       login: login,
+//     };
+//   } catch (error) {
+//     console.error("DB error", error);
+//     result.message = `Database error ${error}`;
+//     result.errorCode = 1001;
+//     res.status(500);
+//   }
 
-  console.log("result: ", result);
-  res.formatView(result);
-};
 
 exports.sendLogin = async (req, res) => {
   console.log("---in controller getLogin---");

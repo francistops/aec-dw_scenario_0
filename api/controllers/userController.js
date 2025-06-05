@@ -47,19 +47,21 @@ exports.getUserById = async (req, res) => {
     res.formatView(result);
 };
 
-exports.createUser = async (req, res) => {
+exports.subscribe = async (req, res) => {
+    console.log('---in userController subscribe---');
+
     let result = UNKNOWN_ERROR;
-    const user = req.body;
-    console.log(user);
+    const newUser = req.body;
+    console.log(newUser);
 
 
     try {
-        const createdUser = await userModel.insert(user);
+        const createdUser = await userModel.createUser(newUser);
         console.log(createdUser);
         result = {
             message: 'Success',
             errorCode: 0,
-            post: createdUser
+            user: createdUser
         }
     } catch (error) {
         console.error('Error inserting user:', error);
@@ -70,8 +72,4 @@ exports.createUser = async (req, res) => {
     }
 
     res.formatView(result);
-};
-
-exports.subscribe = async(req, res) => {
-    console.log('in subscribe');
 };

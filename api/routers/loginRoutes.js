@@ -8,5 +8,8 @@ router.post('/subscribe', userController.subscribe)
 router.post('/', loginController.sendLogin);
 router.post('/debug', loginController.debugLogin);
 // router.post('/debug/:id', loginController.debugDataLogin);
+router.post('/subscribe', userController.subscribe);
+
+router.post('/login', userController.login)
 
 module.exports = router;

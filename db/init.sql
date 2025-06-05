@@ -8,6 +8,8 @@ CREATE DATABASE andre;
 -- USE andre;
 \c andre;
 
+
+
 CREATE TABLE "users" (
     "userUuid" uuid DEFAULT gen_random_uuid(),
     "email" VARCHAR(255) NOT NULL,

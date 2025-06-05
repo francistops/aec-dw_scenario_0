@@ -4,6 +4,6 @@ const userController = require('../controllers/userController');
 
 router.get('/', userController.getAllUsers);
 router.get('/:id', userController.getUserById);
-router.post('/subscribe', userController.subscribe);
+
 
 module.exports = router;
