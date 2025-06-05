@@ -1,5 +1,4 @@
 const postModel = require('../models/postModel');
-
 const UNKNOWN_ERROR = {
         message: "Unknown error",
         errorCode: 9999

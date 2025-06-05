@@ -27,7 +27,6 @@ exports.getLogin = async (req, res) => {
 };
 
 exports.sendLogin = async (req, res) => {
-  //
   console.log("---in controller getLogin---");
   console.log("in sendLogin req: ", req);
   console.log("in sendLogin res: ", res);
@@ -35,9 +34,6 @@ exports.sendLogin = async (req, res) => {
   let result = UNKNOWN_ERROR;
 
   const { userSentEmail, userSentPassword } = req.body;
-  //const { userSentEmail } = req.body;
-  console.log("in sendLogin req.body: ", userSentEmail, userSentPassword);
-  //console.log("in sendLogin req.body: ", email);
 
   try {
     const dbSentEmail = await loginModel.fetchLoginByEmailFromDb(userSentEmail);
@@ -45,21 +41,10 @@ exports.sendLogin = async (req, res) => {
       userSentEmail
     );
 
-    // if (!userSentEmail || !dbSentEmail) {
-    //   return res
-    //     .status(401)
-    //     .json({ message: "Utilisateur non trouvé", errorCode: 1001 });
-    // }
+
     // la on le hash mais est le bonne endroit?
     // const hashBuffer = await crypto.subtle.digest('SHA-256', data);
     // const userPassHash = crypto.createHash("sha256").update(userSentPassword).digest("hex");
-
-    // console.log(passHash);
-    // if (passHash !== dbSentPassHash) {
-    //   return res
-    //     .status(403)
-    //     .json({ message: "Mot de passe invalide", errorCode: 1002 });
-    // }
 
     return res.formatView({
       message: "Connexion réussie",
