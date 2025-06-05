@@ -108,5 +108,5 @@ exports.login = async (req, res) => {
   }
 
   // console.log("result: ", result);
-  res.formatView(result, user);
+  res.formatView(result);
 };

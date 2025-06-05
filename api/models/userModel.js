@@ -49,3 +49,7 @@ exports.createUser = async(user) => {
     console.log(queryResult.rows[0]);
     return queryResult.rows[0];
 };
+
+exports.isUserValid = async(email) => {
+    console.log('---in isUserValid---')
+}
