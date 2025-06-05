@@ -1,3 +1,17 @@
+# todo:
+- clean up des fonctions et fichier qu' on utilise pas
+- create tokens table
+  - expire + 24h
+- rajouter les error comme dans le diagram
+- l'encryption et la decryption du passhash de la deb
+- rehasher le passhash du user avec le sel
+  - revoir si le ispasswordValid fonction
+- ajouter la route logout 
+- ajouter la route deleteAccount
+- *optionel: commencer le frontend apres avoir fini*
+- *optionel: implementer des role eg: admin,author...etc*
+
+
 # aec-dw_scenario_0
 aec dw Scénario 0  Identification et authorisation
 
