@@ -1,20 +1,32 @@
-const pool = require('../db/pool');
+const pool = require("../db/pool");
 //const authGuard = require('../middlewares/authGuard');
 
-exports.isTokenValid = async(token) => {
-    const validToken = `SELECT "created", "expires"
-                            FROM "token"
-                            WHERE "tokenId" = $1 AND "expires" > NOW();
-                            `
-    console.log('in isTokenValid ', token);
-    return token
+exports.isTokenValid = async (token) => {
+  console.log("in isTokenValid ", token);
+  const sql = `SELECT "expires", "tokenUuid"
+                FROM "tokens"
+                WHERE "tokenUuid" = $1
+                AND "expires" >= NOW();`;
+  const param = [token];
+  const queryResult = await pool.query(sql, param);
+  console.log(queryResult);
+  if (queryResult.rowCount != 1) {
+    throw new Error("error 401: not a valid token");
+  }
 
+  return true;
 };
 
-exports.assignToken = async(email) => {
-    // console.log('in assignToken')
-    const sql = `update users set token = gen_random_uuid() where email=$1 returning *;`;
-    const param = [email];
-    const queryResult = await pool.query(sql, param);
-    return queryResult.rows[0]
+exports.assignToken = async (userId) => {
+  // TODO change update for insert
+    const sql = `insert into "tokens" ("userId") 
+                    values ($1)
+                    returning *;`;
+  const param = [userId];
+  const queryResult = await pool.query(sql, param);
+  return queryResult.rows[0];
 };
+//   const sql = `SELECT "expires", "tokenUuid"
+//                 FROM "tokens"
+//                 WHERE "tokenUuid" = $1 
+//                     AND "expires" >= NOW() = 0;
