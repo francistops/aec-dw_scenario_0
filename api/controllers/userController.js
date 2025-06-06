@@ -15,16 +15,16 @@ exports.getAllUsers = async (req, res) => {
   let result = UNKNOWN_ERROR;
   try {
     const users = await userModel.fetchAllUsers();
-      result = {
-        message: "Success",
-        errorCode: 0,
-        users: users,
-      };
+    result = {
+      message: "Success",
+      errorCode: 0,
+      users: users,
+    };
   } catch (error) {
-      console.error("DB error", error);
-      result.message = `Database error ${error}`;
-      result.errorCode = 1001;
-      res.status(500);
+    console.error("DB error", error);
+    result.message = `Database error ${error}`;
+    result.errorCode = 1001;
+    res.status(500);
   }
   res.formatView(result);
 };
@@ -78,32 +78,36 @@ exports.subscribe = async (req, res) => {
 };
 
 exports.login = async (req, res) => {
-  console.log("---in userController login---");
-  // console.log("in login req: ", req.body.email);
-  // console.log("in sendLogin res: ", res);
+  // console.log("---in userController login---");
 
   let result = UNKNOWN_ERROR;
 
-  // const { userObj } = req.body.email, req.body.passHash;
-  // console.log(userObj)
+  // TODO find a way to combine
   const U_email = req.body.email;
   const U_passHash = req.body.password;
 
+  // !!! error too verbose for prod
   try {
-    const checkUser = await userModel.isUserValid(U_email)
+    const checkUser = await userModel.isUserValid(U_email);
     if (checkUser == 0) {
-      const checkedPassHash = await userModel.isPasswordValid(U_passHash)
+      const checkedPassHash = await userModel.isPasswordValid(U_passHash);
+
       if (checkedPassHash == 0) {
-        // console.log('logged in successfully!!!')
-        const loggedUser = await userModel.fetchDetailsByEmail(U_email)
-        const userToken = await tokenModel.assignToken(loggedUser.email)
+        const loggedUser = await userModel.fetchDetailsByEmail(U_email);
+        const userToken = await tokenModel.assignToken(loggedUser.email);
+
+        // TODO check if return is not too verbose
         result = {
           message: "Successfull login",
           errorCode: 0,
           user: loggedUser.email,
-          token: userToken.token
+          token: userToken.token,
         };
+      } else {
+        throw new Error(`401 invalid password: ${error}`);
       }
+    } else {
+      throw new Error(`401 invalid email: ${error}`);
     }
   } catch (error) {
     console.error("DB error", error);
@@ -112,6 +116,6 @@ exports.login = async (req, res) => {
     res.status(500);
   }
 
-  console.log("result: ", result);
+  //console.log("result: ", result);
   res.formatView(result);
 };
