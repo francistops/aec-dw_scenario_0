@@ -1,10 +1,7 @@
 const userModel = require("../models/userModel");
 const tokenModel = require("../models/tokenModel");
 
-const crypto = require("crypto");
-// la on le hash mais est le bonne endroit?
-// const hashBuffer = await crypto.subtle.digest('SHA-256', data);
-// const userPassHash = crypto.createHash("sha256").update(userSentPassword).digest("hex");
+
 
 const UNKNOWN_ERROR = {
   message: "Unknown error",
@@ -52,15 +49,15 @@ exports.getUserById = async (req, res) => {
 };
 
 exports.subscribe = async (req, res) => {
-  console.log("---in userController subscribe---");
+  //console.log("---in userController subscribe---");
 
   let result = UNKNOWN_ERROR;
   const newUser = req.body;
-  console.log(newUser);
+  //console.log(newUser);
 
   try {
     const createdUser = await userModel.createUser(newUser);
-    console.log(createdUser);
+    console.log('after model', createdUser);
     result = {
       message: "Success",
       errorCode: 0,
@@ -84,31 +81,26 @@ exports.login = async (req, res) => {
 
   // TODO find a way to combine
   const U_email = req.body.email;
-  const U_passHash = req.body.password;
+  const U_passHash = req.body.passHash;
 
-  // ! error too verbose for prod
   try {
     // TODO re-salt the password on both the api and the DB
 
-    const checkUser = await userModel.isUserValid(U_email);
+    const checkUser = await userModel.isUserValid(U_email, U_passHash);
     if (checkUser) {
-      const checkedPassHash = await userModel.isPasswordValid(U_passHash);
-
-      if (checkedPassHash) {
         const loggedUser = await userModel.fetchDetailsByEmail(U_email);
-        cons
         const userToken = await tokenModel.assignToken(loggedUser.userUuid);
 
-        // TODO check if return is not too verbose
+        // TODO return is too verbose
         result = {
           message: "Successfull login",
           errorCode: 0,
-          // user: loggedUser.email,
-          //token: userToken.token,
+          user: loggedUser,
+          token: userToken
         };
-      } else {
-        throw new Error(`Error 401: invalid password ${error}`);
-      }
+      // } else {
+      //   throw new Error(`Error 401: invalid password ${error}`);
+      // }
     } else {
       throw new Error(`401 invalid email`);
     }

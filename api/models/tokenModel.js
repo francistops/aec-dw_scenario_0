@@ -1,13 +1,12 @@
 const pool = require("../db/pool");
 //const authGuard = require('../middlewares/authGuard');
 
-exports.isTokenValid = async (userId) => {
-  console.log("in isTokenValid ", userId);
-  const sql = `SELECT "expires", "userId"
-                            FROM "tokens"
-                            WHERE "userId"="$1" AND "expires" > NOW();
-                        `;
-  const param = [userId];
+exports.isTokenValid = async (token) => {
+  console.log("in isTokenValid ", token);
+  const sql = `SELECT "expires", "tokenUuid"
+                FROM "tokens"
+                WHERE "tokenUuid" = $1;`;
+  const param = [token];
   const queryResult = await pool.query(sql, param);
   console.log(queryResult);
   if (queryResult.rowCount != 1) {
@@ -18,11 +17,15 @@ exports.isTokenValid = async (userId) => {
 };
 
 exports.assignToken = async (userId) => {
-  const sql = `update tokens 
-                set token = gen_random_uuid() 
-                where email=$1 returning *;
-                `;
+  // TODO change update for insert
+    const sql = `insert into "tokens" ("userId") 
+                    values ($1)
+                    returning *;`;
   const param = [userId];
   const queryResult = await pool.query(sql, param);
   return queryResult.rows[0];
 };
+//   const sql = `SELECT "expires", "tokenUuid"
+//                 FROM "tokens"
+//                 WHERE "tokenUuid" = $1 
+//                     AND "expires" >= NOW() = 0;

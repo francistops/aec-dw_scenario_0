@@ -8,7 +8,7 @@ CREATE DATABASE andre;
 -- USE andre;
 \c andre;
 
-
+DECLARE "SALT" CONSTANT CHAR NOT NULL DEFAULT 'monGrainDeCummin';
 
 CREATE TABLE "users" (
     "userUuid" uuid DEFAULT gen_random_uuid(),
@@ -26,7 +26,7 @@ CREATE TABLE "users" (
 CREATE TABLE "tokens" (
     "tokenUuid" uuid DEFAULT gen_random_uuid(),
     "userId" uuid NOT NULL REFERENCES "users"("userUuid"),
-    "expires" TIMESTAMP DEFAULT (Now() + INTERVAL '24 hours'),
+    "expires" TIMESTAMP DEFAULT (Now() + INTERVAL '8 hours'),
     PRIMARY KEY ("tokenUuid")
 );
 

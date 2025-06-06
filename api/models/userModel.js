@@ -2,6 +2,8 @@ const pool = require("../db/pool");
 
 const { createHash } = require("crypto");
 
+// const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+// const userPassHash = crypto.createHash("sha256").update(userSentPassword).digest("hex");
 const SALT = "monGrainDeCummin";
 
 function hash(passHash) {
@@ -29,7 +31,7 @@ exports.fetchAllUsers = async () => {
 exports.fetchById = async (id) => {
   const selectSql = `SELECT * 
                         FROM "users"
-                        WHERE id = $1`;
+                        WHERE "userUuid" = $1`;
   const parameters = [id];
   const queryResult = await pool.query(selectSql, parameters);
 
@@ -41,38 +43,41 @@ exports.fetchById = async (id) => {
 };
 
 exports.createUser = async (user) => {
+    console.log('user: ',user)
   const insertSql = `INSERT INTO users ("email", "passHash", "firstName", "lastName") 
                             VALUES ($1, $2, $3, $4)
                             returning *;`;
   const parameters = [
     user.email,
-    hash(user.password),
+    hash(user.passHash),
     user.firstName,
     user.lastName,
   ];
   const queryResult = await pool.query(insertSql, parameters);
-
-  hasAffectedOne(null, "inserted", queryResult);
-  // console.log(queryResult.rows[0]);
+  // todo if you want
+//   hasAffectedOne(null, "inserted", queryResult);
+  console.log('query: ', queryResult.rows[0]);
   return queryResult.rows[0];
 };
 
-exports.isUserValid = async (email) => {
-  // console.log('---in isUserValid--- ', email)
-  const sql = `select "email" from "users" where "email"=$1;`;
-  const param = [email];
+exports.isUserValid = async (email, passHash) => {
+  console.log('---in isUserValid--- ', email, passHash)
+  const sql = `select "email" "passHash" from "users" where "email"=$1 AND "passHash"=$2;`;
+  const param = [email, passHash];
   const queryResult = await pool.query(sql, param);
   if (queryResult.rowCount != 1) {
-    throw new Error(`Error 500: Too many users retrieve for email: ${email}`);
+    throw new Error(`Error 401: failed to authorize: ${email} ${passHash}`);
   }
   return true;
 };
 
 // need improvement
-exports.isPasswordValid = async (passHash) => {
-  const sql = `select "passHash" from "users" where "passHash"=$1;`;
-  const param = [passHash];
+exports.isPasswordValid = async (passHash, email) => {
+    console.log('in isPasswordValid ', passHash)
+  const sql = `select "passHash" from "users" where "email"=$1;`;
+  const param = [email];
   const queryResult = await pool.query(sql, param);
+  console.log(queryResult)
   if (queryResult.rowCount != 1) {
     throw new Error(`error 401: password invalid`);
   }

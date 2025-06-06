@@ -2,7 +2,6 @@
 const tokenModel = require('../models/tokenModel');
 
 exports.validateToken = async(req, res, next) => {
-  console.log('in validateToken', req.headers.authorization)
   const header = req.headers.authorization || '';
 
   const [scheme, token] = header.split(' ');
@@ -14,7 +13,7 @@ exports.validateToken = async(req, res, next) => {
 
   try {
     const tokenRow = await tokenModel.isTokenValid(token);
-    console.log(tokenRow)
+    console.log('try validate', tokenRow)
     if (!tokenRow) {
       return res
         .status(401)
