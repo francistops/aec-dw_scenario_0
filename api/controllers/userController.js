@@ -86,33 +86,36 @@ exports.login = async (req, res) => {
   const U_email = req.body.email;
   const U_passHash = req.body.password;
 
-  // !!! error too verbose for prod
+  // ! error too verbose for prod
   try {
+    // TODO re-salt the password on both the api and the DB
+
     const checkUser = await userModel.isUserValid(U_email);
-    if (checkUser == 0) {
+    if (checkUser) {
       const checkedPassHash = await userModel.isPasswordValid(U_passHash);
 
-      if (checkedPassHash == 0) {
+      if (checkedPassHash) {
         const loggedUser = await userModel.fetchDetailsByEmail(U_email);
-        const userToken = await tokenModel.assignToken(loggedUser.email);
+        cons
+        const userToken = await tokenModel.assignToken(loggedUser.userUuid);
 
         // TODO check if return is not too verbose
         result = {
           message: "Successfull login",
           errorCode: 0,
-          user: loggedUser.email,
-          token: userToken.token,
+          // user: loggedUser.email,
+          //token: userToken.token,
         };
       } else {
-        throw new Error(`401 invalid password: ${error}`);
+        throw new Error(`Error 401: invalid password ${error}`);
       }
     } else {
-      throw new Error(`401 invalid email: ${error}`);
+      throw new Error(`401 invalid email`);
     }
   } catch (error) {
-    console.error("DB error", error);
-    result.message = `Database error ${error}`;
-    result.errorCode = 1001;
+    console.error("Authorization Denied", error);
+    result.message = `${error}`;
+    result.errorCode = 420;
     res.status(500);
   }
 

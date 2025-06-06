@@ -13,7 +13,6 @@ exports.validateToken = async(req, res, next) => {
   }
 
   try {
-    console.log('in authGuard try')
     const tokenRow = await tokenModel.isTokenValid(token);
     console.log(tokenRow)
     if (!tokenRow) {

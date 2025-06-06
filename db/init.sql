@@ -16,8 +16,8 @@ CREATE TABLE "users" (
     "passHash" CHAR(64) NOT NULL,
     "firstName" VARCHAR(255) NULL,
     "lastName" VARCHAR(255) NULL,
-    "loginStamp" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    "token" uuid DEFAULT NULL,
+    -- TODO remove now manage by the token table
+    --"token" uuid DEFAULT NULL,
     PRIMARY KEY ("userUuid")
 );
 
