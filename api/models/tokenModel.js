@@ -12,7 +12,7 @@ exports.isTokenValid = async(token) => {
 };
 
 exports.assignToken = async(email) => {
-    // console.log('in assignToken')
+    console.log('in assignToken')
     const sql = `update users set token = gen_random_uuid() where email=$1 returning *;`;
     const param = [email];
     const queryResult = await pool.query(sql, param);
