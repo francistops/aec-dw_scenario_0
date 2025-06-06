@@ -10,6 +10,9 @@
 - ajouter la route deleteAccount
 - *optionel: commencer le frontend apres avoir fini*
 - *optionel: implementer des role eg: admin,author...etc*
+- Réduire return users à true ou false
+- embriquer lesobjets json pour lisibilité
+- 
 
 
 # aec-dw_scenario_0
@@ -43,6 +46,11 @@ git config --global --add --bool push.autoSetupRemote true
 - Et tu recommences le cycle :  
   créer une branche → coder → commit → push → PR → sync → pull → recommencer (et passer GO, récolter 200 $ 💰).
   
+git checkout : Changer de branches ( checkout + nom de la branche)
+git add . : stager mes changements, mettre mes changements dans la prochaine sauvegarde
+git commit -m "message" : crée la sauvegarde dans les fichiers qui sont stage depuis le git add
+git pull : pour avoir les changements du remote
+git push : pour envoyer mes changements au remote
   
 
 *apprendre git en jouant*
