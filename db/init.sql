@@ -17,7 +17,7 @@ CREATE TABLE "users" (
     "firstName" VARCHAR(255) NULL,
     "lastName" VARCHAR(255) NULL,
     "loginStamp" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    "token" uuid DEFAULT gen_random_uuid(),
+    "token" uuid DEFAULT NULL,
     PRIMARY KEY ("userUuid")
 );
 
