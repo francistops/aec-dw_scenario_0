@@ -80,15 +80,15 @@ exports.login = async (req, res) => {
   let result = UNKNOWN_ERROR;
 
   // TODO find a way to combine
-  const U_email = req.body.email;
-  const U_passHash = req.body.passHash;
+  const userEmail = req.body.email;
+  const userPassHash = req.body.passHash;
 
   try {
     // TODO re-salt the password on both the api and the DB
 
-    const checkUser = await userModel.isUserValid(U_email, U_passHash);
+    const checkUser = await userModel.isUserValid(userEmail, userPassHash);
     if (checkUser) {
-        const loggedUser = await userModel.fetchDetailsByEmail(U_email);
+        const loggedUser = await userModel.fetchDetailsByEmail(userEmail);
         const userToken = await tokenModel.assignToken(loggedUser.userUuid);
 
         // TODO return is too verbose

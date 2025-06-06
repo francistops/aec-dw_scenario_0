@@ -5,7 +5,8 @@ exports.isTokenValid = async (token) => {
   console.log("in isTokenValid ", token);
   const sql = `SELECT "expires", "tokenUuid"
                 FROM "tokens"
-                WHERE "tokenUuid" = $1;`;
+                WHERE "tokenUuid" = $1
+                AND "expires" >= NOW();`;
   const param = [token];
   const queryResult = await pool.query(sql, param);
   console.log(queryResult);
