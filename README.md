@@ -46,6 +46,10 @@ git config --global --add --bool push.autoSetupRemote true
 - Et tu recommences le cycle :  
   créer une branche → coder → commit → push → PR → sync → pull → recommencer (et passer GO, récolter 200 $ 💰).
   
+git checkout : Changer de branches ( checkout + nom de la branche)
+git add . : stager mes changements, mettre mes changements dans la prochaine sauvegarde
+git commit -m "message" : crée la sauvegarde dans les fichiers qui sont stage depuis le git add
+
   
 
 *apprendre git en jouant*
