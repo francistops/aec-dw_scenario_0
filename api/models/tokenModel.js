@@ -28,4 +28,13 @@ exports.assignToken = async (userId) => {
 
 exports.fetchByToken = async (token) => {
   // fetcher son token
+  const sql = `SELECT * 
+                FROM "tokens"
+                WHERE "tokenUuid" = $1;`;
+  const param = [token];
+  const queryResult = await pool.query(sql, param);
+  if (queryResult.rowCount != 1) {
+    throw new Error(`Error 500: Too many tokens retrieve for token ${token}.`);
+  }
+  return queryResult.rows[0];
 }

@@ -2,8 +2,6 @@ const userModel = require("../models/userModel");
 const tokenModel = require("../models/tokenModel");
 // const loginRouter  = require("../routers/loginRoutes");
 
-
-
 const UNKNOWN_ERROR = {
   message: "Unknown error",
   errorCode: 9999,
@@ -76,13 +74,9 @@ exports.subscribe = async (req, res) => {
 };
 
 exports.login = async (req, res) => {
-  // console.log("---in userController login---");
-
+  console.log("---in userController login---");
   let result = UNKNOWN_ERROR;
-
-  // TODO find a way to combine
-  const userEmail = req.body.email;
-  const userPassHash = req.body.passHash;
+  const { email: userEmail, passHash: userPassHash } = req.body;
 
   try {
 
