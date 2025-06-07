@@ -87,12 +87,15 @@ exports.fetchDetailsByEmail = async (email) => {
 
 // quand on logout on set expires à now
 exports.logoutByToken = async(token) => {
-  const userUuid = `UPDATE "tokens" 
-                      SET expires = NOW() 
-                      WHERE id = $1 
-                      RETURNING *;`
-  const userToken = 
-  console.log('--- in logout model ---')
+  console.log('--- in logout model ---');
+   const updatedToken = `UPDATE "tokens" 
+                        SET "expires" = NOW() 
+                        WHERE "tokenUuid" = $1
+                        RETURNING *;`;
+
+  const updateResult = await pool.query(updatedToken, [token]);
+
+  return updateResult.rows[0];
 }
 
 exports.deleteAccountByToken = async(tokenUuid) => {
@@ -119,7 +122,6 @@ exports.deleteAccountByToken = async(tokenUuid) => {
                         WHERE "userUuid" = $1;`
 
   await pool.query(deletedUser, [userUuid]);
-
 
   const updatedToken = `UPDATE "tokens" 
                         SET "expires" = NOW() 

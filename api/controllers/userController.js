@@ -121,12 +121,15 @@ exports.login = async (req, res) => {
 exports.logout = async (req, res) => {
   console.log('--- in logout ctrl---')
   let result = UNKNOWN_ERROR;
+
   try {
-    const logoutConfirmation = await userModel.logoutByToken(token);
+    const tokenUuid = req.selectedToken.tokenUuid;
+    const logoutConfirmation = await userModel.logoutByToken(tokenUuid);
     console.log(logoutConfirmation);
     result = {
       message: "Success",
       errorCode: 0,
+      "expiredToken": tokenUuid
     };
   } catch (error) {
     console.error("DB error", error);
