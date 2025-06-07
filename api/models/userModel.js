@@ -110,22 +110,22 @@ exports.deleteAccountByToken = async(tokenUuid) => {
 
   const userUuid = queryResult.rows[0].userId;
 
-  const updatedPosts = `UPDATE "posts"
-                        SET "authorId" = NULL
-                        WHERE "authorId" = $1`;
-
-  await pool.query(updatedPosts, [userUuid]);
-
-  const deletedUser = `DELETE FROM "users"
-                        WHERE "userUuid" = $1`;
+  const deletedUser = `UPDATE "users"
+                        SET 
+                          "firstName" = NULL,
+                          "lastName" = NULL,
+                          "email" = CONCAT('anonyme-', "userUuid"),
+                          "passHash" = REPEAT(' ', 64)
+                        WHERE "userUuid" = $1;`
 
   await pool.query(deletedUser, [userUuid]);
 
-  const updatedToken = `UPDATE "tokens" 
-                          SET expires = NOW() 
-                          WHERE tokenUuid = $1 
-                          RETURNING *;`;
 
-  const updateResult = await pool.query(updatedToken, [tokenUuid]);
+  const updatedToken = `UPDATE "tokens" 
+                        SET "expires" = NOW() 
+                        WHERE "userId" = $1`;
+
+  const updateResult = await pool.query(updatedToken, [userUuid]);
+
   return updateResult.rows[0];
 }
