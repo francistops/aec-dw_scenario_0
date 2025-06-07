@@ -1,5 +1,6 @@
 const userModel = require("../models/userModel");
 const tokenModel = require("../models/tokenModel");
+// const loginRouter  = require("../routers/loginRoutes");
 
 
 
@@ -84,6 +85,8 @@ exports.login = async (req, res) => {
   const userPassHash = req.body.passHash;
 
   try {
+
+    // ! verify with teacher
     // TODO re-salt the password on both the api and the DB
 
     const checkUser = await userModel.isUserValid(userEmail, userPassHash);
@@ -112,5 +115,45 @@ exports.login = async (req, res) => {
   }
 
   //console.log("result: ", result);
+  res.formatView(result);
+};
+
+exports.logout = async (req, res) => {
+  console.log('--- in logout ctrl---')
+  let result = UNKNOWN_ERROR;
+  try {
+    const token = await tokenModel.fetchByToken()
+    const logoutComfirmation = await userModel.logoutByToken(token);
+    console.log(logoutComfirmation)
+    result = {
+      message: "Success",
+      errorCode: 0,
+    };
+  } catch (error) {
+    console.error("DB error", error);
+    result.message = `Database error ${error}`;
+    result.errorCode = 1001;
+    res.status(500);
+  }
+  res.formatView(result);
+};
+
+exports.deleteAccount = async (req, res) => {
+  console.log('--- in deleteAccount ---')
+  let result = UNKNOWN_ERROR;
+  try {
+    const token = await tokenModel.fetchByToken()
+    const deleteComfirmation = await userModel.deleteAccountByToken(token);
+    console.log(deleteComfirmation)
+    result = {
+      message: "Success",
+      errorCode: 0,
+    };
+  } catch (error) {
+    console.error("DB error", error);
+    result.message = `Database error ${error}`;
+    result.errorCode = 1001;
+    res.status(500);
+  }
   res.formatView(result);
 };
