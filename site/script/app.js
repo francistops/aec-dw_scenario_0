@@ -1,4 +1,4 @@
-const BASE_API = 'https://api.amelieroussin.ca';
+// const BASE_API = 'https://api.amelieroussin.ca';
 // const listPostTag = document.querySelector('list-posts');
 
 // listPostTag.addEventListener('ready-delete', async (e) => {

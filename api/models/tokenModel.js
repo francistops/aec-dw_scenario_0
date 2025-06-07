@@ -17,7 +17,6 @@ exports.isTokenValid = async (token) => {
   return true;
 };
 
-=======
 exports.assignToken = async (userId) => {
   // TODO change update for insert
     const sql = `insert into "tokens" ("userId") 
@@ -27,7 +26,3 @@ exports.assignToken = async (userId) => {
   const queryResult = await pool.query(sql, param);
   return queryResult.rows[0];
 };
-//   const sql = `SELECT "expires", "tokenUuid"
-//                 FROM "tokens"
-//                 WHERE "tokenUuid" = $1 
-//                     AND "expires" >= NOW() = 0;
