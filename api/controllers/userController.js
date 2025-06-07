@@ -37,7 +37,7 @@ exports.getUserById = async (req, res) => {
     result = {
       message: "Success",
       errorCode: 0,
-      post: post,
+      user: user,
     };
   } catch (error) {
     console.error("Error fetching user by ID:", error);
@@ -123,8 +123,8 @@ exports.logout = async (req, res) => {
   let result = UNKNOWN_ERROR;
   try {
     const token = await tokenModel.fetchByToken()
-    const logoutComfirmation = await userModel.logoutByToken(token);
-    console.log(logoutComfirmation)
+    const logoutConfirmation = await userModel.logoutByToken(token);
+    console.log(logoutConfirmation)
     result = {
       message: "Success",
       errorCode: 0,

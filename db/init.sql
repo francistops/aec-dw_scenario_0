@@ -28,7 +28,15 @@ CREATE TABLE "users" (
 CREATE TABLE "tokens" (
     "tokenUuid" uuid DEFAULT gen_random_uuid(),
     "userId" uuid NOT NULL REFERENCES "users"("userUuid"),
-    "expires" TIMESTAMP DEFAULT (Now() + INTERVAL '1 minute'),
+    "expires" TIMESTAMP DEFAULT (Now() + INTERVAL '24 hours'),
+    PRIMARY KEY ("tokenUuid")
+);
+
+CREATE TABLE "expiredTokens" (
+    "tokenUuid" uuid NOT NULL REFERENCES "tokens"("tokenUuid"),
+    "userId" uuid NOT NULL REFERENCES "users"("userUuid"),
+    "revokedAt" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    "originalExpires" TIMESTAMP NOT NULL,
     PRIMARY KEY ("tokenUuid")
 );
 

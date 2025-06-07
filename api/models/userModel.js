@@ -99,7 +99,9 @@ exports.fetchDetailsByEmail = async (email) => {
 };
 
 exports.logoutByToken = async(token) => {
-    console.log('--- in logout model ---')
+  const userUuid = `DELETE FROM "tokens" WHERE ""`
+  const userToken = 
+  console.log('--- in logout model ---')
 }
 
 exports.deleteAccountByToken = async(token) => {
