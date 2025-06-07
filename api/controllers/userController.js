@@ -1,5 +1,6 @@
 const userModel = require("../models/userModel");
 const tokenModel = require("../models/tokenModel");
+const { router } = require("../routers/loginRoutes");
 
 
 
@@ -114,5 +115,43 @@ exports.login = async (req, res) => {
   }
 
   //console.log("result: ", result);
+  res.formatView(result);
+};
+
+exports.logout = async (req, res) => {
+  console.log('--- in logout ---')
+  let result = UNKNOWN_ERROR;
+  try {
+    const user = await userModel.fetchById()
+    const deleteComfirmation = await userModel.logout();
+    result = {
+      message: "Success",
+      errorCode: 0,
+    };
+  } catch (error) {
+    console.error("DB error", error);
+    result.message = `Database error ${error}`;
+    result.errorCode = 1001;
+    res.status(500);
+  }
+  res.formatView(result);
+};
+
+exports.deleteAccount = async (req, res) => {
+  console.log('--- in deleteAccount ---')
+  let result = UNKNOWN_ERROR;
+  try {
+    const user = await userModel.fetchById()
+    const deleteComfirmation = await userModel.deleteAccount();
+    result = {
+      message: "Success",
+      errorCode: 0,
+    };
+  } catch (error) {
+    console.error("DB error", error);
+    result.message = `Database error ${error}`;
+    result.errorCode = 1001;
+    res.status(500);
+  }
   res.formatView(result);
 };

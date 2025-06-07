@@ -5,7 +5,7 @@
 - [ ] rajouter les error comme dans le diagram
 - [ ] *optionel: l'encryption et la decryption du passhash de la deb*
 - [ ] rehasher le passhash du user avec le sel
-- [ ] revoir si le ispasswordValid fonction
+- [x] revoir si le ispasswordValid fonction
 - [ ] ajouter la route logout 
 - [ ] ajouter la route deleteAccount
 - [ ] *optionel: commencer le frontend apres avoir fini*
