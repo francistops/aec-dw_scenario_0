@@ -8,6 +8,8 @@ CREATE DATABASE andre;
 -- USE andre;
 \c andre;
 
+
+-- ! find a way to salt with a var
 -- DECLARE "SALT" CONSTANT CHAR NOT NULL DEFAULT 'monGrainDeCummin';
 
 CREATE TABLE "users" (

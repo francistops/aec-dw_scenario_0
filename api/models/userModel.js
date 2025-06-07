@@ -97,3 +97,11 @@ exports.fetchDetailsByEmail = async (email) => {
 
   return queryResult.rows[0];
 };
+
+exports.logoutByToken = async(token) => {
+    console.log('--- in logout model ---')
+}
+
+exports.deleteAccountByToken = async(token) => {
+    console.log('--- in delete account model ---')
+}

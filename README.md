@@ -12,6 +12,7 @@
 - [ ] *optionel: implementer des role eg: admin,author...etc*
 - [ ] Réduire return users à true ou false
 - [ ] embriquer lesobjets json pour lisibilité
+- [ ] le guest peux voir les posts
 
 
 # aec-dw_scenario_0

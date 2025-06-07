@@ -1,6 +1,6 @@
 const userModel = require("../models/userModel");
 const tokenModel = require("../models/tokenModel");
-const { router } = require("../routers/loginRoutes");
+// const loginRouter  = require("../routers/loginRoutes");
 
 
 
@@ -119,11 +119,12 @@ exports.login = async (req, res) => {
 };
 
 exports.logout = async (req, res) => {
-  console.log('--- in logout ---')
+  console.log('--- in logout ctrl---')
   let result = UNKNOWN_ERROR;
   try {
-    const user = await userModel.fetchById()
-    const deleteComfirmation = await userModel.logout();
+    const token = await tokenModel.fetchByToken()
+    const logoutComfirmation = await userModel.logoutByToken(token);
+    console.log(logoutComfirmation)
     result = {
       message: "Success",
       errorCode: 0,
@@ -141,8 +142,9 @@ exports.deleteAccount = async (req, res) => {
   console.log('--- in deleteAccount ---')
   let result = UNKNOWN_ERROR;
   try {
-    const user = await userModel.fetchById()
-    const deleteComfirmation = await userModel.deleteAccount();
+    const token = await tokenModel.fetchByToken()
+    const deleteComfirmation = await userModel.deleteAccountByToken(token);
+    console.log(deleteComfirmation)
     result = {
       message: "Success",
       errorCode: 0,

@@ -1,12 +1,15 @@
 const express = require('express');
 const router = express.Router();
 exports.router = router;
-// const loginController = require('../controllers/loginController');
+
+const authGuard = require('../middlewares/authGuard');
 const userController = require('../controllers/userController');
+
 
 router.post('/subscribe', userController.subscribe)
 router.post('/login', userController.login)
 
-router.delete('/delete-account', userController.deleteAccount)
+router.post('/logout', authGuard.validateToken, userController.logout)
+router.delete('/delete-account', authGuard.validateToken, userController.deleteAccount)
 
 module.exports = router;
