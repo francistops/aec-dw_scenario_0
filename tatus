@@ -1,0 +1,43 @@
+[33mcommit e22443089e2d7af7a1bf4f05d5b90f290ec803c6[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m
+Author: amelieroussin <amelie.roussin@gmail.com>
+Date:   Sat Jun 7 17:06:57 2025 -0400
+
+    change-authGuard.validateToken
+
+[1mdiff --git a/api/routers/postRoutes.js b/api/routers/postRoutes.js[m
+[1mindex f5c19d3..6d5d461 100644[m
+[1m--- a/api/routers/postRoutes.js[m
+[1m+++ b/api/routers/postRoutes.js[m
+[36m@@ -1,12 +1,13 @@[m
+ const express = require('express');[m
+ const router = express.Router();[m
+[32m+[m[32mconst authGuard = require('../middlewares/authGuard');[m
+ const postController = require('../controllers/postController');[m
+ [m
+ router.get('/', postController.getAllPosts);[m
+ router.get('/:id', postController.getPostById);[m
+[31m-router.post('/', postController.createPost);[m
+[31m-router.post('/:id', postController.updatePost);[m
+[31m-router.post('/:id/publish', postController.publishPost);[m
+[31m-router.delete('/:id', postController.deletePost);[m
+[31m-[m
+[32m+[m[32mrouter.post('/', authGuard.validateToken, postController.createPost);[m
+[32m+[m[32mrouter.post('/:id', authGuard.validateToken, postController.updatePost);[m
+[32m+[m[32mrouter.post('/:id/publish', authGuard.validateToken, postController.publishPost);[m
+[32m+[m[32mrouter.delete('/:id', authGuard.validateToken, postController.deletePost);[m
+[32m+[m[32m// J'ai mis le authguard ici pour pouvoir accéder comme guest aux post, il était dans server.js avant. Pour les users c'est correct vu que tu veux absoluement qu'un user soit connecté pour trouver les autres users[m
+ module.exports = router;[m
+\ No newline at end of file[m
+[1mdiff --git a/api/server.js b/api/server.js[m
+[1mindex 7259320..523b3ad 100644[m
+[1m--- a/api/server.js[m
+[1m+++ b/api/server.js[m
+[36m@@ -16,7 +16,7 @@[m [mconst authGuard = require('./middlewares/authGuard');[m
+ [m
+ [m
+ const postRoute = require('./routers/postRoutes');[m
+[31m-app.use('/posts', authGuard.validateToken, postRoute);[m
+[32m+[m[32mapp.use('/posts', postRoute);[m
+ [m
+ const userRoute = require('./routers/userRoutes');[m
+ app.use('/users', authGuard.validateToken, userRoute);[m

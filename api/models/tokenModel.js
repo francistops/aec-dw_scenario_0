@@ -2,7 +2,7 @@ const pool = require("../db/pool");
 //const authGuard = require('../middlewares/authGuard');
 
 exports.isTokenValid = async (token) => {
-  // console.log("in isTokenValid ", token);
+  console.log("in isTokenValid ", token);
   const sql = `SELECT "expires", "tokenUuid"
                 FROM "tokens"
                 WHERE "tokenUuid" = $1

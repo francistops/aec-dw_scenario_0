@@ -6,13 +6,13 @@
 - [ ] *optionel: l'encryption et la decryption du passhash de la deb*
 - [ ] rehasher le passhash du user avec le sel
 - [x] revoir si le ispasswordValid fonction
-- [ ] ajouter la route logout 
-- [ ] ajouter la route deleteAccount
+- [x] ajouter la route logout 
+- [x] ajouter la route deleteAccount
 - [ ] *optionel: commencer le frontend apres avoir fini*
 - [ ] *optionel: implementer des role eg: admin,author...etc*
 - [ ] Réduire return users à true ou false
 - [ ] embriquer lesobjets json pour lisibilité
-- [ ] le guest peux voir les posts
+- [x] le guest peux voir les posts
 
 
 # aec-dw_scenario_0
@@ -46,7 +46,8 @@ git config --global --add --bool push.autoSetupRemote true
 - Et tu recommences le cycle :  
   créer une branche → coder → commit → push → PR → sync → pull → recommencer (et passer GO, récolter 200 $ 💰).
   
-git checkout : Changer de branches ( checkout + nom de la branche)
+git checkout : Créer une nouvelle branches ( checkout + nom de la branche)
+git checkout -b : Changer de branche qui existe déjà
 git add . : stager mes changements, mettre mes changements dans la prochaine sauvegarde
 git commit -m "message" : crée la sauvegarde dans les fichiers qui sont stage depuis le git add
 git pull : pour avoir les changements du remote
@@ -56,3 +57,6 @@ git push : pour envoyer mes changements au remote
 *apprendre git en jouant*
 [ohmygit](https://ohmygit.org/)
 [learngitbranching](https://learngitbranching.js.org/?locale=en_US)
+
+
+Question 

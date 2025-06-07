@@ -142,7 +142,7 @@ exports.deleteAccount = async (req, res) => {
   console.log('--- in deleteAccount ---')
   let result = UNKNOWN_ERROR;
   try {
-    const token = await tokenModel.fetchByToken()
+    const token = await tokenModel.isTokenValid()
     const deleteComfirmation = await userModel.deleteAccountByToken(token);
     console.log(deleteComfirmation)
     result = {
