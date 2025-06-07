@@ -84,6 +84,8 @@ exports.login = async (req, res) => {
   const userPassHash = req.body.passHash;
 
   try {
+
+    // ! verify with teacher
     // TODO re-salt the password on both the api and the DB
 
     const checkUser = await userModel.isUserValid(userEmail, userPassHash);
