@@ -14,14 +14,18 @@ exports.isTokenValid = async (token) => {
     throw new Error("error 401: not a valid token");
   }
 
-  return true;
+  return queryResult.rows[0]; // avant retournait true
 };
 
 exports.assignToken = async (userId) => {
-    const sql = `insert into "tokens" ("userId") 
-                    values ($1)
-                    returning *;`;
+  const sql = `INSERT into "tokens" ("userId") 
+                  values ($1)
+                  returning *;`;
   const param = [userId];
   const queryResult = await pool.query(sql, param);
   return queryResult.rows[0];
 };
+
+exports.fetchByToken = async (token) => {
+  // fetcher son token
+}

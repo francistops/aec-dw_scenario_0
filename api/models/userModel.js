@@ -61,8 +61,8 @@ exports.createUser = async (user) => {
 };
 
 exports.isUserValid = async (email, passHash) => {
-  console.log('---in isUserValid--- ', email, passHash)
-  const sql = `select "email" "passHash" from "users" where "email"=$1 AND "passHash"=$2;`;
+  console.log('---in isUserValid--- ', email, hash(passHash));
+  const sql = `SELECT "email" "passHash" FROM "users" WHERE "email"=$1 AND "passHash"=$2;`;
   const param = [email, passHash];
   const queryResult = await pool.query(sql, param);
   if (queryResult.rowCount != 1) {
@@ -71,23 +71,10 @@ exports.isUserValid = async (email, passHash) => {
   return true;
 };
 
-// need improvement
-exports.isPasswordValid = async (passHash, email) => {
-    console.log('in isPasswordValid ', passHash)
-  const sql = `select "passHash" from "users" where "email"=$1;`;
-  const param = [email];
-  const queryResult = await pool.query(sql, param);
-  console.log(queryResult)
-  if (queryResult.rowCount != 1) {
-    throw new Error(`error 401: password invalid`);
-  }
-  return true;
-};
-
 exports.fetchDetailsByEmail = async (email) => {
   const selectSql = `SELECT * 
-                        FROM "users"
-                        WHERE email = $1`;
+                      FROM "users"
+                      WHERE email = $1`;
   const parameters = [email];
   const queryResult = await pool.query(selectSql, parameters);
 
@@ -98,12 +85,47 @@ exports.fetchDetailsByEmail = async (email) => {
   return queryResult.rows[0];
 };
 
+// quand on logout on set expires à now
 exports.logoutByToken = async(token) => {
-  const userUuid = `DELETE FROM "tokens" WHERE ""`
+  const userUuid = `UPDATE "tokens" 
+                      SET expires = NOW() 
+                      WHERE id = $1 
+                      RETURNING *;`
   const userToken = 
   console.log('--- in logout model ---')
 }
 
-exports.deleteAccountByToken = async(token) => {
-    console.log('--- in delete account model ---')
+exports.deleteAccountByToken = async(tokenUuid) => {
+  console.log('--- in delete account model ---');
+
+  const parameters = ` SELECT "userId" 
+                          FROM "tokens" 
+                          WHERE "tokenUuid" = $1;`;
+  console.log(tokenUuid)
+  const queryResult = await pool.query(parameters, [tokenUuid]);
+
+  if (queryResult.rowCount !== 1) {
+    throw new Error(`Invalid token or user not found`);
+  }
+
+  const userUuid = queryResult.rows[0].userId;
+
+  const updatedPosts = `UPDATE "posts"
+                        SET "authorId" = NULL
+                        WHERE "authorId" = $1`;
+
+  await pool.query(updatedPosts, [userUuid]);
+
+  const deletedUser = `DELETE FROM "users"
+                        WHERE "userUuid" = $1`;
+
+  await pool.query(deletedUser, [userUuid]);
+
+  const updatedToken = `UPDATE "tokens" 
+                          SET expires = NOW() 
+                          WHERE tokenUuid = $1 
+                          RETURNING *;`;
+
+  const updateResult = await pool.query(updatedToken, [tokenUuid]);
+  return updateResult.rows[0];
 }

@@ -117,14 +117,13 @@ exports.login = async (req, res) => {
   //console.log("result: ", result);
   res.formatView(result);
 };
-
+// finir logout
 exports.logout = async (req, res) => {
   console.log('--- in logout ctrl---')
   let result = UNKNOWN_ERROR;
   try {
-    const token = await tokenModel.fetchByToken()
     const logoutConfirmation = await userModel.logoutByToken(token);
-    console.log(logoutConfirmation)
+    console.log(logoutConfirmation);
     result = {
       message: "Success",
       errorCode: 0,
@@ -141,10 +140,13 @@ exports.logout = async (req, res) => {
 exports.deleteAccount = async (req, res) => {
   console.log('--- in deleteAccount ---')
   let result = UNKNOWN_ERROR;
+
   try {
-    const token = await tokenModel.fetchByToken()
-    const deleteComfirmation = await userModel.deleteAccountByToken(token);
-    console.log(deleteComfirmation)
+    const token = req.selectedToken.tokenUuid;
+    const deleteConfirmation = await userModel.deleteAccountByToken(token);
+
+    console.log(deleteConfirmation)
+
     result = {
       message: "Success",
       errorCode: 0,

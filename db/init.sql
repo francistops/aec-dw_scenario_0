@@ -32,14 +32,6 @@ CREATE TABLE "tokens" (
     PRIMARY KEY ("tokenUuid")
 );
 
-CREATE TABLE "expiredTokens" (
-    "tokenUuid" uuid NOT NULL REFERENCES "tokens"("tokenUuid"),
-    "userId" uuid NOT NULL REFERENCES "users"("userUuid"),
-    "revokedAt" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    "originalExpires" TIMESTAMP NOT NULL,
-    PRIMARY KEY ("tokenUuid")
-);
-
 CREATE UNIQUE INDEX uidx_users_email ON "users"("email");
 
 -- Créer une table "posts"
