@@ -8,7 +8,7 @@ CREATE DATABASE andre;
 -- USE andre;
 \c andre;
 
-
+-- DECLARE "SALT" CONSTANT CHAR NOT NULL DEFAULT 'monGrainDeCummin';
 
 CREATE TABLE "users" (
     "userUuid" uuid DEFAULT gen_random_uuid(),
@@ -16,8 +16,8 @@ CREATE TABLE "users" (
     "passHash" CHAR(64) NOT NULL,
     "firstName" VARCHAR(255) NULL,
     "lastName" VARCHAR(255) NULL,
-    "loginStamp" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    "token" uuid DEFAULT NULL,
+    -- TODO remove now manage by the token table
+    --"token" uuid DEFAULT NULL,
     PRIMARY KEY ("userUuid")
 );
 
@@ -26,7 +26,7 @@ CREATE TABLE "users" (
 CREATE TABLE "tokens" (
     "tokenUuid" uuid DEFAULT gen_random_uuid(),
     "userId" uuid NOT NULL REFERENCES "users"("userUuid"),
-    "expires" TIMESTAMP DEFAULT (Now() + INTERVAL '24 hours'),
+    "expires" TIMESTAMP DEFAULT (Now() + INTERVAL '1 minute'),
     PRIMARY KEY ("tokenUuid")
 );
 

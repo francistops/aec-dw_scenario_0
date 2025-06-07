@@ -1,10 +1,7 @@
 const userModel = require("../models/userModel");
 const tokenModel = require("../models/tokenModel");
 
-const crypto = require("crypto");
-// la on le hash mais est le bonne endroit?
-// const hashBuffer = await crypto.subtle.digest('SHA-256', data);
-// const userPassHash = crypto.createHash("sha256").update(userSentPassword).digest("hex");
+
 
 const UNKNOWN_ERROR = {
   message: "Unknown error",
@@ -15,16 +12,16 @@ exports.getAllUsers = async (req, res) => {
   let result = UNKNOWN_ERROR;
   try {
     const users = await userModel.fetchAllUsers();
-      result = {
-        message: "Success",
-        errorCode: 0,
-        users: users,
-      };
+    result = {
+      message: "Success",
+      errorCode: 0,
+      users: users,
+    };
   } catch (error) {
-      console.error("DB error", error);
-      result.message = `Database error ${error}`;
-      result.errorCode = 1001;
-      res.status(500);
+    console.error("DB error", error);
+    result.message = `Database error ${error}`;
+    result.errorCode = 1001;
+    res.status(500);
   }
   res.formatView(result);
 };
@@ -52,15 +49,15 @@ exports.getUserById = async (req, res) => {
 };
 
 exports.subscribe = async (req, res) => {
-  console.log("---in userController subscribe---");
+  //console.log("---in userController subscribe---");
 
   let result = UNKNOWN_ERROR;
   const newUser = req.body;
-  console.log(newUser);
+  //console.log(newUser);
 
   try {
     const createdUser = await userModel.createUser(newUser);
-    console.log(createdUser);
+    console.log('after model', createdUser);
     result = {
       message: "Success",
       errorCode: 0,
@@ -78,40 +75,42 @@ exports.subscribe = async (req, res) => {
 };
 
 exports.login = async (req, res) => {
-  console.log("---in userController login---");
-  // console.log("in login req: ", req.body.email);
-  // console.log("in sendLogin res: ", res);
+  // console.log("---in userController login---");
 
   let result = UNKNOWN_ERROR;
 
-  // const { userObj } = req.body.email, req.body.passHash;
-  // console.log(userObj)
-  const U_email = req.body.email;
-  const U_passHash = req.body.password;
+  // TODO find a way to combine
+  const userEmail = req.body.email;
+  const userPassHash = req.body.passHash;
 
   try {
-    const checkUser = await userModel.isUserValid(U_email)
-    if (checkUser == 0) {
-      const checkedPassHash = await userModel.isPasswordValid(U_passHash)
-      if (checkedPassHash == 0) {
-        // console.log('logged in successfully!!!')
-        const loggedUser = await userModel.fetchDetailsByEmail(U_email)
-        const userToken = await tokenModel.assignToken(loggedUser.email)
+    // TODO re-salt the password on both the api and the DB
+
+    const checkUser = await userModel.isUserValid(userEmail, userPassHash);
+    if (checkUser) {
+        const loggedUser = await userModel.fetchDetailsByEmail(userEmail);
+        const userToken = await tokenModel.assignToken(loggedUser.userUuid);
+
+        // TODO return is too verbose
         result = {
           message: "Successfull login",
           errorCode: 0,
-          user: loggedUser.email,
-          token: userToken.token
+          user: loggedUser,
+          token: userToken
         };
-      }
+      // } else {
+      //   throw new Error(`Error 401: invalid password ${error}`);
+      // }
+    } else {
+      throw new Error(`401 invalid email`);
     }
   } catch (error) {
-    console.error("DB error", error);
-    result.message = `Database error ${error}`;
-    result.errorCode = 1001;
+    console.error("Authorization Denied", error);
+    result.message = `${error}`;
+    result.errorCode = 420;
     res.status(500);
   }
 
-  console.log("result: ", result);
+  //console.log("result: ", result);
   res.formatView(result);
 };
