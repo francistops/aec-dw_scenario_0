@@ -41,8 +41,8 @@ exports.fetchById = async (id) => {
 exports.createUser = async (user) => {
     console.log('user: ',user)
   const insertSql = `INSERT INTO users ("email", "passHash", "firstName", "lastName") 
-                            VALUES ($1, $2, $3, $4)
-                            returning *;`;
+                      VALUES ($1, $2, $3, $4)
+                      returning *;`;
   const parameters = [
     user.email,
     hash(user.passHash),
@@ -51,6 +51,7 @@ exports.createUser = async (user) => {
   ];
   const queryResult = await pool.query(insertSql, parameters);
   hasAffectedOne(null, "inserted", queryResult);
+  
   console.log('query: ', queryResult.rows[0]);
   return queryResult.rows[0];
 };
