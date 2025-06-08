@@ -39,7 +39,7 @@ exports.fetchById = async (id) => {
 };
 
 exports.createUser = async (user) => {
-    console.log('user: ',user)
+  // console.log('user: ',user)
   const insertSql = `INSERT INTO users ("email", "passHash", "firstName", "lastName") 
                       VALUES ($1, $2, $3, $4)
                       returning *;`;
@@ -52,17 +52,17 @@ exports.createUser = async (user) => {
   const queryResult = await pool.query(insertSql, parameters);
   hasAffectedOne(null, "inserted", queryResult);
   
-  console.log('query: ', queryResult.rows[0]);
+  // console.log('query: ', queryResult.rows[0]);
   return queryResult.rows[0];
 };
 
 exports.isUserValid = async (email, passHash) => {
-  console.log('---in isUserValid--- ', email, hash(passHash));
+  // console.log('---in isUserValid--- ', email, hash(passHash));
   const sql = `SELECT "email" "passHash" FROM "users" WHERE "email"=$1 AND "passHash"=$2;`;
   const param = [email, passHash];
   const queryResult = await pool.query(sql, param);
   if (queryResult.rowCount != 1) {
-    throw new Error(`Error 401: failed to authorize: ${email} ${passHash}`);
+    throw new Error(`401: failed to authorize`);
   }
   return true;
 };
@@ -83,7 +83,7 @@ exports.fetchDetailsByEmail = async (email) => {
 
 // quand on logout on set expires à now
 exports.logoutByToken = async(token) => {
-  console.log('--- in logout model ---');
+  // console.log('--- in logout model ---');
    const updatedToken = `UPDATE "tokens" 
                         SET "expires" = NOW() 
                         WHERE "tokenUuid" = $1
@@ -95,12 +95,11 @@ exports.logoutByToken = async(token) => {
 }
 
 exports.deleteAccountByToken = async(tokenUuid) => {
-  console.log('--- in delete account model ---');
-
+  // console.log('--- in delete account model ---');
   const parameters = ` SELECT "userId" 
                           FROM "tokens" 
                           WHERE "tokenUuid" = $1;`;
-  console.log(tokenUuid)
+  // console.log(tokenUuid);
   const queryResult = await pool.query(parameters, [tokenUuid]);
 
   if (queryResult.rowCount !== 1) {
@@ -108,7 +107,8 @@ exports.deleteAccountByToken = async(tokenUuid) => {
   }
 
   const userUuid = queryResult.rows[0].userId;
-
+ 
+  const userData = await exports.fetchById(userUuid);
   const deletedUser = `UPDATE "users"
                         SET 
                           "firstName" = NULL,
@@ -126,5 +126,5 @@ exports.deleteAccountByToken = async(tokenUuid) => {
 
   const updateResult = await pool.query(updatedToken, [userUuid]);
 
-  return updateResult.rows[0];
+  return true;
 }

@@ -4,7 +4,7 @@ const tokenModel = require("../models/tokenModel");
 
 const UNKNOWN_ERROR = {
   message: "Unknown error",
-  errorCode: 9999,
+  errorCode: 9999
 };
 
 exports.getAllUsers = async (req, res) => {
@@ -14,7 +14,7 @@ exports.getAllUsers = async (req, res) => {
     result = {
       message: "Success",
       errorCode: 0,
-      users: users,
+      users: users
     };
   } catch (error) {
     console.error("DB error", error);
@@ -35,7 +35,7 @@ exports.getUserById = async (req, res) => {
     result = {
       message: "Success",
       errorCode: 0,
-      user: user,
+      user: user
     };
   } catch (error) {
     console.error("Error fetching user by ID:", error);
@@ -56,11 +56,11 @@ exports.subscribe = async (req, res) => {
 
   try {
     const createdUser = await userModel.createUser(newUser);
-    console.log('after model', createdUser);
+    // console.log('after model', createdUser);
     result = {
       message: "Success",
       errorCode: 0,
-      user: createdUser,
+      user: createdUser
     };
   } catch (error) {
     console.error("Error inserting user:", error);
@@ -69,12 +69,11 @@ exports.subscribe = async (req, res) => {
     result.message = `Error inserting user`;
     result.errorCode = 1002;
   }
-
   res.formatView(result);
 };
 
 exports.login = async (req, res) => {
-  console.log("---in userController login---");
+  // console.log("---in userController login---");
   let result = UNKNOWN_ERROR;
   const { email: userEmail, passHash: userPassHash } = req.body;
 
@@ -95,38 +94,35 @@ exports.login = async (req, res) => {
           user: loggedUser,
           token: userToken
         };
-      // } else {
-      //   throw new Error(`Error 401: invalid password ${error}`);
-      // }
     } else {
       throw new Error(`401 invalid email`);
     }
   } catch (error) {
     console.error("Authorization Denied", error);
     result.message = `${error}`;
-    result.errorCode = 420;
+    result.errorCode = 409;
     res.status(500);
   }
 
   //console.log("result: ", result);
   res.formatView(result);
 };
-// finir logout
+
 exports.logout = async (req, res) => {
-  console.log('--- in logout ctrl---')
+  // console.log('--- in logout ctrl---');
   let result = UNKNOWN_ERROR;
 
   try {
     const tokenUuid = req.selectedToken.tokenUuid;
     const logoutConfirmation = await userModel.logoutByToken(tokenUuid);
-    console.log(logoutConfirmation);
+    // console.log(logoutConfirmation);
     result = {
       message: "Success",
       errorCode: 0,
       "expiredToken": tokenUuid
     };
   } catch (error) {
-    console.error("DB error", error);
+    // console.error("DB error", error);
     result.message = `Database error ${error}`;
     result.errorCode = 1001;
     res.status(500);
@@ -135,18 +131,18 @@ exports.logout = async (req, res) => {
 };
 
 exports.deleteAccount = async (req, res) => {
-  console.log('--- in deleteAccount ---')
+  // console.log('--- in deleteAccount ---');
   let result = UNKNOWN_ERROR;
 
   try {
     const token = req.selectedToken.tokenUuid;
+    
     const deleteConfirmation = await userModel.deleteAccountByToken(token);
-
-    console.log(deleteConfirmation)
+    // console.log(deleteConfirmation);
 
     result = {
       message: "Success",
-      errorCode: 0,
+      errorCode: 0
     };
   } catch (error) {
     console.error("DB error", error);
