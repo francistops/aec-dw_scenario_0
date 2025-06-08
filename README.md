@@ -1,10 +1,18 @@
+# final checkup
+  - [ ] comment or remove user visible console.log
+  - [ ] provide only the minimum information need for error that the user can see 
+  - [ ] review our objects check if the are nested correctly and providing only the nessecery information
+  - [ ] mimic teacher diagram for errors and features
+  - [ ] review code to make sure the name, structure, and pattern make sense
+
+
 # todo:
 - [x] clean up des fonctions et fichier qu' on utilise pas
 - [x] create tokens table
 - [x] expire + 24h
-- [ ] rajouter les error comme dans le diagram
+- [x] rajouter les error comme dans le diagram
 - [ ] *optionel: l'encryption et la decryption du passhash de la deb*
-- [ ] rehasher le passhash du user avec le sel
+- [x] rehasher le passhash du user avec le sel
 - [x] revoir si le ispasswordValid fonction
 - [x] ajouter la route logout 
 - [x] ajouter la route deleteAccount
