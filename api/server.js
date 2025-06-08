@@ -16,7 +16,7 @@ const authGuard = require('./middlewares/authGuard');
 
 
 const postRoute = require('./routers/postRoutes');
-app.use('/posts', authGuard.validateToken, postRoute);
+app.use('/posts', postRoute);
 
 const userRoute = require('./routers/userRoutes');
 app.use('/users', authGuard.validateToken, userRoute);

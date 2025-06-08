@@ -2,8 +2,6 @@ const userModel = require("../models/userModel");
 const tokenModel = require("../models/tokenModel");
 // const loginRouter  = require("../routers/loginRoutes");
 
-
-
 const UNKNOWN_ERROR = {
   message: "Unknown error",
   errorCode: 9999,
@@ -37,7 +35,7 @@ exports.getUserById = async (req, res) => {
     result = {
       message: "Success",
       errorCode: 0,
-      post: post,
+      user: user,
     };
   } catch (error) {
     console.error("Error fetching user by ID:", error);
@@ -76,13 +74,9 @@ exports.subscribe = async (req, res) => {
 };
 
 exports.login = async (req, res) => {
-  // console.log("---in userController login---");
-
+  console.log("---in userController login---");
   let result = UNKNOWN_ERROR;
-
-  // TODO find a way to combine
-  const userEmail = req.body.email;
-  const userPassHash = req.body.passHash;
+  const { email: userEmail, passHash: userPassHash } = req.body;
 
   try {
 
@@ -117,17 +111,19 @@ exports.login = async (req, res) => {
   //console.log("result: ", result);
   res.formatView(result);
 };
-
+// finir logout
 exports.logout = async (req, res) => {
   console.log('--- in logout ctrl---')
   let result = UNKNOWN_ERROR;
+
   try {
-    const token = await tokenModel.fetchByToken()
-    const logoutComfirmation = await userModel.logoutByToken(token);
-    console.log(logoutComfirmation)
+    const tokenUuid = req.selectedToken.tokenUuid;
+    const logoutConfirmation = await userModel.logoutByToken(tokenUuid);
+    console.log(logoutConfirmation);
     result = {
       message: "Success",
       errorCode: 0,
+      "expiredToken": tokenUuid
     };
   } catch (error) {
     console.error("DB error", error);
@@ -141,10 +137,13 @@ exports.logout = async (req, res) => {
 exports.deleteAccount = async (req, res) => {
   console.log('--- in deleteAccount ---')
   let result = UNKNOWN_ERROR;
+
   try {
-    const token = await tokenModel.fetchByToken()
-    const deleteComfirmation = await userModel.deleteAccountByToken(token);
-    console.log(deleteComfirmation)
+    const token = req.selectedToken.tokenUuid;
+    const deleteConfirmation = await userModel.deleteAccountByToken(token);
+
+    console.log(deleteConfirmation)
+
     result = {
       message: "Success",
       errorCode: 0,
