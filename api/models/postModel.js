@@ -11,7 +11,7 @@ function hasAffectedOne(id, action, queryResult) {
 }
 
 exports.fetchAllPost = async() => {
-    const selectSql = `SELECT * 
+    const selectSql = `SELECT "authorId", "created", "published", "title", "excert"
                             FROM posts 
                             ORDER BY created DESC`;
     const queryResult = await pool.query(selectSql);
@@ -19,7 +19,7 @@ exports.fetchAllPost = async() => {
 };
 
 exports.fetchById = async(id) => {
-    const selectSql = `SELECT * 
+    const selectSql = `SELECT "authorId", "created", "published", "title", "excert", "content"
                             FROM posts 
                             WHERE id = $1`;
     const parameters = [id];

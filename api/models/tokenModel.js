@@ -15,12 +15,24 @@ exports.isTokenValid = async (token) => {
 };
 
 exports.assignToken = async (userId) => {
+  const checkSql = `
+                    SELECT * 
+                      FROM "tokens"
+                      WHERE "userId" = $1
+                        AND ("expires" IS NULL OR "expires" > NOW())
+                      LIMIT 1;`;
+  const checkResult = await pool.query(checkSql, [userId]);
+
+  if (checkResult.rowCount > 0) {
+    throw new Error(`User already logged in`);
+  }
+ 
   const sql = `INSERT into "tokens" ("userId") 
-                  values ($1)
-                  returning *;`;
+                values ($1)
+                returning *;`;
   const param = [userId];
   const queryResult = await pool.query(sql, param);
-  return queryResult.rows[0];
+  return queryResult.rows[0];  
 };
 
 exports.fetchByToken = async (token) => {

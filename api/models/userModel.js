@@ -40,10 +40,10 @@ exports.fetchById = async (id) => {
 };
 
 exports.createUser = async (user) => {
-    console.log('user: ',user)
+  // console.log('user: ',user)
   const insertSql = `INSERT INTO users ("email", "passHash", "firstName", "lastName") 
-                            VALUES ($1, $2, $3, $4)
-                            returning *;`;
+                      VALUES ($1, $2, $3, $4)
+                      returning *;`;
   const parameters = [
     user.email,
     hash(user.passHash),
@@ -52,22 +52,18 @@ exports.createUser = async (user) => {
   ];
   const queryResult = await pool.query(insertSql, parameters);
   hasAffectedOne(null, "inserted", queryResult);
-  console.log('query: ', queryResult.rows[0]);
+  
+  // console.log('query: ', queryResult.rows[0]);
   return queryResult.rows[0];
 };
 
 exports.isUserValid = async (email, passHash) => {
-  console.log('---in isUserValid--- ', email, hash(passHash));
-  const user = `SELECT * FROM users WHERE email = $1;`;
-  const userParam = [email];
-  const userQueryResult = await pool.query(user, userParam);
-  // J'ai changé pour séparer le email et le passHash
-  if (userQueryResult.rowCount != 1) {
-    throw new Error(`Error 401: Email not found`);
-  }
-  const dbPassHash = userQueryResult.rows[0].passHash;
-  if (dbPassHash !== passHash) {
-    throw new Error(`Error 401: Invalid password`);
+  // console.log('---in isUserValid--- ', email, hash(passHash));
+  const sql = `SELECT "email" "passHash" FROM "users" WHERE "email"=$1 AND "passHash"=$2;`;
+  const param = [email, passHash];
+  const queryResult = await pool.query(sql, param);
+  if (queryResult.rowCount != 1) {
+    throw new Error(`401: failed to authorize`);
   }
   return true;
 };
@@ -87,7 +83,7 @@ exports.fetchDetailsByEmail = async (email) => {
 };
 
 exports.logoutByToken = async(token) => {
-  console.log('--- in logout model ---');
+  // console.log('--- in logout model ---');
    const updatedToken = `UPDATE "tokens" 
                         SET "expires" = NOW() 
                         WHERE "tokenUuid" = $1
