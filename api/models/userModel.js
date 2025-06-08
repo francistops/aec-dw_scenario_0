@@ -57,16 +57,11 @@ exports.createUser = async (user) => {
 
 exports.isUserValid = async (email, passHash) => {
   console.log('---in isUserValid--- ', email, hash(passHash));
-  const user = `SELECT * FROM users WHERE email = $1;`;
-  const userParam = [email];
-  const userQueryResult = await pool.query(user, userParam);
-  // J'ai changé pour séparer le email et le passHash
-  if (userQueryResult.rowCount != 1) {
-    throw new Error(`Error 401: Email not found`);
-  }
-  const dbPassHash = userQueryResult.rows[0].passHash;
-  if (dbPassHash !== passHash) {
-    throw new Error(`Error 401: Invalid password`);
+  const sql = `SELECT "email" "passHash" FROM "users" WHERE "email"=$1 AND "passHash"=$2;`;
+  const param = [email, passHash];
+  const queryResult = await pool.query(sql, param);
+  if (queryResult.rowCount != 1) {
+    throw new Error(`Error 401: failed to authorize: ${email} ${passHash}`);
   }
   return true;
 };
