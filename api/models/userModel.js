@@ -1,9 +1,5 @@
 const pool = require("../db/pool");
-
 const { createHash } = require("crypto");
-
-// const hashBuffer = await crypto.subtle.digest('SHA-256', data);
-// const userPassHash = crypto.createHash("sha256").update(userSentPassword).digest("hex");
 const SALT = "monGrainDeCummin";
 
 function hash(passHash) {
@@ -54,8 +50,7 @@ exports.createUser = async (user) => {
     user.lastName,
   ];
   const queryResult = await pool.query(insertSql, parameters);
-  // todo if you want
-//   hasAffectedOne(null, "inserted", queryResult);
+  hasAffectedOne(null, "inserted", queryResult);
   console.log('query: ', queryResult.rows[0]);
   return queryResult.rows[0];
 };
@@ -99,7 +94,7 @@ exports.logoutByToken = async(token) => {
                         RETURNING *;`;
 
   const updateResult = await pool.query(updatedToken, [token]);
-
+  hasAffectedOne(token, "logged out", updateResult);
   return updateResult.rows[0];
 }
 
@@ -126,7 +121,8 @@ exports.deleteAccountByToken = async(tokenUuid) => {
                           "passHash" = REPEAT(' ', 64)
                         WHERE "userUuid" = $1;`
 
-  await pool.query(deletedUser, [userUuid]);
+  const deleteResult = await pool.query(deletedUser, [userUuid]);
+  hasAffectedOne(userUuid, "anonymized", deleteResult);
 
   const updatedToken = `UPDATE "tokens" 
                         SET "expires" = NOW() 

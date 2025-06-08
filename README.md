@@ -6,13 +6,13 @@
 - [ ] *optionel: l'encryption et la decryption du passhash de la deb*
 - [ ] rehasher le passhash du user avec le sel
 - [x] revoir si le ispasswordValid fonction
-- [ ] ajouter la route logout 
-- [ ] ajouter la route deleteAccount
+- [x] ajouter la route logout 
+- [x] ajouter la route deleteAccount
 - [ ] *optionel: commencer le frontend apres avoir fini*
 - [ ] *optionel: implementer des role eg: admin,author...etc*
 - [ ] Réduire return users à true ou false
 - [ ] embriquer lesobjets json pour lisibilité
-- [ ] le guest peux voir les posts
+- [x] le guest peux voir les posts
 
 
 # aec-dw_scenario_0

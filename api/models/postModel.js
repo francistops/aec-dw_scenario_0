@@ -61,9 +61,9 @@ exports.update = async(id, post) => {
 
 exports.publish = async(id) => {
     const updateSql = `UPDATE posts 
-                            SET published = NOW() 
-                            WHERE id = $1 
-                            RETURNING *;`;
+                        SET published = NOW() 
+                        WHERE id = $1 
+                        RETURNING *;`;
     const parameters = [id];
     const queryResult = await pool.query(updateSql, parameters);
 
@@ -74,11 +74,11 @@ exports.publish = async(id) => {
 
 exports.delete = async(id) => {
     const deleteSql = `DELETE 
-                            FROM posts 
-                            WHERE id = $1;`;
+                        FROM posts 
+                        WHERE id = $1;`;
     const parameters = [id];
     const queryResult = await pool.query(deleteSql, parameters);
     
-    hasAffectedOne(null, "deleted", queryResult);
+    hasAffectedOne(id, "deleted", queryResult);
     return queryResult.rowCount;
 };
