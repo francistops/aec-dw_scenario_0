@@ -33,10 +33,10 @@ exports.fetchById = async(id) => {
 };
 
 exports.insert = async(post) => {
-    const insertSql = `INSERT INTO posts (title, excert, content) 
-                            VALUES ($1, $2, $3)
+    const insertSql = `INSERT INTO "posts" ("authorId", "title", "excert", "content") 
+                            VALUES ($1, $2, $3, $4)
                             RETURNING *;`;
-    const parameters = [post.title, post.excert, post.content];
+    const parameters = [post.authorId, post.title, post.excert, post.content];
     const queryResult = await pool.query(insertSql, parameters);
     
     hasAffectedOne(null, "inserted", queryResult);

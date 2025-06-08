@@ -19,10 +19,9 @@ exports.assignToken = async (userId) => {
                     SELECT * 
                       FROM "tokens"
                       WHERE "userId" = $1
-                        AND ("expires" IS NULL OR "expires" > NOW())
-                      LIMIT 1;`;
+                      AND "expires" > NOW()`;
   const checkResult = await pool.query(checkSql, [userId]);
-
+  console.log("in assignToken  ", checkResult)
   if (checkResult.rowCount > 0) {
     throw new Error(`User already logged in`);
   }
