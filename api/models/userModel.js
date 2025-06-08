@@ -1,5 +1,6 @@
 const pool = require("../db/pool");
 const { createHash } = require("crypto");
+const { fetchByToken } = require("./tokenModel");
 const SALT = "monGrainDeCummin";
 
 function hash(passHash) {
@@ -81,7 +82,6 @@ exports.fetchDetailsByEmail = async (email) => {
   return queryResult.rows[0];
 };
 
-// quand on logout on set expires à now
 exports.logoutByToken = async(token) => {
   // console.log('--- in logout model ---');
    const updatedToken = `UPDATE "tokens" 
@@ -92,39 +92,30 @@ exports.logoutByToken = async(token) => {
   const updateResult = await pool.query(updatedToken, [token]);
   hasAffectedOne(token, "logged out", updateResult);
   return updateResult.rows[0];
-}
+};
+
 
 exports.deleteAccountByToken = async(tokenUuid) => {
-  // console.log('--- in delete account model ---');
-  const parameters = ` SELECT "userId" 
-                          FROM "tokens" 
-                          WHERE "tokenUuid" = $1;`;
-  // console.log(tokenUuid);
-  const queryResult = await pool.query(parameters, [tokenUuid]);
-
-  if (queryResult.rowCount !== 1) {
-    throw new Error(`Invalid token or user not found`);
-  }
-
-  const userUuid = queryResult.rows[0].userId;
- 
-  const userData = await exports.fetchById(userUuid);
-  const deletedUser = `UPDATE "users"
+  console.log('--- in delete account model ---');
+  // console.log('tokenUuid', tokenUuid)
+    const sqlDeletedUser = `UPDATE "users"
                         SET 
                           "firstName" = NULL,
                           "lastName" = NULL,
                           "email" = CONCAT('anonyme-', "userUuid"),
                           "passHash" = REPEAT(' ', 64)
-                        WHERE "userUuid" = $1;`
-
-  const deleteResult = await pool.query(deletedUser, [userUuid]);
-  hasAffectedOne(userUuid, "anonymized", deleteResult);
-
-  const updatedToken = `UPDATE "tokens" 
+                        WHERE "userUuid" = $1;`;
+                      
+  const sqlUpdatedToken = `UPDATE "tokens" 
                         SET "expires" = NOW() 
                         WHERE "userId" = $1`;
 
-  const updateResult = await pool.query(updatedToken, [userUuid]);
+  const tokenObj = await fetchByToken(tokenUuid);
 
-  return true;
+  const deleteUserResult = await pool.query(sqlDeletedUser, [tokenObj.userId]);
+  hasAffectedOne(tokenObj.userId, "anonymized", deleteUserResult);
+  const updateResult = await pool.query(sqlUpdatedToken, [tokenObj.userId]);
+
+  // console.log(updateResult)
+  return (updateResult.rowCount == 1) ?  true : false
 }

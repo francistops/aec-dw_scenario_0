@@ -113,7 +113,7 @@ exports.logout = async (req, res) => {
   let result = UNKNOWN_ERROR;
 
   try {
-    const tokenUuid = req.selectedToken.tokenUuid;
+    const tokenUuid = req.selectedToken;
     const logoutConfirmation = await userModel.logoutByToken(tokenUuid);
     // console.log(logoutConfirmation);
     result = {
@@ -135,15 +135,20 @@ exports.deleteAccount = async (req, res) => {
   let result = UNKNOWN_ERROR;
 
   try {
-    const token = req.selectedToken.tokenUuid;
-    
-    const deleteConfirmation = await userModel.deleteAccountByToken(token);
-    // console.log(deleteConfirmation);
 
+    const deleteConfirmation = await userModel.deleteAccountByToken(req.selectedToken);
+    // console.log('deleteBytoken deleteconfirm', deleteConfirmation)
+    if (deleteConfirmation) {
     result = {
       message: "Success",
       errorCode: 0
     };
+    } else {
+      result = {
+        message: "Failed",
+        errorCode: 1,
+      }
+    }
   } catch (error) {
     console.error("DB error", error);
     result.message = `Database error ${error}`;

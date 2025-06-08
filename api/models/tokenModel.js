@@ -1,18 +1,17 @@
 const pool = require("../db/pool");
 
 exports.isTokenValid = async (token) => {
-  console.log("in isTokenValid ", token);
   const sql = `SELECT "expires", "tokenUuid"
                 FROM "tokens"
                 WHERE "tokenUuid" = $1
                 AND "expires" >= NOW();`;
-  const param = [token];
-  const queryResult = await pool.query(sql, param);
+  const queryResult = await pool.query(sql, [token]);
   if (queryResult.rowCount != 1) {
     throw new Error("error 401: not a valid token");
   }
 
-  return true;
+  // console.log('in isTokenValid model', queryResult.rows[0].tokenUuid);
+  return queryResult.rows[0].tokenUuid;
 };
 
 exports.assignToken = async (userId) => {
