@@ -58,9 +58,10 @@ exports.createUser = async (user) => {
 };
 
 exports.isUserValid = async (email, passHash) => {
-  // console.log('---in isUserValid--- ', email, hash(passHash));
+  console.log('---in isUserValid--- ', email, hash(passHash));
   const sql = `SELECT "email" "passHash" FROM "users" WHERE "email"=$1 AND "passHash"=$2;`;
-  const param = [email, passHash];
+  console.log("hashPassHash et passHash   " + hash(passHash) + "  ----  " + passHash);
+  const param = [email, hash(passHash)];
   const queryResult = await pool.query(sql, param);
   if (queryResult.rowCount != 1) {
     throw new Error(`401: failed to authorize`);
@@ -84,14 +85,13 @@ exports.fetchDetailsByEmail = async (email) => {
 
 exports.logoutByToken = async(token) => {
   // console.log('--- in logout model ---');
-   const updatedToken = `UPDATE "tokens" 
+   const sqlUpdatedToken = `UPDATE "tokens" 
                         SET "expires" = NOW() 
                         WHERE "tokenUuid" = $1
                         RETURNING *;`;
 
-  const updateResult = await pool.query(updatedToken, [token]);
-  hasAffectedOne(token, "logged out", updateResult);
-  return updateResult.rows[0];
+  const updateResult = await pool.query(sqlUpdatedToken, [token]);
+  return (updateResult.rowCount == 1) ?  true : false
 };
 
 

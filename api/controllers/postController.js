@@ -53,7 +53,7 @@ exports.createPost = async (req, res) => {
     console.log(data);
 
     try {
-        const createdPost = await postModel.insert(data.post);
+        const createdPost = await postModel.insert(data);
 
         result = {
             message: 'Success',

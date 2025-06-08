@@ -87,12 +87,11 @@ exports.login = async (req, res) => {
         const loggedUser = await userModel.fetchDetailsByEmail(userEmail);
         const userToken = await tokenModel.assignToken(loggedUser.userUuid);
 
-        // TODO return is too verbose
         result = {
           message: "Successfull login",
           errorCode: 0,
-          user: loggedUser,
-          token: userToken
+          // user: loggedUser,
+          // token: userToken
         };
     } else {
       throw new Error(`401 invalid email`);
@@ -113,14 +112,20 @@ exports.logout = async (req, res) => {
   let result = UNKNOWN_ERROR;
 
   try {
-    const tokenUuid = req.selectedToken;
-    const logoutConfirmation = await userModel.logoutByToken(tokenUuid);
+    const logoutConfirmation = await userModel.logoutByToken(req.selectedToken);
     // console.log(logoutConfirmation);
-    result = {
-      message: "Success",
-      errorCode: 0,
-      "expiredToken": tokenUuid
+    if (logoutConfirmation) {
+      result = {
+        message: "Success",
+        errorCode: 0
     };
+    } else {
+        result = {
+          message: "Failed",
+          errorCode: 1,
+        }
+    }
+
   } catch (error) {
     // console.error("DB error", error);
     result.message = `Database error ${error}`;
