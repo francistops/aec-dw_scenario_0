@@ -15,7 +15,7 @@ exports.getAllPosts = async (req, res) => {
             rows: posts
         };
     } catch (error) {
-        console.error('DB error', error);
+        console.error('Error fetching posts:', error);
         result.message = `Database error ${error}`;
         result.errorCode = 1001;
         res.status(500);
@@ -40,7 +40,7 @@ exports.getPostById = async (req, res) => {
         console.error('Error fetching post by ID:', error);
 
         res.status(500);
-        result.message = `Error retrieving post with id ${id}`;
+        result.message = `Error fetching post with id ${id}`;
         result.errorCode = 1002;
     }
 

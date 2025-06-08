@@ -1,9 +1,5 @@
 const pool = require("../db/pool");
-
 const { createHash } = require("crypto");
-
-// const hashBuffer = await crypto.subtle.digest('SHA-256', data);
-// const userPassHash = crypto.createHash("sha256").update(userSentPassword).digest("hex");
 const SALT = "monGrainDeCummin";
 
 function hash(passHash) {
@@ -54,18 +50,15 @@ exports.createUser = async (user) => {
     user.lastName,
   ];
   const queryResult = await pool.query(insertSql, parameters);
-  // todo if you want
-//   hasAffectedOne(null, "inserted", queryResult);
-  if (queryResult.rowCount !== 1) {
-    throw new Error(`Error 500: User not created.`);
-  }
+  hasAffectedOne(null, "inserted", queryResult);
+  
   console.log('query: ', queryResult.rows[0]);
   return queryResult.rows[0];
 };
 
 exports.isUserValid = async (email, passHash) => {
-  console.log('---in isUserValid--- ', email, passHash)
-  const sql = `select "email" "passHash" from "users" where "email"=$1 AND "passHash"=$2;`;
+  console.log('---in isUserValid--- ', email, hash(passHash));
+  const sql = `SELECT "email" "passHash" FROM "users" WHERE "email"=$1 AND "passHash"=$2;`;
   const param = [email, passHash];
   const queryResult = await pool.query(sql, param);
   if (queryResult.rowCount != 1) {
@@ -74,23 +67,10 @@ exports.isUserValid = async (email, passHash) => {
   return true;
 };
 
-// need improvement
-exports.isPasswordValid = async (passHash, email) => {
-    console.log('in isPasswordValid ', passHash)
-  const sql = `select "passHash" from "users" where "email"=$1;`;
-  const param = [email];
-  const queryResult = await pool.query(sql, param);
-  console.log(queryResult)
-  if (queryResult.rowCount != 1) {
-    throw new Error(`error 401: password invalid`);
-  }
-  return true;
-};
-
 exports.fetchDetailsByEmail = async (email) => {
   const selectSql = `SELECT * 
-                        FROM "users"
-                        WHERE email = $1`;
+                      FROM "users"
+                      WHERE email = $1`;
   const parameters = [email];
   const queryResult = await pool.query(selectSql, parameters);
 
@@ -101,10 +81,50 @@ exports.fetchDetailsByEmail = async (email) => {
   return queryResult.rows[0];
 };
 
+// quand on logout on set expires à now
 exports.logoutByToken = async(token) => {
-    console.log('--- in logout model ---')
+  console.log('--- in logout model ---');
+   const updatedToken = `UPDATE "tokens" 
+                        SET "expires" = NOW() 
+                        WHERE "tokenUuid" = $1
+                        RETURNING *;`;
+
+  const updateResult = await pool.query(updatedToken, [token]);
+  hasAffectedOne(token, "logged out", updateResult);
+  return updateResult.rows[0];
 }
 
-exports.deleteAccountByToken = async(token) => {
-    console.log('--- in delete account model ---')
+exports.deleteAccountByToken = async(tokenUuid) => {
+  console.log('--- in delete account model ---');
+
+  const parameters = ` SELECT "userId" 
+                          FROM "tokens" 
+                          WHERE "tokenUuid" = $1;`;
+  console.log(tokenUuid)
+  const queryResult = await pool.query(parameters, [tokenUuid]);
+
+  if (queryResult.rowCount !== 1) {
+    throw new Error(`Invalid token or user not found`);
+  }
+
+  const userUuid = queryResult.rows[0].userId;
+
+  const deletedUser = `UPDATE "users"
+                        SET 
+                          "firstName" = NULL,
+                          "lastName" = NULL,
+                          "email" = CONCAT('anonyme-', "userUuid"),
+                          "passHash" = REPEAT(' ', 64)
+                        WHERE "userUuid" = $1;`
+
+  const deleteResult = await pool.query(deletedUser, [userUuid]);
+  hasAffectedOne(userUuid, "anonymized", deleteResult);
+
+  const updatedToken = `UPDATE "tokens" 
+                        SET "expires" = NOW() 
+                        WHERE "userId" = $1`;
+
+  const updateResult = await pool.query(updatedToken, [userUuid]);
+
+  return updateResult.rows[0];
 }
