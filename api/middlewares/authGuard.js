@@ -13,7 +13,6 @@ exports.validateToken = async(req, res, next) => {
 
   try {
     const tokenRow = await tokenModel.isTokenValid(token);
-    console.log('try validate', tokenRow)
     if (!tokenRow) {
       return res
         .status(401)
