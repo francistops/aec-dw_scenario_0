@@ -1,12 +1,27 @@
+
+<!-- not logged in -->
 <div id="navBar">
+    <ul>
+        <li><a href="#blog">Blog</a></li>
+        <!-- <li><a href="#articles">Mes articles</a></li> -->
+        <!-- <li><a href="#account">Mon compte</a></li> -->
+        <!-- <li>Courriel</li> -->
+        <li><a href="#login">login</a></li>
+    </ul>
+</div>
+
+<!-- logged in -->
+<!-- <div id="navBar">
     <ul>
         <li><a href="#blog">Blog</a></li>
         <li><a href="#articles">Mes articles</a></li>
         <li><a href="#account">Mon compte</a></li>
-        <li>Courriel</li>
-        <li><a href="#logout">Logout</a></li>
+        <li><span class="userEmail">${emailOfLoggedInUser}</span></li>
+        <li><a href="#logout">logout</a></li>
     </ul>
-</div>
+</div> -->
+
+
 
 <div id="wrapperPosts">
 
@@ -14,7 +29,7 @@
     <!-- post card template for reference -->
     <div class="postCard">
         <h2 class="postTitle">TITLE</h2>
-        <div clas="postMeta">
+        <div class="postMeta">
             By <span class="author">${AUTHOR}</span> on <span class="publishDate">01/01/1969</span>
         </div>
         <p class="postContent">POST CONTENT FULL =>
@@ -26,7 +41,7 @@
     <!-- post card template for reference -->
     <div class="postCard">
         <h2 class="postTitle">TITLE</h2>
-        <div clas="postMeta">
+        <div class="postMeta">
             By <span class="author">${AUTHOR}</span> on <span class="publishDate">01/01/1969</span>
         </div>
         <p class="postContent">POST CONTENT FULL =>
@@ -34,11 +49,11 @@
         </p>
         <hr class="sep">
     </div>
-    
+
     <!-- post card template for reference -->
     <div class="postCard">
         <h2 class="postTitle">TITLE</h2>
-        <div clas="postMeta">
+        <div class="postMeta">
             By <span class="author">${AUTHOR}</span> on <span class="publishDate">01/01/1969</span>
         </div>
         <p class="postContent">POST CONTENT FULL =>
