@@ -16,3 +16,11 @@ p {
     font-weight: bold;
     font-style: italic;
 }
+
+a {
+  color: orange;
+}
+
+a::visited {
+  color: orchid;
+}

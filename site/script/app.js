@@ -19,7 +19,7 @@ window.addEventListener('hashchange', (e) => {
             // todo: WC user-account call by displayAccount()
             displayAccount()
             break;
-        case "#article":
+        case "#articles":
             // todo: WC list-posts and handling-post call by displayArticles()
             displayArticles()
             break;
