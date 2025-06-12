@@ -5,14 +5,58 @@
 ul {
     display: flex;
     list-style: none;
-    padding: 0;
 }
 
 li {
     flex: 1;
 }
 p {
-    font-size: 100px;
-    font-weight: bold;
+    font-size: 1rem;
+}
+
+a {
+  color: lime;
+  text-decoration: none;
+}
+
+a:hover, a:active{
+    text-decoration: underline;
+}
+
+a::visited {
+  color: rebeccapurple;
+}
+
+#navBar {
+    border: 0.10em, solid, limegreen;
+    background-color: #010101;
+    max-width: 96%;
+    max-height: max-content;
+    margin:auto;
+}
+
+.sep {
+    border: none;
+    border-top: 3px double hotpink;
+    margin-top: 1.5em;
+}
+
+
+
+.postTitle {
+    font-size: 2.5rem;
+    margin-bottom: 2px;
+}
+
+.postMeta {
+    /* color: hotpink; */
     font-style: italic;
+    font-weight: 700;
+    font-size: 0.80rem;
+    margin-bottom: 1.5em;
+}
+
+#wrapperPosts {
+    max-width: 90%;
+    margin-inline: auto;
 }
