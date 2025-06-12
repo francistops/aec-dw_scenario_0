@@ -5,22 +5,45 @@
 ul {
     display: flex;
     list-style: none;
-    padding: 0;
 }
 
 li {
     flex: 1;
 }
 p {
-    font-size: 100px;
-    font-weight: bold;
-    font-style: italic;
+    font-size: 1rem;
 }
 
 a {
-  color: orange;
+  color: lime;
+  text-decoration: none;
+}
+
+a:hover, a:active{
+    text-decoration: underline;
 }
 
 a::visited {
-  color: orchid;
+  color: rebeccapurple;
+}
+
+#navBar {
+    border: 0.15em, solid, limegreen;
+    background-color: #010101;
+}
+
+#sep {
+    border: none;
+    border-top: 3px double hotpink;
+}
+
+#postTitle {
+    font-size: 2.5rem;
+}
+
+#postMeta {
+    color: hotpink;
+    font-style: italic;
+    font-weight: 700;
+    font-size: 0.80rem;
 }
