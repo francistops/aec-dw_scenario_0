@@ -1,23 +1,36 @@
 <!DOCTYPE html>
 <html lang="en">
+
+
 <head>
   <meta charset="UTF-8" />
   <title>Web Component Demo</title>
   <link rel="stylesheet" href="/style/global.css">
 
+  <!-- orchestrator -->
   <script defer src="/script/app.js"></script>
+
+  <!-- landing page -->
+  <script type="module" src="/wc/post-read/post-read.js"></script>
+  <!-- login form -->
+  <script type="module" src="/wc/auth-login/auth-login.js"></script>
+  <!-- subscribe form -->
+  <script type="module" src="/wc/auth-subs/auth-subs.js"></script>
+  <!-- user account page -->
+  <script type="module" src="/wc/user-account/user-account.js"></script>
+  <!--user articles page  -->
   <script type="module" src="/wc/list-posts/list-posts.js"></script>
   <script type="module" src="/wc/handling-post/handling-post.js"></script>
-  <script type="module" src="/wc/login-form/login-form.js"></script>
-  <script type="module" src="/wc/post-read/post-read.js"></script>
 </head>
+
+
 <body>
   <header>
     <post-read></post-read>
   </header>
   <main>
-    <list-posts></list-posts>
-    <login-form></login-form>
   </main>
 </body>
+
+
 </html>
