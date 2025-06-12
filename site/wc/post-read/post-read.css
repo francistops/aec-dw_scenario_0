@@ -28,22 +28,35 @@ a::visited {
 }
 
 #navBar {
-    border: 0.15em, solid, limegreen;
+    border: 0.10em, solid, limegreen;
     background-color: #010101;
+    max-width: 96%;
+    max-height: max-content;
+    margin:auto;
 }
 
-#sep {
+.sep {
     border: none;
     border-top: 3px double hotpink;
+    margin-top: 1.5em;
 }
 
-#postTitle {
+
+
+.postTitle {
     font-size: 2.5rem;
+    margin-bottom: 2px;
 }
 
-#postMeta {
+.postMeta {
     color: hotpink;
     font-style: italic;
     font-weight: 700;
     font-size: 0.80rem;
+    margin-bottom: 1.5em;
+}
+
+#wrapperPosts {
+    max-width: 90%;
+    margin-inline: auto;
 }
