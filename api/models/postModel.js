@@ -32,6 +32,43 @@ exports.fetchById = async(id) => {
     return queryResult.rows[0];
 };
 
+exports.fetchNextPosts = async(ids, nbRequested) => {
+    let selectSQL = `
+        SELECT "posts"."id" AS "postId",
+                "authorId",
+                "created",
+                "published",
+                "excert",
+                "content"
+        FROM "posts"
+            INNER JOIN "users" ON "authorId" = "uuId"
+        WHERE "published" IS NOT NULL`
+        
+    if (ids.length > 0) {
+        selectSQL += `
+            AND "postId" NOT IN (${ids.map((item, index) => `$${index + 1}`).join(', ')})
+        `; // Pas certaine du nom postId
+        const symbolDollar = ids.map((item, index) => '$' + (index + 1)).join(', ');
+    }
+
+    select += `
+        ORDER BY "published"
+        FROM "posts"
+        LIMIT $${ids.length + 1}
+    `;
+    const { rows } = await pool.query(selectSQL, [...ids, nbRequested]); //À vérifier
+    
+    let allPosts = [];
+
+    // rows.forEach((item.index) => {
+    //     const post = {
+    //         id: item.postId,
+    //         title: item.title,
+    //         published: item.published
+    //     } // Pas fini, à vérifier
+    // })
+}
+
 exports.insert = async(post) => {
     const insertSql = `INSERT INTO "posts" ("authorId", "title", "excert", "content") 
                             VALUES ($1, $2, $3, $4)
@@ -83,39 +120,3 @@ exports.delete = async(id) => {
     return queryResult.rowCount;
 };
 
-exports.fetchNextPosts = async(ids, nbRequested) => {
-    let selectSQL = `SELECT "postId", 
-                            "authorId", 
-                            "created", 
-                            "published", 
-                            "title", 
-                            "excert", 
-                            "content"
-                        FROM "posts" 
-                            INNER JOIN "users" ON "authorId" = "uuId" 
-                        WHERE "published" IS NOT NULL
-                    `;// Pas certaine comment l'écrire
-    if (ids.length > 0) {
-        selectSQL += `
-            AND "postId" NOT IN (${ids.map((item, index) => `$${index + 1}`).join(', ')})
-        `; // Pas certaine du nom postId
-        const symbolDollar = ids.map((item, index) => '$' + (index + 1)).join(', ');
-    }
-
-    select += `
-        ORDER BY "published"
-        FROM "posts"
-        LIMIT $${ids.length + 1}
-    `;
-    const { rows } = await pool.query(selectSQL, [...ids, nbRequested]); //À vérifier
-    
-    let allPosts = [];
-
-    rows.forEach((item.index) => {
-        const post = {
-            id: item.postId,
-            title: item.title,
-            published: item.published
-        } // Pas fini, à vérifier
-    })
-}

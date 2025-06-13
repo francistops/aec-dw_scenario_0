@@ -5,6 +5,7 @@
 ## scenario 0b frontend **WIP**
 ### Question:
 ### Tasks:
+*optional si tu veux transitionner a import fait une branche et merge la SEULEMENT quand cest 100% fonctionnelle. on checkera les conflicts then*
 
 
 ## scenario 0a: backend api **DONE**

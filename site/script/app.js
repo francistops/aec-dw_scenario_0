@@ -55,7 +55,7 @@ function displayBlog() {
     //  published date
     //  content
 
-    
+    // if user has token display nav with extra   
 };
 
 function displayLogin() {
