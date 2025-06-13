@@ -1,6 +1,9 @@
 // menu has 2 states authorize or guest (not authorize)
 
+import { getAllPosts, getNextPost, isIdentified, login, subscribe } from "./auth.js";
+console.log('in app.js')
 window.addEventListener('hashchange', (e) => {
+    console.log('hash has change to ', window.location.hash)
     switch (window.location.hash) { // window est un objet avec un objet location à l'intérieur et hash est un attribut de location qui est aussi un attribut de window
         case "#blog": // Quand on lit on met un #
             // todo: WC post-read call by displayBlog()
@@ -36,6 +39,29 @@ window.addEventListener('hashchange', (e) => {
     }
 });
 
+function displayNavBar() {
+
+    // je suis pas sure je pense que je vais just mettre un class hidden sur la boite des posts
+    const headerTag = document.querySelector('header');
+
+    if (isIdentified()) {
+        const WCnavBarTag = document.createElement('nav-bar');
+        headerTag.appendChild(WCnavBarTag);
+    } else {
+        const WCnavBarTag = document.createElement('nav-bar');
+        headerTag.appendChild(WCnavBarTag);
+    }
+}
+
+function hideBlogPosts(bool) {
+    const wrapperPostsDiv = document.getElementById("wrapperPosts")
+    if (bool) {
+        wrapperPostsDiv.classList.add('hidden')
+        wrapperPostsDiv.style.display = 'none'
+        wrapperPostsDiv.style.backgroundColor = 'bisque'
+    }
+}
+
 function displayBlog() {
     //display landing page blog
     console.log('in display_blog ')
@@ -56,6 +82,15 @@ function displayBlog() {
     //  content
 
     // if user has token display nav with extra   
+    const mainTag = document.querySelector('main');
+    const WCpostReadTag = document.createElement('post-read');
+    mainTag.appendChild(WCpostReadTag);
+
+    const wrapperPostsDiv = document.getElementById("wrapperPosts")
+    const allPost = getAllPosts()
+    const nextPost = getNextPost()
+
+
 };
 
 function displayLogin() {
@@ -77,6 +112,13 @@ function displayLogin() {
     // eg: blog title, My articles, My account, ${user.email}, logout
     
     // return token
+    
+    const mainTag = document.querySelector('main');
+    const WCauthLoginTag = document.createElement('auth-login');
+    mainTag.appendChild(WCauthLoginTag);
+    
+
+
 };
 
 function displaySubs() {
@@ -94,6 +136,8 @@ function displaySubs() {
     //  subscribe => send above field to api await a response
     // if sucess => the user is created and then return to the login page
     // if error => the frontend is alerted and let the user known then return to login page. error verbosity tbd
+
+    subscribe()
 };
 
 function displayArticles(){
@@ -108,6 +152,7 @@ function displayArticles(){
     //  edit post on this row
     //  delete post on this row
     //  publish button in cell if the post publishedDate is NULL
+    getAllPosts()
 };
 
 function displayAccount() {
@@ -122,6 +167,7 @@ function displayAccount() {
     //  has a dedicated save buttton
     // optional: delete account button
     // optional: lost my password
+
 
 };
 

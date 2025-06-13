@@ -73,14 +73,12 @@ exports.subscribe = async (req, res) => {
 };
 
 exports.login = async (req, res) => {
-  // console.log("---in userController login---");
+  console.log("---in userController login---");
+  console.log("body: ", req.body);
   let result = UNKNOWN_ERROR;
   const { email: userEmail, passHash: userPassHash } = req.body;
 
   try {
-
-    // ! verify with teacher
-    // TODO re-salt the password on both the api and the DB
 
     const checkUser = await userModel.isUserValid(userEmail, userPassHash);
     if (checkUser) {
@@ -91,7 +89,7 @@ exports.login = async (req, res) => {
           message: "Successfull login",
           errorCode: 0,
           // user: loggedUser,
-          // token: userToken
+          token: userToken
         };
     } else {
       throw new Error(`401 invalid email`);
@@ -103,7 +101,7 @@ exports.login = async (req, res) => {
     res.status(500);
   }
 
-  //console.log("result: ", result);
+  console.log("result: ", result);
   res.formatView(result);
 };
 

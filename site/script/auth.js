@@ -1,5 +1,5 @@
 // recevoir le token and le storer in the client
-
+console.log('in auth.js')
 let currentUser = null;
 
 async function hashPassword(password) {
@@ -20,25 +20,39 @@ async function hashPassword(password) {
 
 async function call(resource, method, auth, obj) {
   //TODO test it
+  console.log('in auth.js call fn')
+  console.log(resource, method, auth, obj)
   const BASE_URL = "https://www.amelieroussin.com/";
   const apiUrl = `${BASE_URL}${resource}`;
+  let reqJson = {}
   const reqBodyJson = obj || {};
+  console.log(reqBodyJson)
 
-  if (resource == "subscribe" || resource == "login") {
+  if (resource == "subscribe" || resource == "login" || obj == undefined) {
     if ("password" in obj) {
-      obj.password = hashPassword(obj.password);
+      obj.passHash = hashPassword(obj.password);
+      console.log(obj.password)
     } else {
       throw new Error("Empty password while required...");
     }
   }
 
-  const reqJson = {
-    method: `${method}`,
-    headers: buildHeaders(auth),
-    body: JSON.stringify(reqBodyJson),
-  };
+  if (method == "GET") {
+    reqJson = {
+        method: `${method}`,
+        headers: `${buildHeaders(auth)}`
+    };
+  } else {
+    reqJson = {
+        method: `${method}`,
+        headers: `${buildHeaders(auth)}`,
+        body: JSON.stringify(reqBodyJson),
+    };
+  }
 
+  console.log('end of call fn before fetch: ', reqJson, reqBodyJson, apiUrl)
   const reqObjJson = await fetch(apiUrl, reqJson);
+  console.log('end of call fn return: ', reqObjJson)
   return reqObjJson;
 }
 
@@ -122,7 +136,7 @@ export async function logout() {
 export async function getAllPosts() {
   console.log("in auth.js getAllPosts");
   let result = [];
-  const allPostsJson = await call("posts", "GET", true);
+  const allPostsJson = await call("posts", "GET", false);
 
   if (allPostsJson.errorCode == 0) {
     result = allPostsJson.posts;
@@ -137,7 +151,7 @@ export async function getNextPost(postId) {
   if (postId != null) {
     resource += `/${postId}`;
   }
-  const nextPostJson = await call(resource, "GET", true);
+  const nextPostJson = await call(resource, "GET", false);
 
   if (nextPostJson.errorCode == 0) {
     result = nextPostJson.post;

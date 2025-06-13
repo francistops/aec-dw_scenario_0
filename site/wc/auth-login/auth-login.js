@@ -1,6 +1,5 @@
-/**
- * Changez ce code pour répondre à votre besoins
- */
+import { login } from "../../script/auth.js";
+
 class authLogin extends HTMLElement {
     constructor() {
       super();
@@ -32,20 +31,29 @@ class authLogin extends HTMLElement {
   
     async connectedCallback() {
       await this.loadContent();
-  
-      /**
-       * Ajoutez votre logique nécessaire
-       */
+      
+      const submitInp = this.shadowRoot.getElementById('inpSubmit');
+
+      
+      submitInp.addEventListener('click', (e) => {
+        const emailInp = this.shadowRoot.getElementById('inpEmail').value;
+        const passwordInp = this.shadowRoot.getElementById('inpPassword').value;
+        console.log(emailInp, passwordInp)
+
+        const user = {
+        email: emailInp,
+        password: passwordInp
+        }
+        console.log('in auth-login WC user: ', user)
+        login(user)
+      });
+
+
     }
 
-    /**
-     * Vous aurez peut-être besoins d'ajouter des élément supplémentaires ici
-     */
+
   
   }
   
-  /**
-   * Changez le nom de manière adéquate
-   */
   customElements.define('auth-login', authLogin);
   
