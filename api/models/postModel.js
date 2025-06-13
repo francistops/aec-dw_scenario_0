@@ -33,7 +33,7 @@ exports.fetchById = async (id) => {
 };
 
 exports.fetchNextPosts = async (ids, nbRequested) => {
-    console.log('in fetchNextPosts', ids, nbRequested)
+  console.log("in fetchNextPosts", ids, nbRequested);
   let selectSQL = `
         SELECT "posts"."id" AS "postId",
                 "posts"."title",
@@ -64,10 +64,29 @@ exports.fetchNextPosts = async (ids, nbRequested) => {
     `;
   const { rows } = await pool.query(selectSQL, [...ids, nbRequested]);
 
-  let allPosts = [];
+  // replace by the map bellow
+  //   let allPosts = [];
 
-  rows.forEach((item, index) => {
-    const post = {
+  //   rows.forEach((item, index) => {
+  //     const post = {
+  //       id: item.postId,
+  //       title: item.title,
+  //       published: item.published,
+  //       content: item.content,
+  //       author: {
+  //         id: item.userId,
+  //         email: item.email,
+  //         firstName: item.firstName,
+  //         lastName: item.lastName,
+  //       },
+  //     };
+
+  //     allPosts.push(post);
+  //   });
+  //   return allPosts;
+
+  return rows.map((item, index) => {
+    return {
       id: item.postId,
       title: item.title,
       published: item.published,
@@ -79,11 +98,7 @@ exports.fetchNextPosts = async (ids, nbRequested) => {
         lastName: item.lastName,
       },
     };
-
-    allPosts.push(post);
   });
-  console.log(allPosts)
-  return allPosts;
 };
 
 exports.insert = async (post) => {
