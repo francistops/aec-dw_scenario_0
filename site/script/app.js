@@ -55,6 +55,7 @@ function displayBlog() {
     //  published date
     //  content
 
+    
 };
 
 function displayLogin() {
