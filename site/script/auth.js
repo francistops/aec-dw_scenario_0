@@ -6,7 +6,7 @@ let currentUser = null
 
 const BASE_URL =  "https://www.amelieroussin.com"
 
-    async hashPassword(password) {
+async function hashPassword(password) {
         let hashHex = '';
         try {
             const encoder = new TextEncoder();
