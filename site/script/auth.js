@@ -2,7 +2,7 @@
 
 let currentUser = null;
 
-const BASE_URL = "https://www.amelieroussin.com";
+
 
 async function hashPassword(password) {
   let hashHex = "";
@@ -21,45 +21,51 @@ async function hashPassword(password) {
 }
 
 async function call(resource, method, auth, obj) {
-    //TODO
-    return objJson;
+  //TODO test it
+  const BASE_URL = "https://www.amelieroussin.com/";
+  const apiUrl = `${BASE_URL}${resource}` 
+
+  if (resource == "subscribe" || resource == "login") {
+    obj.password = hashPassword(obj.password)
+  };
+
+  const reqJson = {
+    method: `${method}`,
+    headers: buildHeaders(auth),
+    body: JSON.stringify(obj)
+    }
+
+    const reqObjJson = await fetch(apiUrl, reqJson)
+    return reqObjJson;
 }
 
 function buildHeaders(auth) {
-    let headers = {
-        'Content-type': 'application/json',
-        'Accept': 'application/json'
-    };
-    if (auth) {
-        if (!isIdentified()){
-            throw new Error("Empty token while required...");
-        }
-        headers['Authorization'] = `Bearer ${getConnectedUser().token}`;
+  let headers = {
+    "Content-type": "application/json",
+    Accept: "application/json",
+  };
+  if (auth) {
+    if (!isIdentified()) {
+      throw new Error("Empty token while required...");
     }
+    headers["Authorization"] = `Bearer ${getConnectedUser().token}`;
+  }
 
-    return headers;
+  return headers;
 }
 
 export function getConnectedUser() {
-    return JSON.parse(localStorage.getItem('user'));
+  return JSON.parse(localStorage.getItem("user"));
 }
 
 export function isIdentified() {
-    return getConnectedUser() !== null;
+  return getConnectedUser() !== null;
 }
 
 export async function subscribe(user) {
   let result = false;
 
   const subscribeJson = await call("subscribe", "POST", false, user);
-  //  {
-  //     method: 'POST',
-  //     headers: {
-  //         'Content-Type': 'application/json',
-  //         'Accept': 'application/json'
-  //     },
-  //     body: JSON.stringify(user)
-  // }
 
   if (subscribeJson.errorCode == 0) {
     result = subscribeJson.subscribed;
@@ -97,16 +103,6 @@ export async function logout() {
   let result = false;
 
   const logoutJson = await call("logout", "POST", true);
-
-  // {
-  //     method: 'POST',
-  //     headers: {
-  //         'Content-Type': 'application/json',
-  //         'Accept': 'application/json',
-  //         'Authorization': `Bearer ${currentUser.token}`
-  //     },
-  //     body: JSON.stringify(user)
-  // }
 
   if (logoutJson.errorCode == 0) {
     result = logoutJson.revoked;
