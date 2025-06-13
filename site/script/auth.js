@@ -2,8 +2,6 @@
 
 let currentUser = null;
 
-
-
 async function hashPassword(password) {
   let hashHex = "";
   try {
@@ -23,20 +21,25 @@ async function hashPassword(password) {
 async function call(resource, method, auth, obj) {
   //TODO test it
   const BASE_URL = "https://www.amelieroussin.com/";
-  const apiUrl = `${BASE_URL}${resource}` 
+  const apiUrl = `${BASE_URL}${resource}`;
+  const reqBodyJson = obj || {};
 
   if (resource == "subscribe" || resource == "login") {
-    obj.password = hashPassword(obj.password)
-  };
+    if ("password" in obj) {
+      obj.password = hashPassword(obj.password);
+    } else {
+      throw new Error("Empty password while required...");
+    }
+  }
 
   const reqJson = {
     method: `${method}`,
     headers: buildHeaders(auth),
-    body: JSON.stringify(obj)
-    }
+    body: JSON.stringify(reqBodyJson),
+  };
 
-    const reqObjJson = await fetch(apiUrl, reqJson)
-    return reqObjJson;
+  const reqObjJson = await fetch(apiUrl, reqJson);
+  return reqObjJson;
 }
 
 function buildHeaders(auth) {
