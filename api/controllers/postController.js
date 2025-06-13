@@ -50,9 +50,9 @@ exports.getPostById = async (req, res) => {
 exports.getNextPosts = async (req, res) => {
     let result = UNKNOWN_ERROR;
     const { ids, nbRequested } = req.body;
-
+console.log('in getNextPosts', ids, nbRequested)
     try {
-        const posts = await fetchNextPosts(ids, nbRequested);
+        const posts = await postModel.fetchNextPosts(ids, nbRequested);
         result = {
             message: 'Success',
             errorCode: 0,

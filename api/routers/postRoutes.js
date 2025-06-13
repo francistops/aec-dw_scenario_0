@@ -6,7 +6,7 @@ const postController = require('../controllers/postController');
 
 
 router.get('/:id', postController.getPostById);
-router.get('/next', postController.getNextPosts);
+router.post('/next', postController.getNextPosts);
 
 
 router.get('/', authGuard.validateToken, postController.getAllPosts);
