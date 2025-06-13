@@ -82,3 +82,40 @@ exports.delete = async(id) => {
     hasAffectedOne(id, "deleted", queryResult);
     return queryResult.rowCount;
 };
+
+exports.fetchNextPosts = async(ids, nbRequested) => {
+    let selectSQL = `SELECT "postId", 
+                            "authorId", 
+                            "created", 
+                            "published", 
+                            "title", 
+                            "excert", 
+                            "content"
+                        FROM "posts" 
+                            INNER JOIN "users" ON "authorId" = "uuId" 
+                        WHERE "published" IS NOT NULL
+                    `;// Pas certaine comment l'écrire
+    if (ids.length > 0) {
+        selectSQL += `
+            AND "postId" NOT IN (${ids.map((item, index) => `$${index + 1}`).join(', ')})
+        `; // Pas certaine du nom postId
+        const symbolDollar = ids.map((item, index) => '$' + (index + 1)).join(', ');
+    }
+
+    select += `
+        ORDER BY "published"
+        FROM "posts"
+        LIMIT $${ids.length + 1}
+    `;
+    const { rows } = await pool.query(selectSQL, [...ids, nbRequested]); //À vérifier
+    
+    let allPosts = [];
+
+    rows.forEach((item.index) => {
+        const post = {
+            id: item.postId,
+            title: item.title,
+            published: item.published
+        } // Pas fini, à vérifier
+    })
+}
