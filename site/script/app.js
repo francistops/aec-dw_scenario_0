@@ -74,6 +74,8 @@ function displayLogin() {
 
     // after a successfull login return to blog landing page but with personnalized nav bar
     // eg: blog title, My articles, My account, ${user.email}, logout
+    
+    // return token
 };
 
 function displaySubs() {

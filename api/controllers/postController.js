@@ -140,3 +140,24 @@ exports.deletePost = async (req, res) => {
 
     res.formatView(result);
 };
+
+exports.getNextPosts = async (req, res) => {
+    let result = UNKNOWN_ERROR;
+    const { ids, nbRequested } = req.body;
+
+    try {
+        const posts = await fetchNextPosts(ids, nbRequested);
+        result = {
+            message: 'Success',
+            errorCode: 0,
+            posts: posts
+        }
+    } catch (error) {
+        console.error('DB error', error);
+        result.message = `Database error ${error}`;
+        result.errorCode = 1021;
+        res.status(500);
+    }
+
+    res.formatView(result);
+}
