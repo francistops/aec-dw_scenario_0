@@ -34,7 +34,6 @@ class authLogin extends HTMLElement {
       
       const submitInp = this.shadowRoot.getElementById('inpSubmit');
 
-      
       submitInp.addEventListener('click', (e) => {
         const emailInp = this.shadowRoot.getElementById('inpEmail').value;
         const passwordInp = this.shadowRoot.getElementById('inpPassword').value;
@@ -47,12 +46,7 @@ class authLogin extends HTMLElement {
         console.log('in auth-login WC user: ', user)
         login(user)
       });
-
-
     }
-
-
-  
   }
   
   customElements.define('auth-login', authLogin);
