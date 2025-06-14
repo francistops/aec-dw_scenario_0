@@ -1,7 +1,7 @@
 /**
  * Changez ce code pour répondre à votre besoins
  */
-class TemplateWebComponent extends HTMLElement {
+class navBar extends HTMLElement {
     constructor() {
       super();
       this.attachShadow({ mode: 'open' });
@@ -16,8 +16,8 @@ class TemplateWebComponent extends HTMLElement {
          * Renommez vos fichiers selon votre composant à vous
          */
       const [html, css] = await Promise.all([
-        fetch('/wc/template/template.html').then(res => res.text()),
-        fetch('/wc/template/template.css').then(res => res.text())
+        fetch('/wc/nav-bar/nav-bar.html').then(res => res.text()),
+        fetch('/wc/nav-bar/nav-bar.css').then(res => res.text())
       ]);
   
       const style = document.createElement('style');
@@ -47,5 +47,5 @@ class TemplateWebComponent extends HTMLElement {
   /**
    * Changez le nom de manière adéquate
    */
-  customElements.define('template', TemplateWebComponent);
+  customElements.define('nav-bar', navBar);
   

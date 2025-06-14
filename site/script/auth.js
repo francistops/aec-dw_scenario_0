@@ -22,13 +22,13 @@ async function call(resource, method, auth, obj) {
   //TODO test it
   console.log('in auth.js call fn')
   console.log(resource, method, auth, obj)
-  const BASE_URL = "https://www.amelieroussin.com/";
+  const BASE_URL = "https://www.amelieroussin.ca/";
   const apiUrl = `${BASE_URL}${resource}`;
   let reqJson = {}
   const reqBodyJson = obj || {};
   console.log(reqBodyJson)
 
-  if (resource == "subscribe" || resource == "login" || obj == undefined) {
+  if (resource == "subscribe" || resource == "login") {
     if ("password" in obj) {
       obj.passHash = hashPassword(obj.password);
       console.log(obj.password)
@@ -39,14 +39,14 @@ async function call(resource, method, auth, obj) {
 
   if (method == "GET") {
     reqJson = {
-        method: `${method}`,
-        headers: `${buildHeaders(auth)}`
+        method: method,
+        headers: buildHeaders(auth)
     };
   } else {
     reqJson = {
-        method: `${method}`,
-        headers: `${buildHeaders(auth)}`,
-        body: JSON.stringify(reqBodyJson),
+        method: method,
+        headers: buildHeaders(auth),
+        body: JSON.stringify(reqBodyJson)
     };
   }
 
@@ -110,6 +110,9 @@ export async function login(user) {
 
     const event = new CustomEvent("auth-logedin", {});
     this.dispatchEvent(event);
+
+    document.querySelector('.articles').style.visibility = 'visible';
+    document.querySelector('.account').style.visibility = 'visible';
   }
 
   return result;
@@ -128,6 +131,9 @@ export async function logout() {
     // todo understand this better
     const event = new CustomEvent("auth-logedout", {});
     this.dispatchEvent(event);
+
+    document.querySelector('.articles').style.visibility = 'hidden';
+    document.querySelector('.account').style.visibility = 'hidden';
   }
 
   return result;
@@ -151,7 +157,7 @@ export async function getNextPost(postId) {
   if (postId != null) {
     resource += `/${postId}`;
   }
-  const nextPostJson = await call(resource, "GET", false);
+  const nextPostJson = await call(resource, "POST", false);
 
   if (nextPostJson.errorCode == 0) {
     result = nextPostJson.post;

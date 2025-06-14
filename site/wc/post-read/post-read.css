@@ -1,38 +1,5 @@
-/**
-    Changez le style pour votre composante. N'ayez pas peur, ce fichier de style
-    ne va affectez que ce composant.
- */
-ul {
-    display: flex;
-    list-style: none;
-}
-
-li {
-    flex: 1;
-}
 p {
     font-size: 1rem;
-}
-
-a {
-  color: lime;
-  text-decoration: none;
-}
-
-a:hover, a:active{
-    text-decoration: underline;
-}
-
-a::visited {
-  color: rebeccapurple;
-}
-
-#navBar {
-    border: 0.10em, solid, limegreen;
-    background-color: #010101;
-    max-width: 96%;
-    max-height: max-content;
-    margin:auto;
 }
 
 .sep {
@@ -40,8 +7,6 @@ a::visited {
     border-top: 3px double hotpink;
     margin-top: 1.5em;
 }
-
-
 
 .postTitle {
     font-size: 2.5rem;

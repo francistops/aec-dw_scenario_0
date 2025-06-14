@@ -33,73 +33,51 @@ exports.fetchById = async (id) => {
 };
 
 exports.fetchNextPosts = async (ids, nbRequested) => {
-  console.log("in fetchNextPosts", ids, nbRequested);
-  let selectSQL = `
+    console.log("in fetchNextPosts", ids, nbRequested);
+
+    let selectSQL = `
         SELECT "posts"."id" AS "postId",
-                "posts"."title",
-                "posts"."published",
-                "posts"."content",
-                "users"."userUuid" AS userId,
-                "users"."email",
-                "users"."firstName",
-                "users"."lastName"
+               "posts"."title",
+               "posts"."published",
+               "posts"."content",
+               "users"."userUuid" AS "userId",
+               "users"."email",
+               "users"."firstName",
+               "users"."lastName"
         FROM "posts"
-            INNER JOIN "users" ON "posts"."authorId" = "users"."userUuid"
+        INNER JOIN "users" ON "posts"."authorId" = "users"."userUuid"
         WHERE "posts"."published" IS NOT NULL
     `;
 
-  if (ids.length > 0) {
-    selectSQL += `
-            AND "posts"."id" NOT IN (${ids
-              .map((item, index) => `$${index + 1}`)
-              .join(", ")})
+    if (ids.length > 0) {
+        selectSQL += `
+            AND "posts"."id" NOT IN (${ids.map((item, index) => `$${index + 1}`).join(", ")})
         `;
-    // keep or delete up to you
-    //const symbolDollar = ids.map((item, index) => '$' + (index + 1)).join(', ');
-  }
+    }
 
-  selectSQL += `
+    const safeLimit = parseInt(nbRequested, 10) || 10;
+
+    selectSQL += `
         ORDER BY "posts"."published" DESC
-        LIMIT $${ids.length + 1}
+        LIMIT ${safeLimit}
     `;
-  const { rows } = await pool.query(selectSQL, [...ids, nbRequested]);
 
-  // replace by the map bellow
-  //   let allPosts = [];
+    const { rows } = await pool.query(selectSQL, ids);
 
-  //   rows.forEach((item, index) => {
-  //     const post = {
-  //       id: item.postId,
-  //       title: item.title,
-  //       published: item.published,
-  //       content: item.content,
-  //       author: {
-  //         id: item.userId,
-  //         email: item.email,
-  //         firstName: item.firstName,
-  //         lastName: item.lastName,
-  //       },
-  //     };
-
-  //     allPosts.push(post);
-  //   });
-  //   return allPosts;
-
-  return rows.map((item, index) => {
-    return {
-      id: item.postId,
-      title: item.title,
-      published: item.published,
-      content: item.content,
-      author: {
-        id: item.userId,
-        email: item.email,
-        firstName: item.firstName,
-        lastName: item.lastName,
-      },
-    };
-  });
+    return rows.map((item) => ({
+        id: item.postId,
+        title: item.title,
+        published: item.published,
+        content: item.content,
+        author: {
+            id: item.userId,
+            email: item.email,
+            firstName: item.firstName,
+            lastName: item.lastName,
+        },
+    }));
 };
+
 
 exports.insert = async (post) => {
   const insertSql = `INSERT INTO "posts" ("authorId", "title", "excert", "content") 

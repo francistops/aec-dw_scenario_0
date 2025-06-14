@@ -1,7 +1,14 @@
 // menu has 2 states authorize or guest (not authorize)
 
 import { getAllPosts, getNextPost, isIdentified, login, subscribe } from "./auth.js";
-console.log('in app.js')
+console.log('in app.js');
+    // Force the initial load to handle the current hash (or force #blog)
+if (!window.location.hash) {
+    window.location.hash = 'blog';
+} else {
+    // Appelle manuellement le handler pour gérer le hash courant
+    window.dispatchEvent(new Event('hashchange'));
+}
 window.addEventListener('hashchange', (e) => {
     console.log('hash has change to ', window.location.hash)
     switch (window.location.hash) { // window est un objet avec un objet location à l'intérieur et hash est un attribut de location qui est aussi un attribut de window

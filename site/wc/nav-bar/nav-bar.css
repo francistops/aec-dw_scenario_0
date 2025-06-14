@@ -1,10 +1,47 @@
-/**
-    Changez le style pour votre composante. N'ayez pas peur, ce fichier de style
-    ne va affectez que ce composant.
- */
-
 p {
     font-size: 100px;
     font-weight: bold;
     font-style: italic;
+}
+
+.articles {
+    visibility: hidden;
+}
+
+.account {
+    visibility: hidden;
+}
+
+.userEmail {
+    visibility: hidden;
+}
+
+ul {
+    display: flex;
+    list-style: none;
+    padding: 0;
+}
+li {
+    flex: 1;
+    text-align: center;
+}
+a {
+    color: lime;
+    text-decoration: none;
+}
+
+a:hover, a:active{
+    text-decoration: underline;
+}
+
+a:visited {
+color: rebeccapurple;
+}
+
+#navBar {
+    border: 0.10em, solid, limegreen;
+    background-color: #010101;
+    max-width: 96%;
+    max-height: max-content;
+    margin:auto;
 }
