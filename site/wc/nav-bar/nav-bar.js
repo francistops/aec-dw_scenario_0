@@ -32,10 +32,17 @@ class navBar extends HTMLElement {
   
     async connectedCallback() {
       await this.loadContent();
-  
-      /**
-       * Ajoutez votre logique nécessaire
-       */
+
+        const loginButton = this.shadowRoot.querySelector('#loginButton');
+
+        loginButton.addEventListener('click', (e) => {
+            const event = new CustomEvent('ready-login', {
+              bubbles: true,
+              composed: true
+            });
+
+            this.dispatchEvent(event);
+        });
     }
 
     /**

@@ -32,20 +32,10 @@ class authSubs extends HTMLElement {
   
     async connectedCallback() {
       await this.loadContent();
-  
-      /**
-       * Ajoutez votre logique nécessaire
-       */
-    }
 
-    /**
-     * Vous aurez peut-être besoins d'ajouter des élément supplémentaires ici
-     */
-  
+
+    }  
   }
-  
-  /**
-   * Changez le nom de manière adéquate
-   */
+
   customElements.define('auth-subs', authSubs);
   
