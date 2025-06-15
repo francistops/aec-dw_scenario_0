@@ -4,10 +4,6 @@ class authLogin extends HTMLElement {
     constructor() {
       super();
       this.attachShadow({ mode: 'open' });
-
-      /**
-       * Initialiser vos propriétés nécesaire
-       */
     }
 
     async loadContent() {
@@ -55,8 +51,7 @@ class authLogin extends HTMLElement {
       //   });
 
       // this.dispatchEvent(event);
-      
-    
+
       const form = this.shadowRoot.getElementById('action-post');
       const submitInp = this.shadowRoot.getElementById('inpSubmit');
       const { parseFormToObject } = await import("/script/utilform.js");
@@ -75,7 +70,6 @@ class authLogin extends HTMLElement {
           alert("Connexion échouée. Vérifiez vos informations.");
         }
       });
-
     }
   }
   
