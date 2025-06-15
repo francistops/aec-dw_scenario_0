@@ -231,6 +231,17 @@ function displayLogin() {
     mainTag.appendChild(WCauthLoginTag);
 };
 
+function hiddenNavButton() {
+    if (!isIdentified()) {
+        document.getElementById('articles').style.visibility = 'hidden';
+        document.getElementById('account').style.visibility = 'hidden';
+    } else {
+        document.getElementById('articles').style.visibility = 'visible';
+        document.getElementById('account').style.visibility = 'visible';
+    }
+    document.getElementById('logout').style.visibility = isIdentified() ? 'visible' : 'hidden';
+}
+
 function displaySubs() {
     // account creation form => access via the login page
     console.log('in app.js displaySubs');
@@ -260,9 +271,6 @@ function displayArticles(){
     console.log('in app.js displayArticles');
     const mainTag = document.querySelector('main');
     mainTag.innerHTML = '';
-
-
-
 
 // TODO
 // create a route that will fetch only the posts from an user either id or authorId or userId tbd

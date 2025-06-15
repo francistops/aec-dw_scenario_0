@@ -33,40 +33,59 @@ class authSubs extends HTMLElement {
     async connectedCallback() {
       await this.loadContent();
 
-        const subscribeButton = this.shadowRoot.querySelector('#subscribeButton');
+        // const subscribeButton = this.shadowRoot.querySelector('#subscribeButton');
   
-        subscribeButton.addEventListener('click', (e) => {
+        // subscribeButton.addEventListener('click', (e) => {
  
-          const emailInp = this.shadowRoot.getElementById('inpEmail').value;
-          const passwordInp = this.shadowRoot.getElementById('inpPassword').value;
-          const confirmPasswordInp = this.shadowRoot.getElementById('inpConfirmPassword').value;
-          const firstNameInp = this.shadowRoot.getElementById('inpFirstName').value;
-          const lastNameInp = this.shadowRoot.getElementById('inpLastName').value;
+        //   const emailInp = this.shadowRoot.getElementById('inpEmail').value;
+        //   const passwordInp = this.shadowRoot.getElementById('inpPassword').value;
+        //   const confirmPasswordInp = this.shadowRoot.getElementById('inpConfirmPassword').value;
+        //   const firstNameInp = this.shadowRoot.getElementById('inpFirstName').value;
+        //   const lastNameInp = this.shadowRoot.getElementById('inpLastName').value;
 
-          console.log(emailInp, passwordInp, confirmPasswordInp, firstNameInp, lastNameInp);
+        //   console.log(emailInp, passwordInp, confirmPasswordInp, firstNameInp, lastNameInp);
 
-          if (passwordInp === confirmPasswordInp) {
+        //   if (passwordInp === confirmPasswordInp) {
               
-            const user = {
-              email: emailInp,
-              password: passwordInp,
-              firstName: firstNameInp,
-              lastName: lastNameInp
-            }
-            console.log('in auth-login WC user: ', user);
+        //     const user = {
+        //       email: emailInp,
+        //       password: passwordInp,
+        //       firstName: firstNameInp,
+        //       lastName: lastNameInp
+        //     }
+        //     console.log('in auth-login WC user: ', user);
 
-            const event = new CustomEvent('subscribed', {
-              bubbles: true,
-              composed: true,
-              detail: { user }
-            });
+        //     const event = new CustomEvent('subscribed', {
+        //       bubbles: true,
+        //       composed: true,
+        //       detail: { user }
+        //     });
 
-            this.dispatchEvent(event);
+        //     this.dispatchEvent(event);
 
-          } else {
-            alert("The 2 password must be the same");
+        //   } else {
+        //     alert("The 2 password must be the same");
+        //   }
+        // });
+
+        const form = this.shadowRoot.getElementById('subscribeForm');
+        const submitInp = this.shadowRoot.getElementById('subscribeButton');
+        const { parseFormToObject } = await import("/script/utilform.js");
+  
+        form.addEventListener('submit', (e) => {
+          e.preventDefault();
+        });
+  
+        submitInp.addEventListener('click', async (e) => {
+          const user = parseFormToObject(form);
+  
+          console.log('in auth-subs WC user: ', user)
+          const success = await login(user);
+  
+          if (!success) {
+            alert("Inscription échouée. Vérifiez vos informations.");
           }
-        });     
+        });
         
         const cancelButton = this.shadowRoot.querySelector('#cancelButton');
 
