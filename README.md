@@ -4,6 +4,11 @@
 
 ## scenario 0b frontend **WIP**
 ### Question:
+postModel ligne 58 a 62 : pourquoi? et il manque le $ avant safelimit
+postModel ligne 65 : pourquoi as tu retirer le fait que le array soit flat?
+postModel ligne 67 : pourquoi a tu oter le index tu map et oter le return?
+
+
 ### Tasks:
 *optional si tu veux transitionner a import fait une branche et merge la SEULEMENT quand cest 100% fonctionnelle. on checkera les conflicts then*
 
