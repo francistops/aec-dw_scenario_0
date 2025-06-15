@@ -1,3 +1,5 @@
+import { subscribe } from "../../script/auth";
+
 /**
  * Changez ce code pour répondre à votre besoins
  */
@@ -80,7 +82,7 @@ class authSubs extends HTMLElement {
           const user = parseFormToObject(form);
   
           console.log('in auth-subs WC user: ', user)
-          const success = await login(user);
+          const success = await subscribe(user);
   
           if (!success) {
             alert("Inscription échouée. Vérifiez vos informations.");
