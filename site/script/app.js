@@ -3,9 +3,9 @@
 import { getAllPosts, getNextPost, isIdentified, login, subscribe } from "./auth.js";
 console.log('in app.js');
 
-// if (!window.location.hash || window.location.hash === '') {
-//     window.location.hash = '#blog';
-// }
+if (!window.location.hash || window.location.hash === '') {
+    window.location.hash = '#blog';
+}
 
 [
   ['ready-login', '#login'],
