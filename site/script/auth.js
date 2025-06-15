@@ -133,9 +133,6 @@ export async function login(user) {
     if (!window.location.hash || window.location.hash === '') {
         window.location.hash = '#blog';
     }
-
-    document.querySelector('.articles').style.visibility = 'visible';
-    document.querySelector('.account').style.visibility = 'visible';
   }
 
   return result;

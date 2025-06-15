@@ -28,29 +28,29 @@ class authLogin extends HTMLElement {
     async connectedCallback() {
       await this.loadContent();
 
-      //   const cancelButton = this.shadowRoot.querySelector('#cancelButton');
+      const cancelButton = this.shadowRoot.getElementById('cancelButton');
 
-      //   cancelButton.addEventListener('click', (e) => {
-      //       const event = new CustomEvent('ready-cancel', {
-      //         bubbles: true,
-      //         composed: true,
-      //         detail: {
-      //           from: 'login'
-      //         }
-      //       });
+      cancelButton.addEventListener('click', (e) => {
+          const event = new CustomEvent('ready-cancel', {
+            bubbles: true,
+            composed: true,
+            detail: {
+              from: 'login'
+            }
+          });
 
-      //       this.dispatchEvent(event);
-      //   });
+          this.dispatchEvent(event);
+      });
 
-      // const readySubsButton = this.shadowRoot.querySelector('#readySubsButton');
+      const readySubsButton = this.shadowRoot.querySelector('#readySubsButton');
 
-      // readySubsButton.addEventListener('click', (e) => {
-      //   const event = new CustomEvent('go-to-auth-subs', {
-      //     bubbles: true,
-      //     composed: true
-      //   });
-
-      // this.dispatchEvent(event);
+      readySubsButton.addEventListener('click', (e) => {
+        const event = new CustomEvent('go-to-auth-subs', {
+          bubbles: true,
+          composed: true
+        })
+        this.dispatchEvent(event);
+      });
 
       const form = this.shadowRoot.getElementById('action-post');
       const submitInp = this.shadowRoot.getElementById('inpSubmit');
