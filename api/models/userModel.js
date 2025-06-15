@@ -47,6 +47,7 @@ exports.createUser = async (user) => {
   const parameters = [
     user.email,
     hash(user.passHash),
+    user.passHash,
     user.firstName,
     user.lastName,
   ];
@@ -61,7 +62,7 @@ exports.isUserValid = async (email, passHash) => {
   console.log('---in isUserValid--- ', email, hash(passHash));
   const sql = `SELECT "email" "passHash" FROM "users" WHERE "email"=$1 AND "passHash"=$2;`;
   console.log("hashPassHash et passHash   " + hash(passHash) + "  ----  " + passHash);
-  const param = [email, hash(passHash)];
+  const param = [email, passHash];
   const queryResult = await pool.query(sql, param);
   if (queryResult.rowCount != 1) {
     throw new Error(`401: failed to authorize`);

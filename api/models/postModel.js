@@ -55,28 +55,30 @@ exports.fetchNextPosts = async (ids, nbRequested) => {
         `;
     }
 
-    const safeLimit = parseInt(nbRequested, 10) || 10;
-
-    selectSQL += `
+  selectSQL += `
         ORDER BY "posts"."published" DESC
-        LIMIT ${safeLimit}
+        LIMIT $${ids.length + 1}
     `;
 
-    const { rows } = await pool.query(selectSQL, ids);
+  const { rows } = await pool.query(selectSQL, [...ids, nbRequested]);
 
-    return rows.map((item) => ({
-        id: item.postId,
-        title: item.title,
-        published: item.published,
-        content: item.content,
-        author: {
-            id: item.userId,
-            email: item.email,
-            firstName: item.firstName,
-            lastName: item.lastName,
-        },
-    }));
+  return rows.map((item, index) => {
+    return {
+      id: item.postId,
+      title: item.title,
+      published: item.published,
+      content: item.content,
+      author: {
+        id: item.userId,
+        email: item.email,
+        firstName: item.firstName,
+        lastName: item.lastName,
+      },
+    };
+  });
 };
+
+
 
 
 exports.insert = async (post) => {

@@ -45,7 +45,7 @@ CREATE TABLE "posts" (
 );
 
 INSERT INTO "users" ("email", "passHash", "firstName", "lastName") VALUES
-('amelie.roussin@gmail.com', ENCODE (SHA256('123'), 'hex'), 'Amélie', 'Roussin'),
+('amelie.roussin@gmail.com', '123', 'Amélie', 'Roussin'),
 ('jeremy.fontaine@example.com', ENCODE (SHA256('Xxpassw1rdxX'), 'hex'), 'Jérémy', 'Fontaine'),
 ('albert.langlois@example.com', ENCODE (SHA256('Xxpassw2rdxX'), 'hex'), 'Albert', 'Langlois');
 

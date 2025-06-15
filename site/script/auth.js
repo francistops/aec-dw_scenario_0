@@ -19,56 +19,64 @@ async function hashPassword(password) {
 }
 
 async function call(resource, method, auth, obj) {
-  //TODO test it
-  console.log('in auth.js call fn')
-  console.log(resource, method, auth, obj)
   const BASE_URL = "https://api.amelieroussin.ca/";
   const apiUrl = `${BASE_URL}${resource}`;
   let reqJson = {};
   const reqBodyJson = obj || {};
-  console.log(reqBodyJson);
+  // console.log('in auth.js call fn')
+  // console.log('1', resource, method, auth, obj)
+  // console.log('2', reqBodyJson)
 
-  if (resource === "subscribe" || resource === "login") {
-    if ("password" in obj) {
-      obj.passHash = await hashPassword(obj.password);
-      console.log(obj.password);
-    } else {
-      throw new Error("Empty password while required...");
-    }
-  }
-
+  // if (resource == "subscribe" || resource == "login") {
+  //   if ("password" in obj) {
+  //     obj.passHash = hashPassword(obj.password);
+  //     console.log(obj.password);
+  //   } else {
+  //     throw new Error("Empty password while required...");
+  //   }
+  // }
 
   if (method == "GET") {
     reqJson = {
         method: method,
-        headers: buildHeaders(auth)
+        headers: {
+          'Content-type': "application/json",
+          'Accept': "application/json"
+        }
     };
   } else {
     reqJson = {
         method: method,
-        headers: buildHeaders(auth),
+        headers: {
+          'Content-type': "application/json",
+          'Accept': "application/json"
+        },
         body: JSON.stringify(reqBodyJson)
     };
   }
 
-  console.log('end of call fn before fetch: ', reqJson, reqBodyJson, apiUrl)
+  // console.log('end of call fn before fetch: ', reqJson, reqBodyJson, apiUrl)
   const reqObjJson = await fetch(apiUrl, reqJson);
-  const json = await reqObjJson.json();
-  console.log('end of call fn return: ', json);
-  return json;
+
+  // console.log('end of call fn return: ', reqObjJson)
+
+  // let result = await reqBodyJson.json();
+  // console.log(result);
+  
+  return reqObjJson;
 }
 
 function buildHeaders(auth) {
   let headers = {
-    "Content-type": "application/json",
-    Accept: "application/json",
+    'Content-type': "application/json",
+    'Accept': "application/json",
   };
-  if (auth) {
-    if (!isIdentified()) {
-      throw new Error("Empty token while required...");
-    }
-    headers["Authorization"] = `Bearer ${getConnectedUser().token}`;
-  }
+  // if (auth) {
+  //   if (!isIdentified()) {
+  //     throw new Error("Empty token while required...");
+  //   }
+  //   headers["Authorization"] = `Bearer ${getConnectedUser().token}`;
+  // }
 
   return headers;
 }
@@ -99,15 +107,26 @@ export async function subscribe(user) {
 
 export async function login(user) {
   console.log("in auth.js login");
-  // currentUser = loginJson.user;
 
   let result = false;
-  const loginJson = await call("login", "POST", false, user);
+  const loginResponse = await call("login", "POST", false, user);
+  //  const loginResponse = await fetch(`https://api.amelieroussin.ca/login`, {
+  //               method: 'POST',
+  //               headers: { 'Content-Type': 'application/json',
+  //                 'Accept': 'application/json'
+  //                },
+  //               body: JSON.stringify(user)
+  //           });
+    // console.log('in auth.js loginJson', loginJson)
+
+  const loginJson = await loginResponse.json();
+    // console.log(result);
 
   if (loginJson.errorCode == 0) {
-    result = true;
-    localStorage.setItem("user", JSON.stringify(loginJson.user));
+    result = true
+    localStorage.setItem("user", JSON.stringify(loginJson.token));
 
+    
     const event = new CustomEvent("auth-logedin", {});
     document.dispatchEvent(new CustomEvent("auth-logedin", {}));
 
