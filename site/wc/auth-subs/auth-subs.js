@@ -62,7 +62,6 @@ class authSubs extends HTMLElement {
             });
 
             this.dispatchEvent(event);
-            displayLogin();
 
           } else {
             alert("The 2 password must be the same");
