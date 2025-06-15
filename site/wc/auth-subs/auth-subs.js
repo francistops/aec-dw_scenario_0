@@ -33,6 +33,55 @@ class authSubs extends HTMLElement {
     async connectedCallback() {
       await this.loadContent();
 
+        const subscribeButton = this.shadowRoot.querySelector('#subscribeButton');
+  
+        subscribeButton.addEventListener('click', (e) => {
+ 
+          const emailInp = this.shadowRoot.getElementById('inpEmail').value;
+          const passwordInp = this.shadowRoot.getElementById('inpPassword').value;
+          const confirmPasswordInp = this.shadowRoot.getElementById('inpConfirmPassword').value;
+          const firstNameInp = this.shadowRoot.getElementById('inpFirstName').value;
+          const lastNameInp = this.shadowRoot.getElementById('inpLastName').value;
+
+          console.log(emailInp, passwordInp, confirmPasswordInp, firstNameInp, lastNameInp);
+
+          if (passwordInp === confirmPasswordInp) {
+              
+            const user = {
+              email: emailInp,
+              password: passwordInp,
+              firstName: firstNameInp,
+              lastName: lastNameInp
+            }
+            console.log('in auth-login WC user: ', user);
+
+            const event = new CustomEvent('subscribed', {
+              bubbles: true,
+              composed: true,
+              detail: { user }
+            });
+
+            this.dispatchEvent(event);
+            displayLogin();
+
+          } else {
+            alert("The 2 password must be the same");
+          }
+        });     
+        
+        const cancelButton = this.shadowRoot.querySelector('#cancelButton');
+
+        cancelButton.addEventListener('click', (e) => {
+            const event = new CustomEvent('ready-cancel', {
+              bubbles: true,
+              composed: true,
+              detail: {
+                from: 'login'
+              }
+            });
+
+            this.dispatchEvent(event);
+        });
 
     }  
   }

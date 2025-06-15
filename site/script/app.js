@@ -14,6 +14,17 @@ document.addEventListener('ready-subscribe', () => {
     displaySubs();
 });
 
+document.addEventListener('ready-cancel', () => {
+
+    displayBlog();
+})
+
+document.addEventListener('subscribed', (event) => {
+  const user = event.detail.user;
+  console.log('Received from auth-subs:', user);
+
+  subscribe(user); 
+});
 
 window.addEventListener('hashchange', (e) => {
     console.log('hash has change to ', window.location.hash)

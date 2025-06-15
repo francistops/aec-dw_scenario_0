@@ -32,18 +32,31 @@ class authLogin extends HTMLElement {
     async connectedCallback() {
       await this.loadContent();
 
-        const loginButton = this.shadowRoot.querySelector('#subsButton');
+      const cancelButton = this.shadowRoot.querySelector('#cancelButton');
 
-        loginButton.addEventListener('click', (e) => {
-            const event = new CustomEvent('ready-subscribe', {
-              bubbles: true,
-              composed: true
-            });
-
-            this.dispatchEvent(event);
-            // Il manque à faire apparaitre le #subscribe dans la bar pour réussir à afficher la page
+      cancelButton.addEventListener('click', (e) => {
+        const event = new CustomEvent('ready-cancel', {
+          bubbles: true,
+          composed: true,
+          detail: {
+            from: 'login'
+          }
         });
-      
+
+      this.dispatchEvent(event);
+      });
+
+      const readySubsButton = this.shadowRoot.querySelector('#readySubsButton');
+
+      readySubsButton.addEventListener('click', (e) => {
+        const event = new CustomEvent('go-to-auth-subs', {
+          bubbles: true,
+          composed: true
+        });
+
+        this.dispatchEvent(event);
+      });
+    
       const submitInp = this.shadowRoot.getElementById('inpSubmit');
 
       submitInp.addEventListener('click', (e) => {
