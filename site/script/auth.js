@@ -19,57 +19,49 @@ async function hashPassword(password) {
 }
 
 async function call(resource, method, auth, obj) {
-  //TODO test it
-
-  // const BASE_URL = "https://api.amelieroussin.ca/";
-  // const apiUrl = `${BASE_URL}${resource}`;
-  // let reqJson = {}
-  // const reqBodyJson = obj || {};
+  const BASE_URL = "https://api.amelieroussin.ca/";
+  const apiUrl = `${BASE_URL}${resource}`;
+  let reqJson = {}
+  const reqBodyJson = obj || {};
   // console.log('in auth.js call fn')
   // console.log('1', resource, method, auth, obj)
   // console.log('2', reqBodyJson)
 
-  // if ((resource == "subscribe" || resource == "login") & obj) {
-  //   if ("password" in obj) {
-  //     obj.passHash = hashPassword(obj.password);
-  //     console.log(obj.password)
-  //   } else {
-  //     throw new Error("Empty password while required...");
-  //   }
-  // }
+  if ((resource == "subscribe" || resource == "login") & obj) {
+    if ("password" in obj) {
+      obj.passHash = hashPassword(obj.password);
+      console.log(obj.password)
+    } else {
+      throw new Error("Empty password while required...");
+    }
+  }
 
-  // if (method == "GET") {
-  //   reqJson = {
-  //       method: method,
-  //       headers: {
-  //         'Content-type': "application/json",
-  //         'Accept': "application/json"
-  //       }
-  //   };
-  // } else {
-  //   reqJson = {
-  //       method: method,
-  //       headers: {
-  //         'Content-type': "application/json",
-  //         'Accept': "application/json"
-  //       },
-  //       body: JSON.stringify(reqBodyJson)
-  //   };
-  // }
+  if (method == "GET") {
+    reqJson = {
+        method: method,
+        headers: {
+          'Content-type': "application/json",
+          'Accept': "application/json"
+        }
+    };
+  } else {
+    reqJson = {
+        method: method,
+        headers: {
+          'Content-type': "application/json",
+          'Accept': "application/json"
+        },
+        body: JSON.stringify(reqBodyJson)
+    };
+  }
 
   // console.log('end of call fn before fetch: ', reqJson, reqBodyJson, apiUrl)
-  // const reqObjJson = await fetch(apiUrl, reqJson);
-  // const reqObjJson = await fetch(`https://api.amelieroussin.ca/login`, {
-  //               method: 'POST',
-  //               headers: { 'Content-Type': 'application/json',
-  //                 'Accept': 'application/json'
-  //                },
-  //               body: JSON.stringify(reqBodyJson)
-  //           });
-
+  const reqObjJson = await fetch(apiUrl, reqJson);
   // console.log('end of call fn return: ', reqObjJson)
+
   // let result = await reqBodyJson.json();
   // console.log(result);
+  
   return reqObjJson;
 }
 
@@ -116,25 +108,24 @@ export async function subscribe(user) {
 
 export async function login(user) {
   console.log("in auth.js login");
-  // currentUser = loginJson.user;
 
   let result = false;
-  // const loginJson = await call("login", "POST", false, user);
-   const loginJson = await fetch(`https://api.amelieroussin.ca/login`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json',
-                  'Accept': 'application/json'
-                 },
-                body: JSON.stringify(user)
-            });
-    console.log('in auth.js loginJson', loginJson)
+  const loginResponse = await call("login", "POST", false, user);
+  //  const loginResponse = await fetch(`https://api.amelieroussin.ca/login`, {
+  //               method: 'POST',
+  //               headers: { 'Content-Type': 'application/json',
+  //                 'Accept': 'application/json'
+  //                },
+  //               body: JSON.stringify(user)
+  //           });
+    // console.log('in auth.js loginJson', loginJson)
 
-    result = await loginJson.json();
-    console.log(result);
+  const loginJson = await loginResponse.json();
+    // console.log(result);
 
   if (loginJson.errorCode == 0) {
-    result = true;
-    localStorage.setItem("user", JSON.stringify(loginJson.user));
+    result = true
+    localStorage.setItem("user", JSON.stringify(loginJson.token));
 
     
     const event = new CustomEvent("auth-logedin", {});
