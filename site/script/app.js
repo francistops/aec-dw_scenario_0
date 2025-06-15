@@ -3,9 +3,9 @@
 import { getAllPosts, getNextPost, isIdentified, login, subscribe } from "./auth.js";
 console.log('in app.js');
 
-// if (!window.location.hash || window.location.hash === '') {
-//     window.location.hash = '#blog';
-// }
+if (!window.location.hash || window.location.hash === '') {
+    window.location.hash = '#blog';
+}
 
 [
   ['ready-login', '#login'],
@@ -20,8 +20,6 @@ console.log('in app.js');
   });
 });
     const listPostTag = document.createElement('my-articles');
-
-
 
     listPostTag.addEventListener('ready-delete', async (e) => {
         const url = `${BASE_API}/posts/${e.detail.id}`;
@@ -118,7 +116,7 @@ document.addEventListener('ready-cancel', (event) => {
     //         subsComp.remove();
     //     }
     // }
-    window.location.hash = '#blog';
+    // window.location.hash = '#blog';
 });
 
 document.addEventListener('subscribed', async (event) => {
