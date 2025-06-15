@@ -22,13 +22,13 @@ async function call(resource, method, auth, obj) {
   //TODO test it
   console.log('in auth.js call fn')
   console.log(resource, method, auth, obj)
-  const BASE_URL = "https://www.amelieroussin.ca/";
+  const BASE_URL = "https://api.amelieroussin.ca/";
   const apiUrl = `${BASE_URL}${resource}`;
   let reqJson = {}
   const reqBodyJson = obj || {};
   console.log(reqBodyJson)
 
-  if (resource == "subscribe" || resource == "login") {
+  if ((resource == "subscribe" || resource == "login") & obj) {
     if ("password" in obj) {
       obj.passHash = hashPassword(obj.password);
       console.log(obj.password)
@@ -157,7 +157,13 @@ export async function getNextPost(postId) {
   if (postId != null) {
     resource += `/${postId}`;
   }
-  const nextPostJson = await call(resource, "POST", false);
+  
+  const body = {
+    ids: postId ? [postId] : [],
+    nbRequested: 1
+  };
+
+  const nextPostJson = await call(resource, "POST", false, body);
 
   if (nextPostJson.errorCode == 0) {
     result = nextPostJson.post;

@@ -2,13 +2,19 @@
 
 import { getAllPosts, getNextPost, isIdentified, login, subscribe } from "./auth.js";
 console.log('in app.js');
-    // Force the initial load to handle the current hash (or force #blog)
-if (!window.location.hash) {
-    window.location.hash = 'blog';
-} else {
-    // Appelle manuellement le handler pour gérer le hash courant
-    window.dispatchEvent(new Event('hashchange'));
-}
+
+document.addEventListener('ready-login', () => {
+    hideBlogPosts(true);
+    displayLogin();
+});
+
+document.addEventListener('ready-subscribe', () => {
+    hideBlogPosts(true);
+    hideLogin(true);
+    displaySubs();
+});
+
+
 window.addEventListener('hashchange', (e) => {
     console.log('hash has change to ', window.location.hash)
     switch (window.location.hash) { // window est un objet avec un objet location à l'intérieur et hash est un attribut de location qui est aussi un attribut de window
@@ -46,32 +52,24 @@ window.addEventListener('hashchange', (e) => {
     }
 });
 
-function displayNavBar() {
+//Je voulais ajouter le #blog dès le départ, mais ça call tu suite getNextPost
+//     // Force the initial load to handle the current hash (or force #blog)
+// if (!window.location.hash) {
+//     window.location.hash = 'blog';
+// } else {
+//     // Appelle manuellement le handler pour gérer le hash courant
+//     window.dispatchEvent(new Event('hashchange'));
+// }
 
-    // je suis pas sure je pense que je vais just mettre un class hidden sur la boite des posts
-    const headerTag = document.querySelector('header');
-
-    if (isIdentified()) {
-        const WCnavBarTag = document.createElement('nav-bar');
-        headerTag.appendChild(WCnavBarTag);
-    } else {
-        const WCnavBarTag = document.createElement('nav-bar');
-        headerTag.appendChild(WCnavBarTag);
-    }
-}
-
-function hideBlogPosts(bool) {
-    const wrapperPostsDiv = document.getElementById("wrapperPosts")
-    if (bool) {
-        wrapperPostsDiv.classList.add('hidden')
-        wrapperPostsDiv.style.display = 'none'
-        wrapperPostsDiv.style.backgroundColor = 'bisque'
-    }
+function hideBlogPosts() {
+    const postRead = document.querySelector('post-read');
+    const wrapperPostsDiv = postRead.shadowRoot.getElementById("wrapperPosts");
+    wrapperPostsDiv.classList.add('hidden');
 }
 
 function displayBlog() {
     //display landing page blog
-    console.log('in display_blog ')
+    console.log('in display_blog ');
 
     // teacher: this need to make sure that the page only contain post-read WC
     //  need to remove what is currently in the page
@@ -91,18 +89,17 @@ function displayBlog() {
     // if user has token display nav with extra   
     const mainTag = document.querySelector('main');
     const WCpostReadTag = document.createElement('post-read');
+    mainTag.innerHTML = '';
     mainTag.appendChild(WCpostReadTag);
 
-    const wrapperPostsDiv = document.getElementById("wrapperPosts")
-    const allPost = getAllPosts()
-    const nextPost = getNextPost()
-
-
+    const wrapperPostsDiv = document.getElementById("wrapperPosts");
+    const allPost = getAllPosts();
+    const nextPost = getNextPost();
 };
 
 function displayLogin() {
     // display the login page
-    console.log('in app.js displayLogin')
+    console.log('in app.js displayLogin');
 
     // TODO
     // opional: make it modal
@@ -122,15 +119,26 @@ function displayLogin() {
     
     const mainTag = document.querySelector('main');
     const WCauthLoginTag = document.createElement('auth-login');
+
+    mainTag.innerHTML = '';
     mainTag.appendChild(WCauthLoginTag);
-    
-
-
 };
+
+function hideLogin() {
+    const postRead = document.querySelector('auth-login');
+    const wrapperPostsDiv = postRead.shadowRoot.getElementById("loginBox");
+    wrapperPostsDiv.classList.add('hidden');
+}
 
 function displaySubs() {
     // account creation form => access via the login page
-    console.log('in app.js displaySubs')
+    console.log('in app.js displaySubs');
+
+    const mainTag = document.querySelector('main');
+    const WCauthSubsTag = document.createElement('auth-subs');
+
+    mainTag.innerHTML = '';
+    mainTag.appendChild(WCauthSubsTag);
 
     // TODO
     // form with :
@@ -144,12 +152,18 @@ function displaySubs() {
     // if sucess => the user is created and then return to the login page
     // if error => the frontend is alerted and let the user known then return to login page. error verbosity tbd
 
-    subscribe()
+    // subscribe();
 };
+
+function hideSubs() {
+    const postRead = document.querySelector('auth-subs');
+    const wrapperPostsDiv = postRead.shadowRoot.getElementById("subsBox");
+    wrapperPostsDiv.classList.add('hidden');
+}
 
 function displayArticles(){
     // user personnalized page with control over his articles
-    console.log('in app.js displayArticles')
+    console.log('in app.js displayArticles');
 
     // TODO
     // create a route that will fetch only the posts from an user either id or authorId or userId tbd
@@ -159,12 +173,12 @@ function displayArticles(){
     //  edit post on this row
     //  delete post on this row
     //  publish button in cell if the post publishedDate is NULL
-    getAllPosts()
+    getAllPosts();
 };
 
 function displayAccount() {
     // user personnalized account page
-    console.log('in app.js displayAccount')
+    console.log('in app.js displayAccount');
     
     // TODO
     // email is not editable
@@ -180,7 +194,7 @@ function displayAccount() {
 
 function applyLogout() {
     // logout user
-    console.log('in app.js applyLogout')
+    console.log('in app.js applyLogout');
 
     // TODO
     // if user has token send logout to api

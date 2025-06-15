@@ -31,10 +31,21 @@ class authLogin extends HTMLElement {
   
     async connectedCallback() {
       await this.loadContent();
+
+        const loginButton = this.shadowRoot.querySelector('#subsButton');
+
+        loginButton.addEventListener('click', (e) => {
+            const event = new CustomEvent('ready-subscribe', {
+              bubbles: true,
+              composed: true
+            });
+
+            this.dispatchEvent(event);
+            // Il manque à faire apparaitre le #subscribe dans la bar pour réussir à afficher la page
+        });
       
       const submitInp = this.shadowRoot.getElementById('inpSubmit');
 
-      
       submitInp.addEventListener('click', (e) => {
         const emailInp = this.shadowRoot.getElementById('inpEmail').value;
         const passwordInp = this.shadowRoot.getElementById('inpPassword').value;
@@ -47,12 +58,7 @@ class authLogin extends HTMLElement {
         console.log('in auth-login WC user: ', user)
         login(user)
       });
-
-
     }
-
-
-  
   }
   
   customElements.define('auth-login', authLogin);
