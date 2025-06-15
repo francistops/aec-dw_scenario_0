@@ -3,17 +3,137 @@
 import { getAllPosts, getNextPost, isIdentified, login, subscribe } from "./auth.js";
 console.log('in app.js');
 
-document.addEventListener('ready-login', () => {
-    hideBlogPosts(true);
-    displayLogin();
+// if (!window.location.hash || window.location.hash === '') {
+//     window.location.hash = '#blog';
+// }
+
+[
+  ['ready-login', '#login'],
+  ['go-to-auth-subs', '#subscribe'],
+  ['go-to-my-articles', '#articles'],
+  ['post-created', '#articles'],
+  ['create-post', '#createPost']
+].forEach(([eventName, targetHash]) => {
+  document.addEventListener(eventName, () => {
+    window.location.hash = targetHash;
+  });
+});
+    const listPostTag = document.createElement('my-articles');
+
+
+
+    listPostTag.addEventListener('ready-delete', async (e) => {
+        const url = `${BASE_API}/posts/${e.detail.id}`;
+        const result = await fetch(url, {
+            method: 'DELETE',
+            headers: { 'Accept': 'application/json' }
+        });
+
+        if (result.ok) {
+            const data = await result.json();
+            if (data.errorCode == 0) {
+                listPostTag.deleteData(e.detail.id);
+            }
+        }
+    });
+
+    listPostTag.addEventListener('ready-publish', async (e) => {
+        const url = `${BASE_API}/posts/${e.detail.id}/publish`;
+        const result = await fetch(url, {
+            method: 'POST',
+            headers: { 'Accept': 'application/json' }
+        });
+
+        if (result.ok) {
+            const data = await result.json();
+            if (data.errorCode == 0) {
+                listPostTag.publishData(e.detail.id);
+            }
+        }
+    });
+
+    listPostTag.addEventListener('ready-create', (e) => {
+        const handlingArticlesTag = document.createElement('handling-articles');
+        handlingArticlesTag.setAttribute('mode', 'create');
+
+        handlingArticlesTag.addEventListener('post-created', (e) => {
+            handlingArticlesTag.remove();
+            listPostTag.classList.remove('invisible');
+            listPostTag.addData(e.detail.result.data.post);
+        });
+
+        handlingArticlesTag.addEventListener('cancel-action', () => {
+            handlingArticlesTag.remove();
+            listPostTag.classList.remove('invisible');
+        });
+
+        listPostTag.classList.add('invisible');
+        mainTag.appendChild(handlingArticlesTag);
+    });
+
+    listPostTag.addEventListener('ready-update', (e) => {
+        const handlingArticlesTag = listPostTag.createElement('handling-articles');
+        handlingArticlesTag.setAttribute('mode', 'update');
+        handlingArticlesTag.setAttribute('id', e.detail.id);
+
+        handlingArticlesTag.addEventListener('post-updated', (ev) => {
+            handlingArticlesTag.remove();
+            listPostTag.classList.remove('invisible');
+            listPostTag.updateData(e.detail.id, ev.detail.data.post);
+        });
+
+        handlingArticlesTag.addEventListener('cancel-action', () => {
+            handlingArticlesTag.remove();
+            listPostTag.classList.remove('invisible');
+        });
+
+        listPostTag.classList.add('invisible');
+        mainTag.appendChild(handlingArticlesTag);
+    });
+
+
+document.addEventListener('ready-cancel', (event) => {
+    // const from = event.detail?.from;
+
+    // if (from === 'login') {
+    //     const loginComp = document.querySelector('auth-login');
+    //     if (loginComp) {
+    //         const shadow = loginComp.shadowRoot;
+    //         shadow.querySelector('#email')?.value = '';
+    //         shadow.querySelector('#password')?.value = '';
+    //         loginComp.remove();
+    //     }
+    // }
+
+    // if (from === 'subscribe') {
+    //     const subsComp = document.querySelector('auth-subs');
+    //     if (subsComp) {
+    //         const shadow = subsComp.shadowRoot;
+    //         shadow.querySelector('#inpEmail')?.value = '';
+    //         shadow.querySelector('#inpPassword')?.value = '';
+    //         shadow.querySelector('#inpConfirmPassword')?.value = '';
+    //         shadow.querySelector('#inpFirstName')?.value = '';
+    //         shadow.querySelector('#inpLastName')?.value = '';
+    //         subsComp.remove();
+    //     }
+    // }
+    window.location.hash = '#blog';
 });
 
-document.addEventListener('ready-subscribe', () => {
-    hideBlogPosts(true);
-    hideLogin(true);
-    displaySubs();
-});
+document.addEventListener('subscribed', async (event) => {
 
+    const user = event.detail.user;
+    console.log('Received from auth-subs:', user);
+
+    const success = await subscribe(user);
+
+    if (success) {
+        console.log("Inscription réussie !");
+        displayLogin();
+    } else {
+        alert("Inscription échouée. Vérifiez les champs ou réessayez plus tard.");
+    }
+});
 
 window.addEventListener('hashchange', (e) => {
     console.log('hash has change to ', window.location.hash)
@@ -43,6 +163,9 @@ window.addEventListener('hashchange', (e) => {
             // todo: logout action eg: remove auth token the return to landing page
             applyLogout()
             break;
+        case "#createPost":
+            displayCreatePost();
+            break;
         case '':
             window.location.hash = 'blog'; // Quand on l'écrit on met pas de #
             break;
@@ -51,22 +174,6 @@ window.addEventListener('hashchange', (e) => {
             break;
     }
 });
-
-//Je voulais ajouter le #blog dès le départ, mais ça call tu suite getNextPost
-//     // Force the initial load to handle the current hash (or force #blog)
-// if (!window.location.hash) {
-//     window.location.hash = 'blog';
-// } else {
-//     // Appelle manuellement le handler pour gérer le hash courant
-//     window.dispatchEvent(new Event('hashchange'));
-// }
-
-function hideBlogPosts() {
-    const postRead = document.querySelector('post-read');
-    const wrapperPostsDiv = postRead.shadowRoot.getElementById("wrapperPosts");
-    wrapperPostsDiv.classList.add('hidden');
-    return
-}
 
 function displayBlog() {
     //display landing page blog
@@ -125,12 +232,6 @@ function displayLogin() {
     mainTag.appendChild(WCauthLoginTag);
 };
 
-function hideLogin() {
-    const postRead = document.querySelector('auth-login');
-    const wrapperPostsDiv = postRead.shadowRoot.getElementById("loginBox");
-    wrapperPostsDiv.classList.add('hidden');
-}
-
 function displaySubs() {
     // account creation form => access via the login page
     console.log('in app.js displaySubs');
@@ -156,26 +257,32 @@ function displaySubs() {
     // subscribe();
 };
 
-function hideSubs() {
-    const postRead = document.querySelector('auth-subs');
-    const wrapperPostsDiv = postRead.shadowRoot.getElementById("subsBox");
-    wrapperPostsDiv.classList.add('hidden');
-}
-
 function displayArticles(){
-    // user personnalized page with control over his articles
     console.log('in app.js displayArticles');
+    const mainTag = document.querySelector('main');
+    mainTag.innerHTML = '';
 
-    // TODO
-    // create a route that will fetch only the posts from an user either id or authorId or userId tbd
-    // optional multiple publish or delete with checkbox
-    // the below actions need to work:
-    //  create a post
-    //  edit post on this row
-    //  delete post on this row
-    //  publish button in cell if the post publishedDate is NULL
-    getAllPosts();
+
+
+
+// TODO
+// create a route that will fetch only the posts from an user either id or authorId or userId tbd
+// optional multiple publish or delete with checkbox
+// the below actions need to work:
+//  create a post
+//  edit post on this row
+//  delete post on this row
+//  publish button in cell if the post publishedDate is NULL
+getAllPosts();
 };
+
+function displayCreatePost() {
+    const mainTag = document.querySelector('main');
+    mainTag.innerHTML = '';
+    const WCHandlingArticlesTag = document.createElement('handling-articles');
+    mainTag.appendChild(WCHandlingArticlesTag);
+
+}
 
 function displayAccount() {
     // user personnalized account page

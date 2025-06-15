@@ -21,16 +21,16 @@ async function hashPassword(password) {
 async function call(resource, method, auth, obj) {
   const BASE_URL = "https://api.amelieroussin.ca/";
   const apiUrl = `${BASE_URL}${resource}`;
-  let reqJson = {}
+  let reqJson = {};
   const reqBodyJson = obj || {};
   // console.log('in auth.js call fn')
   // console.log('1', resource, method, auth, obj)
   // console.log('2', reqBodyJson)
 
-  if ((resource == "subscribe" || resource == "login") & obj) {
+  if (resource == "subscribe" || resource == "login") {
     if ("password" in obj) {
       obj.passHash = hashPassword(obj.password);
-      console.log(obj.password)
+      console.log(obj.password);
     } else {
       throw new Error("Empty password while required...");
     }
@@ -96,8 +96,6 @@ export async function subscribe(user) {
   if (subscribeJson.errorCode == 0) {
     result = subscribeJson.subscribed;
 
-    const event = new CustomEvent("auth-subscribed", {});
-    this.dispatchEvent(event);
   } else {
     // TODO
     console.error("unhandle error in auth.js subscribeJson");
@@ -130,6 +128,10 @@ export async function login(user) {
     
     const event = new CustomEvent("auth-logedin", {});
     this.dispatchEvent(event);
+
+    if (!window.location.hash || window.location.hash === '') {
+        window.location.hash = '#blog';
+    }
 
     document.querySelector('.articles').style.visibility = 'visible';
     document.querySelector('.account').style.visibility = 'visible';
@@ -177,13 +179,7 @@ export async function getNextPost(postId) {
   if (postId != null) {
     resource += `/${postId}`;
   }
-  
-  const body = {
-    ids: postId ? [postId] : [],
-    nbRequested: 1
-  };
-
-  const nextPostJson = await call(resource, "POST", false, body);
+  const nextPostJson = await call(resource, "POST", false);
 
   if (nextPostJson.errorCode == 0) {
     result = nextPostJson.post;

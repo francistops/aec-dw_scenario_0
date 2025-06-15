@@ -32,18 +32,32 @@ class authLogin extends HTMLElement {
     async connectedCallback() {
       await this.loadContent();
 
-        const loginButton = this.shadowRoot.querySelector('#subsButton');
+        const cancelButton = this.shadowRoot.querySelector('#cancelButton');
 
-        loginButton.addEventListener('click', (e) => {
-            const event = new CustomEvent('ready-subscribe', {
+        cancelButton.addEventListener('click', (e) => {
+            const event = new CustomEvent('ready-cancel', {
               bubbles: true,
-              composed: true
+              composed: true,
+              detail: {
+                from: 'login'
+              }
             });
 
             this.dispatchEvent(event);
-            // Il manque à faire apparaitre le #subscribe dans la bar pour réussir à afficher la page
         });
-      const form = this.shadowRoot.getElementById('action-post');
+
+
+      const readySubsButton = this.shadowRoot.querySelector('#readySubsButton');
+
+      readySubsButton.addEventListener('click', (e) => {
+        const event = new CustomEvent('go-to-auth-subs', {
+          bubbles: true,
+          composed: true
+        });
+
+        this.dispatchEvent(event);
+      });
+    
       const submitInp = this.shadowRoot.getElementById('inpSubmit');
       const { parseFormToObject } = await import("/script/utilform.js");
 
@@ -62,7 +76,7 @@ class authLogin extends HTMLElement {
         // passHash: passwordInp
         // }
         console.log('in auth-login WC user: ', user)
-        login(user)
+        login(user);
       });
     }
   }
