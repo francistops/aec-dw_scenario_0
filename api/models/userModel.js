@@ -46,8 +46,7 @@ exports.createUser = async (user) => {
                       returning *;`;
   const parameters = [
     user.email,
-    hash(user.passHash),
-    user.passHash,
+    hash(user.passHash),,
     user.firstName,
     user.lastName,
   ];

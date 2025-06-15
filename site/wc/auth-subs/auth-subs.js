@@ -1,4 +1,4 @@
-import { subscribe } from "../../script/auth";
+import { subscribe } from "../../script/auth.js";
 
 /**
  * Changez ce code pour répondre à votre besoins
