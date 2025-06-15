@@ -4,26 +4,55 @@ import { getAllPosts, getNextPost, isIdentified, login, subscribe } from "./auth
 console.log('in app.js');
 
 document.addEventListener('ready-login', () => {
-    hideBlogPosts(true);
     displayLogin();
 });
 
 document.addEventListener('ready-subscribe', () => {
-    hideBlogPosts(true);
     hideLogin(true);
     displaySubs();
 });
 
-document.addEventListener('ready-cancel', () => {
+document.addEventListener('ready-cancel', (event) => {
+    const from = event.detail?.from;
 
+    // if (from === 'login') {
+    //     const loginComp = document.querySelector('auth-login');
+    //     if (loginComp) {
+    //         const shadow = loginComp.shadowRoot;
+    //         shadow.querySelector('#email')?.value = '';
+    //         shadow.querySelector('#password')?.value = '';
+    //         loginComp.remove();
+    //     }
+    // }
+
+    // if (from === 'subscribe') {
+    //     const subsComp = document.querySelector('auth-subs');
+    //     if (subsComp) {
+    //         const shadow = subsComp.shadowRoot;
+    //         shadow.querySelector('#inpEmail')?.value = '';
+    //         shadow.querySelector('#inpPassword')?.value = '';
+    //         shadow.querySelector('#inpConfirmPassword')?.value = '';
+    //         shadow.querySelector('#inpFirstName')?.value = '';
+    //         shadow.querySelector('#inpLastName')?.value = '';
+    //         subsComp.remove();
+    //     }
+    // }
     displayBlog();
-})
+});
 
-document.addEventListener('subscribed', (event) => {
-  const user = event.detail.user;
-  console.log('Received from auth-subs:', user);
+document.addEventListener('subscribed', async (event) => {
 
-  subscribe(user); 
+    const user = event.detail.user;
+    console.log('Received from auth-subs:', user);
+
+    const success = await subscribe(user);
+
+    if (success) {
+        console.log("Inscription réussie !");
+        displayLogin();
+    } else {
+        alert("Inscription échouée. Vérifiez les champs ou réessayez plus tard.");
+    }
 });
 
 window.addEventListener('hashchange', (e) => {
@@ -65,17 +94,11 @@ window.addEventListener('hashchange', (e) => {
 
 //Je voulais ajouter le #blog dès le départ, mais ça call tu suite getNextPost
 //     // Force the initial load to handle the current hash (or force #blog)
-// if (!window.location.hash) {
-//     window.location.hash = 'blog';
-// } else {
-//     // Appelle manuellement le handler pour gérer le hash courant
-//     window.dispatchEvent(new Event('hashchange'));
-// }
-
-function hideBlogPosts() {
-    const postRead = document.querySelector('post-read');
-    const wrapperPostsDiv = postRead.shadowRoot.getElementById("wrapperPosts");
-    wrapperPostsDiv.classList.add('hidden');
+if (!window.location.hash) {
+    window.location.hash = '#blog';
+} else {
+    // Appelle manuellement le handler pour gérer le hash courant
+    window.dispatchEvent(new Event('hashchange'));
 }
 
 function displayBlog() {

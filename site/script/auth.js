@@ -87,8 +87,6 @@ export async function subscribe(user) {
   if (subscribeJson.errorCode == 0) {
     result = subscribeJson.subscribed;
 
-    const event = new CustomEvent("auth-subscribed", {});
-    this.dispatchEvent(event);
   } else {
     // TODO
     console.error("unhandle error in auth.js subscribeJson");
