@@ -43,18 +43,24 @@ class authLogin extends HTMLElement {
             this.dispatchEvent(event);
             // Il manque à faire apparaitre le #subscribe dans la bar pour réussir à afficher la page
         });
-      
+      const form = this.shadowRoot.getElementById('action-post');
       const submitInp = this.shadowRoot.getElementById('inpSubmit');
+      const { parseFormToObject } = await import("/script/utilform.js");
 
-      submitInp.addEventListener('click', (e) => {
-        const emailInp = this.shadowRoot.getElementById('inpEmail').value;
-        const passwordInp = this.shadowRoot.getElementById('inpPassword').value;
-        console.log(emailInp, passwordInp)
+      form.addEventListener('submit', (e) => {
+        e.preventDefault();
+      });
 
-        const user = {
-        email: emailInp,
-        password: passwordInp
-        }
+        submitInp.addEventListener('click', async (e) => {
+          const user = parseFormToObject(form);
+          // const emailInp = this.shadowRoot.getElementById('inpEmail').value;
+          // const passwordInp = this.shadowRoot.getElementById('inpPassword').value;
+          // console.log(emailInp, passwordInp)
+
+        // const user = {
+        // email: emailInp,
+        // passHash: passwordInp
+        // }
         console.log('in auth-login WC user: ', user)
         login(user)
       });

@@ -4,10 +4,10 @@ const express = require("express");
 const app = express();
 const PORT = 3000;
 
+process.env['NODE_TLS_REJECT_UNAUTHORIZED'] = '0';
+
 const cors = require("cors");
-app.use(cors({
-    origin: ['https://amelieroussin.ca', 'https://www.amelieroussin.ca']
-}));
+app.use(cors());
 
 app.use(express.json());
 

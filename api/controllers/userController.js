@@ -88,7 +88,7 @@ exports.login = async (req, res) => {
         result = {
           message: "Successfull login",
           errorCode: 0,
-          // user: loggedUser,
+          user: loggedUser,
           token: userToken
         };
     } else {
