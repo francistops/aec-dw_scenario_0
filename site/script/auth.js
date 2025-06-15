@@ -57,6 +57,7 @@ async function call(resource, method, auth, obj) {
 
   // console.log('end of call fn before fetch: ', reqJson, reqBodyJson, apiUrl)
   const reqObjJson = await fetch(apiUrl, reqJson);
+
   // console.log('end of call fn return: ', reqObjJson)
 
   // let result = await reqBodyJson.json();
@@ -127,7 +128,7 @@ export async function login(user) {
 
     
     const event = new CustomEvent("auth-logedin", {});
-    this.dispatchEvent(event);
+    document.dispatchEvent(new CustomEvent("auth-logedin", {}));
 
     if (!window.location.hash || window.location.hash === '') {
         window.location.hash = '#blog';

@@ -27,7 +27,7 @@ class myArticles extends HTMLElement {
         const createBtn = this.shadowRoot.getElementById('create-post');
         createBtn.addEventListener('click', (e) => {
             const event = new CustomEvent('ready-create', {
-                detail: { },
+                detail: { mode: 'create' },
                 bubbles: true,
                 composed: true
             });

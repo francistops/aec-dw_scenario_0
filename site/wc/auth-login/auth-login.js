@@ -46,7 +46,6 @@ class authLogin extends HTMLElement {
       //       this.dispatchEvent(event);
       //   });
 
-
       // const readySubsButton = this.shadowRoot.querySelector('#readySubsButton');
 
       // readySubsButton.addEventListener('click', (e) => {
@@ -55,24 +54,10 @@ class authLogin extends HTMLElement {
       //     composed: true
       //   });
 
-      //   this.dispatchEvent(event);
-      // });
-      // const form = this.shadowRoot.getElementById('action-post');
-      // const submitInp = this.shadowRoot.getElementById('inpSubmit');
-      // const { parseFormToObject } = await import("/script/utilform.js");
-
-      // form.addEventListener('submit', (e) => {
-      //   e.preventDefault();
-      // });
-
-      //   submitInp.addEventListener('click', async (e) => {
-      //     const user = parseFormToObject(form);
-
-      //   console.log('in auth-login WC user: ', user)
-      //   login(user);
-      // });
-
-            const form = this.shadowRoot.getElementById('action-post');
+        this.dispatchEvent(event);
+      });
+    
+      const form = this.shadowRoot.getElementById('action-post');
       const submitInp = this.shadowRoot.getElementById('inpSubmit');
       const { parseFormToObject } = await import("/script/utilform.js");
 
@@ -80,18 +65,15 @@ class authLogin extends HTMLElement {
         e.preventDefault();
       });
 
-        submitInp.addEventListener('click', async (e) => {
-          const user = parseFormToObject(form);
-          // const emailInp = this.shadowRoot.getElementById('inpEmail').value;
-          // const passwordInp = this.shadowRoot.getElementById('inpPassword').value;
-          // console.log(emailInp, passwordInp)
+      submitInp.addEventListener('click', async (e) => {
+        const user = parseFormToObject(form);
 
-        // const user = {
-        // email: emailInp,
-        // passHash: passwordInp
-        // }
         console.log('in auth-login WC user: ', user)
-        login(user)
+        const success = await login(user);
+
+        if (!success) {
+          alert("Connexion échouée. Vérifiez vos informations.");
+        }
       });
 
     }
