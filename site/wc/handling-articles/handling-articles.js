@@ -1,4 +1,4 @@
-class HandlingPostElement extends HTMLElement {
+class HandlingArticles extends HTMLElement {
     constructor() {
         super();
         this.attachShadow({ mode: 'open' });
@@ -6,8 +6,8 @@ class HandlingPostElement extends HTMLElement {
 
     async loadContent() {
       const [html, css] = await Promise.all([
-        fetch('/wc/handling-post/handling-post.html').then(res => res.text()),
-        fetch('/wc/handling-post/handling-post.css').then(res => res.text())
+        fetch('/wc/handling-articles/handling-articles.html').then(res => res.text()),
+        fetch('/wc/handling-articles/handling-articles.css').then(res => res.text())
       ]);
   
       const style = document.createElement('style');
@@ -129,35 +129,34 @@ class HandlingPostElement extends HTMLElement {
     }
   
     async connectedCallback() {
-        await this.loadContent();
+      await this.loadContent();
 
-        const cancelBtn = this.shadowRoot.getElementById('cancel');
-        cancelBtn.addEventListener('click', (e) => {
-            const event = new CustomEvent('cancel-action', {
-                detail: { },
-                bubbles: true,
-                composed: true
-            });
+      const cancelBtn = this.shadowRoot.getElementById('goBackButton');
+      cancelBtn.addEventListener('click', (e) => {
+          const event = new CustomEvent('go-to-my-articles', {
+              detail: { },
+              bubbles: true,
+              composed: true
+          });
 
-            this.dispatchEvent(event);
-        });
+          this.dispatchEvent(event);
+      });
+      const mode = this.getAttribute('mode');
 
-        const mode = this.getAttribute('mode');
+      if (mode === 'create') {
+          this.handleCreate();
+      } else if (mode === 'update') {
+          const id = this.getAttribute('id');
+          if (id) {
+              this.handleUpdate(id);
+          }
+      } else {
+          throw new Error('Mode invalide');
+      }
 
-        if (mode === 'create') {
-            this.handleCreate();
-        } else if (mode === 'update') {
-            const id = this.getAttribute('id');
-            if (id !== undefined) {
-                this.handleUpdate(id);
-            }
-            console.log('Ready to update');
-        } else {
-            throw new Error('Mode invalide');
-        }
 
-        }
+    }
   }
   
-  customElements.define('handling-post', HandlingPostElement);
+  customElements.define('handling-articles', HandlingArticles);
   

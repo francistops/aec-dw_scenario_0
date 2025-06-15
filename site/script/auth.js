@@ -109,6 +109,10 @@ export async function login(user) {
     const event = new CustomEvent("auth-logedin", {});
     this.dispatchEvent(event);
 
+    if (!window.location.hash || window.location.hash === '') {
+        window.location.hash = '#blog';
+    }
+
     document.querySelector('.articles').style.visibility = 'visible';
     document.querySelector('.account').style.visibility = 'visible';
   }

@@ -32,19 +32,20 @@ class authLogin extends HTMLElement {
     async connectedCallback() {
       await this.loadContent();
 
-      const cancelButton = this.shadowRoot.querySelector('#cancelButton');
+        const cancelButton = this.shadowRoot.querySelector('#cancelButton');
 
-      cancelButton.addEventListener('click', (e) => {
-        const event = new CustomEvent('ready-cancel', {
-          bubbles: true,
-          composed: true,
-          detail: {
-            from: 'login'
-          }
+        cancelButton.addEventListener('click', (e) => {
+            const event = new CustomEvent('ready-cancel', {
+              bubbles: true,
+              composed: true,
+              detail: {
+                from: 'login'
+              }
+            });
+
+            this.dispatchEvent(event);
         });
 
-      this.dispatchEvent(event);
-      });
 
       const readySubsButton = this.shadowRoot.querySelector('#readySubsButton');
 
@@ -69,7 +70,7 @@ class authLogin extends HTMLElement {
         password: passwordInp
         }
         console.log('in auth-login WC user: ', user)
-        login(user)
+        login(user);
       });
     }
   }

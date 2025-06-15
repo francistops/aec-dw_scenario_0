@@ -1,4 +1,4 @@
-class ListPostsElement extends HTMLElement {
+class myArticles extends HTMLElement {
     constructor() {
         super();
         this.attachShadow({ mode: 'open' });
@@ -6,8 +6,8 @@ class ListPostsElement extends HTMLElement {
 
     async loadContent() {
         const [html, css] = await Promise.all([
-            fetch('/wc/list-posts/list-posts.html').then(res => res.text()),
-            fetch('/wc/list-posts/list-posts.css').then(res => res.text())
+            fetch('/wc/my-articles/my-articles.html').then(res => res.text()),
+            fetch('/wc/my-articles/my-articles.css').then(res => res.text())
         ]);
 
         const style = document.createElement('style');
@@ -21,6 +21,7 @@ class ListPostsElement extends HTMLElement {
     }
   
     async connectedCallback() {
+        console.log('my-articles connecté');
         await this.loadContent();
 
         const createBtn = this.shadowRoot.getElementById('create-post');
@@ -32,6 +33,7 @@ class ListPostsElement extends HTMLElement {
             });
 
             this.dispatchEvent(event);
+            window.location.hash = '#createPost'
         });
 
         try {
@@ -136,4 +138,4 @@ class ListPostsElement extends HTMLElement {
     }
 }
 
-customElements.define('list-posts', ListPostsElement);
+customElements.define('my-articles', myArticles);
