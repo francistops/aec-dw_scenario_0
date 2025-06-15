@@ -62,9 +62,9 @@ window.addEventListener('hashchange', (e) => {
 // }
 
 function hideBlogPosts() {
-    // const postRead = document.querySelector('post-read');
-    // const wrapperPostsDiv = postRead.shadowRoot.getElementById("wrapperPosts");
-    // wrapperPostsDiv.classList.add('hidden');
+    const postRead = document.querySelector('post-read');
+    const wrapperPostsDiv = postRead.shadowRoot.getElementById("wrapperPosts");
+    wrapperPostsDiv.classList.add('hidden');
     return
 }
 
@@ -93,9 +93,9 @@ function displayBlog() {
     mainTag.innerHTML = '';
     mainTag.appendChild(WCpostReadTag);
 
-    // const wrapperPostsDiv = document.getElementById("wrapperPosts");
-    // const allPost = getAllPosts();
-    // const nextPost = getNextPost();
+    const wrapperPostsDiv = document.getElementById("wrapperPosts");
+    const allPost = getAllPosts();
+    const nextPost = getNextPost();
 };
 
 function displayLogin() {
