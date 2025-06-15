@@ -92,13 +92,14 @@ export function isIdentified() {
 export async function subscribe(user) {
   let result = false;
 
-  const subscribeJson = await call("subscribe", "POST", false, user);
+  const subscribeResponse = await call("subscribe", "POST", false, user);
 
-  if (subscribeJson.errorCode == 0) {
-    result = subscribeJson.subscribed;
+  if (subscribeResponse.errorCode == 0) {
+    result = true;
+    alert('subscribe success')
 
   } else {
-    // TODO
+    alert('subscribe fail')
     console.error("unhandle error in auth.js subscribeJson");
   }
 
@@ -110,17 +111,9 @@ export async function login(user) {
 
   let result = false;
   const loginResponse = await call("login", "POST", false, user);
-  //  const loginResponse = await fetch(`https://api.amelieroussin.ca/login`, {
-  //               method: 'POST',
-  //               headers: { 'Content-Type': 'application/json',
-  //                 'Accept': 'application/json'
-  //                },
-  //               body: JSON.stringify(user)
-  //           });
-    // console.log('in auth.js loginJson', loginJson)
 
   const loginJson = await loginResponse.json();
-    // console.log(result);
+
 
   if (loginJson.errorCode == 0) {
     result = true
@@ -133,9 +126,6 @@ export async function login(user) {
     if (!window.location.hash || window.location.hash === '') {
         window.location.hash = '#blog';
     }
-
-    document.querySelector('.articles').style.visibility = 'visible';
-    document.querySelector('.account').style.visibility = 'visible';
   }
 
   return result;
