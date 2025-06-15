@@ -75,7 +75,7 @@ class authSubs extends HTMLElement {
               bubbles: true,
               composed: true,
               detail: {
-                from: 'login'
+                from: 'subscribe'
               }
             });
 
