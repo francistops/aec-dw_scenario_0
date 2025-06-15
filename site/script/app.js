@@ -21,8 +21,6 @@ if (!window.location.hash || window.location.hash === '') {
 });
     const listPostTag = document.createElement('my-articles');
 
-
-
     listPostTag.addEventListener('ready-delete', async (e) => {
         const url = `${BASE_API}/posts/${e.detail.id}`;
         const result = await fetch(url, {
@@ -118,7 +116,7 @@ document.addEventListener('ready-cancel', (event) => {
     //         subsComp.remove();
     //     }
     // }
-    window.location.hash = '#blog';
+    // window.location.hash = '#blog';
 });
 
 document.addEventListener('subscribed', async (event) => {

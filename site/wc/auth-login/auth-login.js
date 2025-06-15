@@ -52,7 +52,6 @@ class authLogin extends HTMLElement {
 
       // this.dispatchEvent(event);
 
-        
       const form = this.shadowRoot.getElementById('action-post');
       const submitInp = this.shadowRoot.getElementById('inpSubmit');
       const { parseFormToObject } = await import("/script/utilform.js");
