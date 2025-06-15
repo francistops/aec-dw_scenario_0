@@ -32,32 +32,47 @@ class authLogin extends HTMLElement {
     async connectedCallback() {
       await this.loadContent();
 
-        const cancelButton = this.shadowRoot.querySelector('#cancelButton');
+      //   const cancelButton = this.shadowRoot.querySelector('#cancelButton');
 
-        cancelButton.addEventListener('click', (e) => {
-            const event = new CustomEvent('ready-cancel', {
-              bubbles: true,
-              composed: true,
-              detail: {
-                from: 'login'
-              }
-            });
+      //   cancelButton.addEventListener('click', (e) => {
+      //       const event = new CustomEvent('ready-cancel', {
+      //         bubbles: true,
+      //         composed: true,
+      //         detail: {
+      //           from: 'login'
+      //         }
+      //       });
 
-            this.dispatchEvent(event);
-        });
+      //       this.dispatchEvent(event);
+      //   });
 
 
-      const readySubsButton = this.shadowRoot.querySelector('#readySubsButton');
+      // const readySubsButton = this.shadowRoot.querySelector('#readySubsButton');
 
-      readySubsButton.addEventListener('click', (e) => {
-        const event = new CustomEvent('go-to-auth-subs', {
-          bubbles: true,
-          composed: true
-        });
+      // readySubsButton.addEventListener('click', (e) => {
+      //   const event = new CustomEvent('go-to-auth-subs', {
+      //     bubbles: true,
+      //     composed: true
+      //   });
 
-        this.dispatchEvent(event);
-      });
-    
+      //   this.dispatchEvent(event);
+      // });
+      // const form = this.shadowRoot.getElementById('action-post');
+      // const submitInp = this.shadowRoot.getElementById('inpSubmit');
+      // const { parseFormToObject } = await import("/script/utilform.js");
+
+      // form.addEventListener('submit', (e) => {
+      //   e.preventDefault();
+      // });
+
+      //   submitInp.addEventListener('click', async (e) => {
+      //     const user = parseFormToObject(form);
+
+      //   console.log('in auth-login WC user: ', user)
+      //   login(user);
+      // });
+
+            const form = this.shadowRoot.getElementById('action-post');
       const submitInp = this.shadowRoot.getElementById('inpSubmit');
       const { parseFormToObject } = await import("/script/utilform.js");
 
@@ -76,8 +91,9 @@ class authLogin extends HTMLElement {
         // passHash: passwordInp
         // }
         console.log('in auth-login WC user: ', user)
-        login(user);
+        login(user)
       });
+
     }
   }
   

@@ -27,14 +27,14 @@ async function call(resource, method, auth, obj) {
   // console.log('1', resource, method, auth, obj)
   // console.log('2', reqBodyJson)
 
-  if (resource == "subscribe" || resource == "login") {
-    if ("password" in obj) {
-      obj.passHash = hashPassword(obj.password);
-      console.log(obj.password);
-    } else {
-      throw new Error("Empty password while required...");
-    }
-  }
+  // if (resource == "subscribe" || resource == "login") {
+  //   if ("password" in obj) {
+  //     obj.passHash = hashPassword(obj.password);
+  //     console.log(obj.password);
+  //   } else {
+  //     throw new Error("Empty password while required...");
+  //   }
+  // }
 
   if (method == "GET") {
     reqJson = {
