@@ -37,6 +37,10 @@ document.addEventListener('ready-cancel', (event) => {
     //         subsComp.remove();
     //     }
     // }
+    displaySubs();
+});
+
+document.addEventListener('ready-cancel', () => {
     displayBlog();
 });
 
@@ -157,12 +161,6 @@ function displayLogin() {
     mainTag.innerHTML = '';
     mainTag.appendChild(WCauthLoginTag);
 };
-
-function hideLogin() {
-    const postRead = document.querySelector('auth-login');
-    const wrapperPostsDiv = postRead.shadowRoot.getElementById("loginBox");
-    wrapperPostsDiv.classList.add('hidden');
-}
 
 function displaySubs() {
     // account creation form => access via the login page
