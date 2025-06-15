@@ -12,7 +12,8 @@ console.log('in app.js');
   ['go-to-auth-subs', '#subscribe'],
   ['go-to-my-articles', '#articles'],
   ['post-created', '#articles'],
-  ['create-post', '#createPost']
+  ['create-post', '#createPost'],
+  ['update-account', '#account']
 ].forEach(([eventName, targetHash]) => {
   document.addEventListener(eventName, () => {
     window.location.hash = targetHash;
@@ -54,7 +55,7 @@ console.log('in app.js');
 
     listPostTag.addEventListener('ready-create', (e) => {
         const handlingArticlesTag = document.createElement('handling-articles');
-        handlingArticlesTag.setAttribute('mode', 'create');
+        handlingArticlesTag.setAttribute('mode', e.detail.mode || 'create');
 
         handlingArticlesTag.addEventListener('post-created', (e) => {
             handlingArticlesTag.remove();
@@ -72,7 +73,7 @@ console.log('in app.js');
     });
 
     listPostTag.addEventListener('ready-update', (e) => {
-        const handlingArticlesTag = listPostTag.createElement('handling-articles');
+        const handlingArticlesTag = document.createElement('handling-articles');
         handlingArticlesTag.setAttribute('mode', 'update');
         handlingArticlesTag.setAttribute('id', e.detail.id);
 
@@ -280,6 +281,7 @@ function displayCreatePost() {
     const mainTag = document.querySelector('main');
     mainTag.innerHTML = '';
     const WCHandlingArticlesTag = document.createElement('handling-articles');
+    WCHandlingArticlesTag.setAttribute('mode', 'create');
     mainTag.appendChild(WCHandlingArticlesTag);
 
 }
@@ -296,7 +298,11 @@ function displayAccount() {
     //  has a dedicated save buttton
     // optional: delete account button
     // optional: lost my password
+    const mainTag = document.querySelector('main');
+    const WCuserAccountTag = document.createElement('user-account');
 
+    mainTag.innerHTML = '';
+    mainTag.appendChild(WCuserAccountTag);
 
 };
 

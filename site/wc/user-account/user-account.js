@@ -33,9 +33,38 @@ class userAccount extends HTMLElement {
     async connectedCallback() {
       await this.loadContent();
   
-      /**
-       * Ajoutez votre logique nécessaire
-       */
+        const accountButton = this.shadowRoot.querySelector('#updateUser');
+
+        accountButton.addEventListener('click', (e) => {
+            const event = new CustomEvent('update-account', {
+              bubbles: true,
+              composed: true
+            });
+
+            this.dispatchEvent(event);
+        });  
+
+        const passwordUpdate = this.shadowRoot.querySelector('#updatePassword');
+
+        passwordUpdate.addEventListener('click', (e) => {
+            const event = new CustomEvent('update-password', {
+              bubbles: true,
+              composed: true
+            });
+
+            this.dispatchEvent(event);
+        });  
+
+        const deleteAccountButton = this.shadowRoot.querySelector('#deleteAccount');
+
+        deleteAccountButton.addEventListener('click', (e) => {
+            const event = new CustomEvent('delete-account', {
+              bubbles: true,
+              composed: true
+            });
+
+            this.dispatchEvent(event);
+        });
     }
 
     /**

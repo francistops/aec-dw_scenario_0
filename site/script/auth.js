@@ -28,14 +28,15 @@ async function call(resource, method, auth, obj) {
   const reqBodyJson = obj || {};
   console.log(reqBodyJson);
 
-  if (resource == "subscribe" || resource == "login") {
+  if (resource === "subscribe" || resource === "login") {
     if ("password" in obj) {
-      obj.passHash = hashPassword(obj.password);
+      obj.passHash = await hashPassword(obj.password);
       console.log(obj.password);
     } else {
       throw new Error("Empty password while required...");
     }
   }
+
 
   if (method == "GET") {
     reqJson = {
@@ -52,8 +53,9 @@ async function call(resource, method, auth, obj) {
 
   console.log('end of call fn before fetch: ', reqJson, reqBodyJson, apiUrl)
   const reqObjJson = await fetch(apiUrl, reqJson);
-  console.log('end of call fn return: ', reqObjJson)
-  return reqObjJson;
+  const json = await reqObjJson.json();
+  console.log('end of call fn return: ', json);
+  return json;
 }
 
 function buildHeaders(auth) {
@@ -107,7 +109,7 @@ export async function login(user) {
     localStorage.setItem("user", JSON.stringify(loginJson.user));
 
     const event = new CustomEvent("auth-logedin", {});
-    this.dispatchEvent(event);
+    document.dispatchEvent(new CustomEvent("auth-logedin", {}));
 
     if (!window.location.hash || window.location.hash === '') {
         window.location.hash = '#blog';
