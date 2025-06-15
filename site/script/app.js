@@ -231,16 +231,16 @@ function displayLogin() {
     mainTag.appendChild(WCauthLoginTag);
 };
 
-function hiddenNavButton() {
-    if (!isIdentified()) {
-        document.getElementById('articles').style.visibility = 'hidden';
-        document.getElementById('account').style.visibility = 'hidden';
-    } else {
-        document.getElementById('articles').style.visibility = 'visible';
-        document.getElementById('account').style.visibility = 'visible';
-    }
-    document.getElementById('logout').style.visibility = isIdentified() ? 'visible' : 'hidden';
-}
+// function hiddenNavButton() {
+//     if (!isIdentified()) {
+//         document.getElementById('articles').style.visibility = 'hidden';
+//         document.getElementById('account').style.visibility = 'hidden';
+//     } else {
+//         document.getElementById('articles').style.visibility = 'visible';
+//         document.getElementById('account').style.visibility = 'visible';
+//     }
+//     document.getElementById('logout').style.visibility = isIdentified() ? 'visible' : 'hidden';
+// }
 
 function displaySubs() {
     // account creation form => access via the login page
