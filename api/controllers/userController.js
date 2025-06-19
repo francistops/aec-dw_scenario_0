@@ -74,12 +74,11 @@ exports.subscribe = async (req, res) => {
 
 exports.login = async (req, res) => {
   console.log("---in userController login---");
-  console.log("body: ", req.body);
+  // console.log("body: ", req.body);
   let result = UNKNOWN_ERROR;
   const { email: userEmail, passHash: userPassHash } = req.body;
 
   try {
-
     const checkUser = await userModel.isUserValid(userEmail, userPassHash);
     if (checkUser) {
         const loggedUser = await userModel.fetchDetailsByEmail(userEmail);

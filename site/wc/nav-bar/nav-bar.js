@@ -1,3 +1,5 @@
+import { isIdentified } from "../../script/auth.js";
+
 /**
  * Changez ce code pour répondre à votre besoins
  */
@@ -32,6 +34,19 @@ class navBar extends HTMLElement {
   
     async connectedCallback() {
       await this.loadContent();
+
+        const article_link = this.shadowRoot.getElementById('articles')
+        const account_link = this.shadowRoot.getElementById('account')
+      if (isIdentified()) {
+
+
+        article_link.classList.remove('articles')
+        account_link.classList.remove('account')
+        
+      } else {
+        article_link.classList.add('articles')
+        account_link.classList.add('account')
+      }
 
         const loginButton = this.shadowRoot.querySelector('#loginButton');
 

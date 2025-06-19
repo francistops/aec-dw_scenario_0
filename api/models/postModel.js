@@ -11,7 +11,7 @@ function hasAffectedOne(id, action, queryResult) {
 }
 
 exports.fetchAllPost = async () => {
-  const selectSql = `SELECT "authorId", "created", "published", "title", "excert"
+  const selectSql = `SELECT "id", "authorId", "created", "published", "title", "excert"
                             FROM posts 
                             ORDER BY created DESC`;
   const queryResult = await pool.query(selectSql);
@@ -78,9 +78,6 @@ exports.fetchNextPosts = async (ids, nbRequested) => {
   });
 };
 
-
-
-
 exports.insert = async (post) => {
   const insertSql = `INSERT INTO "posts" ("authorId", "title", "excert", "content") 
                             VALUES ($1, $2, $3, $4)
@@ -89,7 +86,10 @@ exports.insert = async (post) => {
   const queryResult = await pool.query(insertSql, parameters);
 
   hasAffectedOne(null, "inserted", queryResult);
-
+  
+  // TODO below publish call is only for debug
+  this.publish(queryResult.rows[0].id)
+  
   return queryResult.rows[0];
 };
 

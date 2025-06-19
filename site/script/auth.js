@@ -1,5 +1,5 @@
 // recevoir le token and le storer in the client
-console.log('in auth.js')
+console.log("in auth.js");
 let currentUser = null;
 
 async function hashPassword(password) {
@@ -18,67 +18,36 @@ async function hashPassword(password) {
   return hashHex;
 }
 
-async function call(resource, method, auth, obj) {
+async function apiCall(resource, method, auth, body = {}) {
+  let result = false;
   const BASE_URL = "https://api.amelieroussin.ca/";
   const apiUrl = `${BASE_URL}${resource}`;
-  let reqJson = {};
-  const reqBodyJson = obj || {};
-  // console.log('in auth.js call fn')
-  // console.log('1', resource, method, auth, obj)
-  // console.log('2', reqBodyJson)
 
-  // if (resource == "subscribe" || resource == "login") {
-  //   if ("password" in obj) {
-  //     obj.passHash = hashPassword(obj.password);
-  //     console.log(obj.password);
-  //   } else {
-  //     throw new Error("Empty password while required...");
-  //   }
-  // }
+  const headers = {
+    "Content-type": "application/json",
+    Accept: "application/json",
+  };
 
-  if (method == "GET") {
-    reqJson = {
-        method: method,
-        headers: {
-          'Content-type': "application/json",
-          'Accept': "application/json"
-        }
-    };
-  } else {
-    reqJson = {
-        method: method,
-        headers: {
-          'Content-type': "application/json",
-          'Accept': "application/json"
-        },
-        body: JSON.stringify(reqBodyJson)
-    };
+  const apiReq = {
+    method: method,
+    headers: headers,
+  };
+
+  if (method == "POST") apiReq["body"] = JSON.stringify(body);
+
+  if (auth) {
+    if (isIdentified()) {
+      headers["Authorization"] = `Bearer ${getConnectedUser().tokenUuid}`;
+    } else throw new Error("Empty token while required...");
   }
 
-  // console.log('end of call fn before fetch: ', reqJson, reqBodyJson, apiUrl)
-  const reqObjJson = await fetch(apiUrl, reqJson);
+  const Response = await fetch(apiUrl, apiReq);
 
-  // console.log('end of call fn return: ', reqObjJson)
+  if (Response.ok) {
+    result = await Response.json();
+  }
 
-  // let result = await reqBodyJson.json();
-  // console.log(result);
-  
-  return reqObjJson;
-}
-
-function buildHeaders(auth) {
-  let headers = {
-    'Content-type': "application/json",
-    'Accept': "application/json",
-  };
-  // if (auth) {
-  //   if (!isIdentified()) {
-  //     throw new Error("Empty token while required...");
-  //   }
-  //   headers["Authorization"] = `Bearer ${getConnectedUser().token}`;
-  // }
-
-  return headers;
+  return result;
 }
 
 export function getConnectedUser() {
@@ -91,15 +60,16 @@ export function isIdentified() {
 
 export async function subscribe(user) {
   let result = false;
+  
+  console.log('in auth.js subcribe', user)
 
-  const subscribeResponse = await call("subscribe", "POST", false, user);
+  const subscribeResponse = await apiCall("subscribe", "POST", false, user);
 
   if (subscribeResponse.errorCode == 0) {
     result = true;
-    alert('subscribe success')
-
+    alert("subscribe success");
   } else {
-    alert('subscribe fail')
+    alert("subscribe fail");
     console.error("unhandle error in auth.js subscribeJson");
   }
 
@@ -110,21 +80,18 @@ export async function login(user) {
   console.log("in auth.js login");
 
   let result = false;
-  const loginResponse = await call("login", "POST", false, user);
 
-  const loginJson = await loginResponse.json();
+  const loginResult = await apiCall("login", "POST", false, user);
 
+  if (loginResult.errorCode == 0) {
+    result = true;
+    localStorage.setItem("user", JSON.stringify(loginResult.token));
 
-  if (loginJson.errorCode == 0) {
-    result = true
-    localStorage.setItem("user", JSON.stringify(loginJson.token));
-
-    
     const event = new CustomEvent("auth-logedin", {});
     document.dispatchEvent(new CustomEvent("auth-logedin", {}));
 
-    if (!window.location.hash || window.location.hash === '') {
-        window.location.hash = '#blog';
+    if (!window.location.hash || window.location.hash === "") {
+      window.location.hash = "#blog";
     }
   }
 
@@ -135,18 +102,18 @@ export async function logout() {
   console.log("in auth.js logout");
   let result = false;
 
-  const logoutJson = await call("logout", "POST", true);
+  const logoutJson = await apiCall("logout", "POST", true);
 
   if (logoutJson.errorCode == 0) {
     result = logoutJson.revoked;
     localStorage.clear();
 
     // todo understand this better
-    const event = new CustomEvent("auth-logedout", {});
-    this.dispatchEvent(event);
+    // const event = new CustomEvent("auth-logedout", {});
+    // this.dispatchEvent(event);
 
-    document.querySelector('.articles').style.visibility = 'hidden';
-    document.querySelector('.account').style.visibility = 'hidden';
+    // document.querySelector(".articles").style.visibility = "hidden";
+    // document.querySelector(".account").style.visibility = "hidden";
   }
 
   return result;
@@ -155,26 +122,34 @@ export async function logout() {
 export async function getAllPosts() {
   console.log("in auth.js getAllPosts");
   let result = [];
-  const allPostsJson = await call("posts", "GET", false);
-
-  if (allPostsJson.errorCode == 0) {
-    result = allPostsJson.posts;
+  const allPosts = await apiCall("posts", "GET", true);
+  if (allPosts.errorCode == 0) {
+    result = allPosts.rows;
   }
 
   return result;
 }
 
-export async function getNextPost(postId) {
+export async function authNextPosts(postId = [], nbRequested) {
   let result = null;
-  let resource = "posts/next";
-  if (postId != null) {
-    resource += `/${postId}`;
-  }
-  const nextPostJson = await call(resource, "POST", false);
 
-  if (nextPostJson.errorCode == 0) {
-    result = nextPostJson.post;
+  const body = {
+    ids: postId,
+    nbRequested: nbRequested,
+  };
+
+  try {
+    result = await apiCall("posts/next", "POST", false, body);
+  } catch (error) {
+    console.log(`auth.js getNextPost Oopsy: ${error}`);
   }
 
   return result;
 }
+
+//   } else {
+//     throw new Error(`API: nextPostsResponse => return non 0 error code`);
+//   }
+// } catch (error) {
+//
+// }
