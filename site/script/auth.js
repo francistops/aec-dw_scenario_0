@@ -164,17 +164,13 @@ export async function getAllPosts() {
 
 export async function getNextPost(postId, nbRequested) {
   let result = null;
-  let resource = "posts/next";
-  // if (postId != null) {
-  //   resource += `/${postId}`;
-  // }
 
   const body = {
     "ids": postId,
 	  "nbRequested": nbRequested 
   }
   // console.log('in getNextPost: ', body)
-  const nextPostJson = await call(resource, "POST", false, body);
+  const nextPostJson = await call("posts/next", "POST", false, body);
 
   if (!nextPostJson.ok) {
     throw new Error(`HTTP error! Status: ${nextPostJson.status}`);

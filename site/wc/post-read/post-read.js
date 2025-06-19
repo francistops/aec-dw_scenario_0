@@ -7,10 +7,8 @@ class postRead extends HTMLElement {
   constructor() {
     super();
     this.attachShadow({ mode: "open" });
+    this.postsReaded = []
 
-    /**
-     * Initialiser vos propriétés nécesaire
-     */
   }
 
   async loadContent() {
@@ -35,12 +33,10 @@ class postRead extends HTMLElement {
   async connectedCallback() {
     await this.loadContent();
 
-    
-
     // const mainTag = this.shadowRoot.querySelector("main");
     // mainTag.addEventListener("click", (e) => {
     //   const event = new CustomEvent("ready-next-posts", {
-    //     detail: { 
+    //     detail: {
     //       mode: "display",
     //       postsReaded: []
     //     },
@@ -54,12 +50,17 @@ class postRead extends HTMLElement {
     // });
 
     try {
-      const nextPostsResponse = await getNextPost([], 3);
+      console.log('!!! ', JSON.parse(localStorage.getItem("postsReaded")))
+      console.log('!!! ', this.postsReaded, typeof(this.postsReaded))
+      const nextPostsResponse = await getNextPost(
+        this.postsReaded || [],
+        3
+      );
 
       if (nextPostsResponse.errorCode == 0) {
         nextPostsResponse.posts.forEach((post, index) => {
-          console.log(post)
-          this.addData(post);
+          this.addNextpost(post);
+          this.markAsReaded(post.id)
         });
       } else {
         throw new Error(`API: nextPostsResponse => return non 0 error code`);
@@ -67,55 +68,59 @@ class postRead extends HTMLElement {
     } catch (error) {
       console.log(`Oops: ${error}`);
     }
-
-    /**
-     * Ajoutez votre logique nécessaire
-     */
   }
-  
-    addData(post) {
-        const wrapperPosts_div = this.shadowRoot.getElementById('wrapperPosts')
 
-        const postCard_div = document.createElement('div');
-        postCard_div.classList.add('postCard')
-        postCard_div.id = post.id;
+  addNextpost(post) {
+    const wrapperPosts_div = this.shadowRoot.getElementById("wrapperPosts");
 
-        const titlePostHeader = document.createElement('h2');
-        titlePostHeader.innerHTML = post.title;
-        titlePostHeader.id = 'postTitle'
+    const postCard_div = document.createElement("div");
+    postCard_div.classList.add("postCard");
+    postCard_div.id = post.id;
 
-        const postMeta_div = document.createElement('div');
-        postMeta_div.classList.add('postMeta');
+    const titlePostHeader = document.createElement("h2");
+    titlePostHeader.innerHTML = post.title;
+    titlePostHeader.id = "postTitle";
 
-        const author_span = document.createElement('span');
-        author_span.innerHTML = `${post.author.firstName} ${post.author.lastName}`;
-        author_span.classList.add('author')
+    const postMeta_div = document.createElement("div");
+    postMeta_div.classList.add("postMeta");
 
-        const publishDate_span = document.createElement('span');
-        publishDate_span.innerHTML = ' | ' + post.published;
-        publishDate_span.classList.add('publishDate');
+    const author_span = document.createElement("span");
+    author_span.innerHTML = `${post.author.firstName} ${post.author.lastName}`;
+    author_span.classList.add("author");
 
-        const postContent_tag = document.createElement('p')
-        postContent_tag.innerHTML = post.content
-        postContent_tag.id = 'postContent'
+    const publishDate_span = document.createElement("span");
+    publishDate_span.innerHTML = " | " + post.published;
+    publishDate_span.classList.add("publishDate");
 
-        const sep_bar = document.createElement('hr')
-        sep_bar.classList.add('sep')
+    const postContent_tag = document.createElement("p");
+    postContent_tag.innerHTML = post.content;
+    postContent_tag.id = "postContent";
 
-        wrapperPosts_div.appendChild(postCard_div);
-        postCard_div.appendChild(titlePostHeader);
+    const sep_bar = document.createElement("hr");
+    sep_bar.classList.add("sep");
 
-        postCard_div.appendChild(postMeta_div);
-        postMeta_div.appendChild(author_span);
-        postMeta_div.appendChild(publishDate_span)
+    wrapperPosts_div.appendChild(postCard_div);
+    postCard_div.appendChild(titlePostHeader);
 
-        postCard_div.appendChild(postContent_tag);
-        postCard_div.appendChild(sep_bar);
+    postCard_div.appendChild(postMeta_div);
+    postMeta_div.appendChild(author_span);
+    postMeta_div.appendChild(publishDate_span);
 
-    }
+    postCard_div.appendChild(postContent_tag);
+    postCard_div.appendChild(sep_bar);
+  }
+
+  markAsReaded(postId) {
+    // this.postsReaded.push(postId)
+    // localStorage.setItem("postsReaded",  JSON.parse(this.postsReaded));
+    // this.postsReaded.push(postId)
+    // localStorage.setItem("postsReaded",  this.postsReaded.toString());
+
+this.postsReaded = JSON.parse(localStorage.getItem("postsReaded")) || [];
+this.postsReaded.push(postId);
+localStorage.setItem("postsReaded", JSON.stringify(this.postsReaded));
+    return localStorage.getItem("postsReaded")
+  }
 }
 
-/**
- * Changez le nom de manière adéquate
- */
 customElements.define("post-read", postRead);
