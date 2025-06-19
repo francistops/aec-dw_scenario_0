@@ -1,4 +1,4 @@
-import { getNextPost } from "../../script/auth.js";
+import { authNextPosts } from "../../script/auth.js";
 
 /**
  * Changez ce code pour répondre à votre besoins
@@ -7,8 +7,7 @@ class postRead extends HTMLElement {
   constructor() {
     super();
     this.attachShadow({ mode: "open" });
-    this.postsReaded = []
-
+    this.postsReaded = [];
   }
 
   async loadContent() {
@@ -33,41 +32,44 @@ class postRead extends HTMLElement {
   async connectedCallback() {
     await this.loadContent();
 
-    // const mainTag = this.shadowRoot.querySelector("main");
-    // mainTag.addEventListener("click", (e) => {
-    //   const event = new CustomEvent("ready-next-posts", {
-    //     detail: {
-    //       mode: "display",
-    //       postsReaded: []
-    //     },
-    //     bubbles: true,
-    //     composed: true,
-    //   });
+    const wrapperPosts_div = this.shadowRoot.getElementById("wrapperPosts");
+    wrapperPosts_div.addEventListener("click", (e) => {
+      const event = new CustomEvent("ready-next-posts", {
+        detail: {
+          mode: "display",
+          postsReaded: [],
+        },
+        bubbles: true,
+        composed: true,
+      });
 
-    //   this.dispatchEvent(event);
+      this.dispatchEvent(event);
 
-    //   window.location.hash = "#blog";
-    // });
+      window.location.hash = "#blog";
+    });
 
-    try {
-      console.log('!!! ', JSON.parse(localStorage.getItem("postsReaded")))
-      console.log('!!! ', this.postsReaded, typeof(this.postsReaded))
-      const nextPostsResponse = await getNextPost(
-        this.postsReaded || [],
-        3
-      );
+    const postsReaded_debug = [];
+    const nextPostsResult = await authNextPosts(this.postsReaded, 3);
+    nextPostsResult.posts.forEach((post, index) => {
+      console.log(post)
+      this.addNextpost(post);
+      // this.markAsReaded(post.id);
+      postsReaded_debug.push(post.id);
+      localStorage.setItem("postsReaded", JSON.stringify(this.postsReaded));
+    });
 
-      if (nextPostsResponse.errorCode == 0) {
-        nextPostsResponse.posts.forEach((post, index) => {
-          this.addNextpost(post);
-          this.markAsReaded(post.id)
-        });
-      } else {
-        throw new Error(`API: nextPostsResponse => return non 0 error code`);
-      }
-    } catch (error) {
-      console.log(`Oops: ${error}`);
-    }
+    this.addPager()
+  }
+
+  addPager() {
+    const pager_div = this.shadowRoot.getElementById("pager");
+    const nextPost_btn = document.createElement("button")
+    nextPost_btn.innerHTML = 'next'
+    pager_div.appendChild(nextPost_btn)
+
+    nextPost_btn.addEventListener('click', (e) => {
+      // const nextPostsResult = await authNextPosts(this.postsReaded, 2);
+    })
   }
 
   addNextpost(post) {
@@ -116,10 +118,8 @@ class postRead extends HTMLElement {
     // this.postsReaded.push(postId)
     // localStorage.setItem("postsReaded",  this.postsReaded.toString());
 
-this.postsReaded = JSON.parse(localStorage.getItem("postsReaded")) || [];
-this.postsReaded.push(postId);
-localStorage.setItem("postsReaded", JSON.stringify(this.postsReaded));
-    return localStorage.getItem("postsReaded")
+
+    return localStorage.getItem("postsReaded");
   }
 }
 

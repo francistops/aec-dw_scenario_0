@@ -1,6 +1,6 @@
 // menu has 2 states authorize or guest (not authorize)
 
-import { getAllPosts, isIdentified, subscribe } from "./auth.js";
+import { getAllPosts, isIdentified, logout, subscribe } from "./auth.js";
 console.log('in app.js');
 
 
@@ -134,6 +134,12 @@ document.addEventListener('subscribed', async (event) => {
         alert("Inscription échouée. Vérifiez les champs ou réessayez plus tard.");
     }
 });
+
+
+    const logout_btn = document.getElementById('logoutBtn')
+    logout_btn.addEventListener('click', (e) => {
+        window.location.hash = 'logout'
+    });
 
 window.addEventListener('hashchange', (e) => {
     console.log('hash has change to ', window.location.hash)
@@ -309,12 +315,23 @@ function displayAccount() {
 
 };
 
-function applyLogout() {
+async function applyLogout() {
     // logout user
     console.log('in app.js applyLogout');
-
+    let result = false;
     // TODO
     // if user has token send logout to api
     // then redirect to landing page eg: #blog
     // validate nav bar
+
+    logout()
+
+
+    const userAuthToken = localStorage.getItem("user")
+    // if (JSON.parse(localStorage.getItem("user") !== null)) {
+    //     const logoutResponse = await fetch('https://api.amelieroussin.ca/logout', userAuthToken.tokenUuid)
+    //     if (logoutResponse.ok) {
+    //         result = await logoutResponse.json();
+    //     }
+    // }
 };
