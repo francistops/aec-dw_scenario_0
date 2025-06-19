@@ -55,14 +55,12 @@ async function call(resource, method, auth, obj) {
     };
   }
 
-  // console.log('end of call fn before fetch: ', reqJson, reqBodyJson, apiUrl)
+  console.log('end of call fn before fetch: ', reqJson, reqBodyJson, apiUrl)
   const reqObjJson = await fetch(apiUrl, reqJson);
-
-  // console.log('end of call fn return: ', reqObjJson)
+  console.log('end of call fn return: ', reqObjJson)
 
   // let result = await reqBodyJson.json();
   // console.log(result);
-  
   return reqObjJson;
 }
 
@@ -164,17 +162,25 @@ export async function getAllPosts() {
   return result;
 }
 
-export async function getNextPost(postId) {
+export async function getNextPost(postId, nbRequested) {
   let result = null;
   let resource = "posts/next";
-  if (postId != null) {
-    resource += `/${postId}`;
-  }
-  const nextPostJson = await call(resource, "POST", false);
+  // if (postId != null) {
+  //   resource += `/${postId}`;
+  // }
 
-  if (nextPostJson.errorCode == 0) {
-    result = nextPostJson.post;
+  const body = {
+    "ids": postId,
+	  "nbRequested": nbRequested 
   }
+  // console.log('in getNextPost: ', body)
+  const nextPostJson = await call(resource, "POST", false, body);
+
+  if (!nextPostJson.ok) {
+    throw new Error(`HTTP error! Status: ${nextPostJson.status}`);
+  }
+
+  result = await nextPostJson.json();
 
   return result;
 }

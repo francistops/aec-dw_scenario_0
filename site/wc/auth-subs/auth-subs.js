@@ -101,6 +101,7 @@ class authSubs extends HTMLElement {
             });
 
             this.dispatchEvent(event);
+            
         });
 
     }  

@@ -1,11 +1,8 @@
 // menu has 2 states authorize or guest (not authorize)
 
-import { getAllPosts, getNextPost, isIdentified, login, subscribe } from "./auth.js";
+import { getAllPosts, isIdentified, subscribe } from "./auth.js";
 console.log('in app.js');
 
-if (!window.location.hash || window.location.hash === '') {
-    window.location.hash = '#blog';
-}
 
 [
   ['ready-login', '#login'],
@@ -19,6 +16,7 @@ if (!window.location.hash || window.location.hash === '') {
     window.location.hash = targetHash;
   });
 });
+
     const listPostTag = document.createElement('my-articles');
 
     listPostTag.addEventListener('ready-delete', async (e) => {
@@ -92,7 +90,10 @@ if (!window.location.hash || window.location.hash === '') {
 
 
 document.addEventListener('ready-cancel', (event) => {
-    // const from = event.detail?.from;
+    const from = event.detail?.from;
+    console.log('ready-cancel: ', event.detail.from)
+    console.log('detail:', event.detail.from)
+    console.log('event ', event)
 
     // if (from === 'login') {
     //     const loginComp = document.querySelector('auth-login');
@@ -198,10 +199,6 @@ function displayBlog() {
     const WCpostReadTag = document.createElement('post-read');
     mainTag.innerHTML = '';
     mainTag.appendChild(WCpostReadTag);
-
-    const wrapperPostsDiv = document.getElementById("wrapperPosts");
-    const allPost = getAllPosts();
-    const nextPost = getNextPost();
 };
 
 function displayLogin() {
