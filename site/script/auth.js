@@ -41,7 +41,6 @@ async function apiCall(resource, method, auth, body = {}) {
     } else throw new Error("Empty token while required...");
   }
 
-  console.log("!!", apiReq);
   const Response = await fetch(apiUrl, apiReq);
 
   if (Response.ok) {
@@ -123,10 +122,9 @@ export async function logout() {
 export async function getAllPosts() {
   console.log("in auth.js getAllPosts");
   let result = [];
-  const allPostsJson = await apiCall("posts", "GET", false);
-
-  if (allPostsJson.errorCode == 0) {
-    result = allPostsJson.posts;
+  const allPosts = await apiCall("posts", "GET", true);
+  if (allPosts.errorCode == 0) {
+    result = allPosts.rows;
   }
 
   return result;

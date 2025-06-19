@@ -51,7 +51,7 @@ class postRead extends HTMLElement {
     const postsReaded_debug = [];
     const nextPostsResult = await authNextPosts(this.postsReaded, 3);
     nextPostsResult.posts.forEach((post, index) => {
-      console.log(post)
+      // console.log(post)
       this.addNextpost(post);
       // this.markAsReaded(post.id);
       postsReaded_debug.push(post.id);

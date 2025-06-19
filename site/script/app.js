@@ -151,8 +151,15 @@ window.addEventListener("hashchange", (e) => {
   console.log("hash has change to ", window.location.hash);
   
   if (isIdentified()) {
-    isConnected_tag.innerHTML = `${getConnectedUser().tokenUuid} connected`;
-    isConnected_tag.style = "color: green;";
+    isConnected_tag.innerHTML = `tokenUuid: ${getConnectedUser().tokenUuid}<br>
+     expires: ${getConnectedUser().expires}<br>
+     userId: ${getConnectedUser().userId}<br>
+     connected`;
+    isConnected_tag.style = "color: green;"
+
+    displayNav();
+    displayArticles();
+    displayAccount();
   }
 
   switch (
@@ -299,7 +306,14 @@ function displayArticles() {
   //  edit post on this row
   //  delete post on this row
   //  publish button in cell if the post publishedDate is NULL
-  getAllPosts();
+  
+ 
+//   getAllPosts() .forEach((post, index) => {
+//     const testdiv = document.createElement('div')
+//     testdiv.innerHTML += `${index}: ${post}`;
+//   });
+//   mainTag.appendChild(testdiv)
+
 }
 
 function displayCreatePost() {
@@ -324,6 +338,7 @@ function displayAccount() {
   // optional: lost my password
   const mainTag = document.querySelector("main");
   const WCuserAccountTag = document.createElement("user-account");
+  
 
   mainTag.innerHTML = "";
   mainTag.appendChild(WCuserAccountTag);
