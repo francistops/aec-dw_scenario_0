@@ -82,7 +82,14 @@ class authSubs extends HTMLElement {
           const user = parseFormToObject(form);
   
           console.log('in auth-subs WC user: ', user)
+          
+          user["passHash"] = user.password;
+          
+          console.log(user)
+          
+        
           const success = await subscribe(user);
+
   
           if (!success) {
             alert("Inscription échouée. Vérifiez vos informations.");

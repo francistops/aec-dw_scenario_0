@@ -37,7 +37,6 @@ async function apiCall(resource, method, auth, body = {}) {
 
   if (auth) {
     if (isIdentified()) {
-      console.log("here!!!");
       headers["Authorization"] = `Bearer ${getConnectedUser().tokenUuid}`;
     } else throw new Error("Empty token while required...");
   }
@@ -62,6 +61,8 @@ export function isIdentified() {
 
 export async function subscribe(user) {
   let result = false;
+  
+  console.log('in auth.js subcribe', user)
 
   const subscribeResponse = await apiCall("subscribe", "POST", false, user);
 
