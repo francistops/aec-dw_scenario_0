@@ -157,7 +157,6 @@ window.addEventListener("hashchange", (e) => {
      connected`;
     isConnected_tag.style = "color: green;"
 
-    displayNav();
     displayArticles();
     displayAccount();
   }
