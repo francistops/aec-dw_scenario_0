@@ -145,6 +145,9 @@ logout_btn.addEventListener("click", (e) => {
   window.location.hash = "logout";
 });
 
+window.addEventListener("load", () => {
+  hashChange();
+});
 
 const isConnected_tag = document.getElementById("isConnected")
 window.addEventListener("hashchange", (e) => {
@@ -156,12 +159,11 @@ window.addEventListener("hashchange", (e) => {
      userId: ${getConnectedUser().userId}<br>
      connected`;
     isConnected_tag.style = "color: green;"
-
-    displayArticles();
-    displayAccount();
   }
+});
 
-  switch (
+  function hashChange() {
+    switch (
     window.location.hash // window est un objet avec un objet location à l'intérieur et hash est un attribut de location qui est aussi un attribut de window
   ) {
     case "#blog": // Quand on lit on met un #
@@ -194,12 +196,13 @@ window.addEventListener("hashchange", (e) => {
       break;
     case "":
       window.location.hash = "blog"; // Quand on l'écrit on met pas de #
+      displayBlog();
       break;
     default:
       alert("alert");
       break;
   }
-});
+};
 
 function displayBlog() {
   //display landing page blog

@@ -58,13 +58,26 @@ class navBar extends HTMLElement {
 
             this.dispatchEvent(event);
         });
-    }
+
+      [
+        "login",
+        "subscribe",
+        "articles",
+        "account"
+      ].forEach((targetHash) => {
+        this.shadowRoot.querySelector(`a[href="#${targetHash}"]`)?.addEventListener('click', (e) => {
+          e.preventDefault();
+          window.location.hash = targetHash;
+          window.location.reload();
+        });
+      });
 
     /**
      * Vous aurez peut-être besoins d'ajouter des élément supplémentaires ici
      */
   
   }
+}
   
   /**
    * Changez le nom de manière adéquate
